@@ -6,6 +6,36 @@ Formato: `[versión] — YYYY-MM-DD | Rol`
 
 ---
 
+## [0.4.0] — 2026-11-20 | Ingeniero de Datos y GIS
+
+### Added
+- `src/gis/fetch_conectividad.py`: script GIS/ETL para cálculo de distancias geodésicas (Haversine WGS84) e ingesta de conectividad provincial ENACOM.
+- `data/01_raw/enacom_internet_tecnologias_raw.csv`: archivo crudo ENACOM con accesos a internet fijo desglosados por tecnología (FTTH, cablemódem, ADSL, etc.) hasta 2026-T2.
+- `data/01_raw/enacom_internet_penetracion_raw.csv`: archivo crudo ENACOM con penetración cada 100 hogares y 100 habitantes hasta 2026-T2.
+- `data/01_raw/enacom_internet_velocidad_raw.csv`: archivo crudo ENACOM con velocidad media de descarga provincial (Mbps) hasta 2026-T2.
+- `data/02_interim/dim_conectividad.csv`: tabla de 24 jurisdicciones con métricas calculadas:
+  `distancia_las_toninas_km` (Haversine exacto a `-36.487, -56.696`), `fibra_optica_accesos`, `fibra_optica_pct`,
+  `penetracion_hogares_pct`, `penetracion_habitantes_pct` y `velocidad_media_bajada_mbps`.
+  Variables `ixp_cabase_nodos` (sin API/CSV público) y `fibra_troncal_cobertura_score` dejadas en NaN explícito auditable.
+- `src/etl/fetch_talento_riesgo.py`: script ETL para ingesta y cálculo de métricas de capital humano IT (CEP XXI) y consulta programática al servicio oficial de zonificación sísmica del INPRES (Reglamento CIRSOC 103).
+- `data/01_raw/cepxxi_puestos_trabajo_clae2_provincias_raw.csv`: panel mensual del CEP XXI (Ministerio de Economía) de puestos registrados por provincia y CLAE a 2 dígitos (corte 2023-11-01).
+- `data/01_raw/inpres_zonificacion_24_raw.json`: payload crudo consolidado con las 24 respuestas del servicio web oficial del INPRES (`zonas_result.php`) para las capitales provinciales.
+- `data/02_interim/dim_talento_riesgo.csv`: tabla de 24 jurisdicciones con métricas calculadas:
+  `puestos_privados_totales`, `puestos_software_clae62` (CLAE 62), `puestos_tic_clae61_63` (CLAE 61-63),
+  `pct_empleo_tic_privado` (tasa sin comprimir para escalado robusto), `densidad_stem_it_score` (normalizado 0–10 a CABA)
+  y `riesgo_sismico_zona` (0 a 4 oficial INPRES). Variables `graduados_stem_anual`, `riesgo_climatico_score`
+  y `riesgo_combinado_score` dejadas en NaN explícito auditable.
+- `config/data_sources.yaml`: incorporadas 5 fuentes con metadata de trazabilidad (ENACOM tecnologías, penetración, velocidad, CEP XXI puestos e INPRES CIRSOC 103, más entradas borrador para CABASE y SPU).
+- `docs/data_dictionary.md`: actualizado a versión 0.4.0 reflejando los nuevos estados 🟢 LISTO y 🔴 NaN de las Secciones 3 y 5.
+
+### QA & Validation
+- Ejecutado `src/etl/validate_master.py` sobre `data/02_interim/dim_conectividad.csv`:
+  **PASS** (24/24 filas, match ancla INDEC, 0 duplicados, 0% nulos en distancias y métricas ENACOM, 100% nulo documentado en CABASE).
+- Ejecutado `src/etl/validate_master.py` sobre `data/02_interim/dim_talento_riesgo.csv`:
+  **PASS** (24/24 filas, match ancla INDEC, 0 duplicados, 0% nulos en variables de empleo CEP XXI y riesgo sísmico INPRES, 100% nulo documentado en SPU y riesgo climático).
+
+---
+
 ## [0.3.0] — 2026-11-20 | Ingeniero de Datos y GIS
 
 ### Added

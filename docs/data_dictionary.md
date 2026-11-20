@@ -1,6 +1,6 @@
 # Diccionario de Datos — Viabilidad IA Data Centers AR
 
-**Versión:** 0.2.0  
+**Versión:** 0.4.0  
 **Fecha:** 2026-11-20  
 **Tabla objetivo:** `data/03_processed/master_24_jurisdicciones.parquet`  
 **Clave primaria:** `jurisdiccion_id` (código INDEC 2 dígitos, string zero-padded)  
@@ -93,18 +93,24 @@ Los perfiles de demanda que consumen estas variables están definidos en
 ## Sección 3 — Conectividad
 
 > Relevancia principal: **Perfil B (Nodo Inferencia/Edge)**. Latencia y redundancia de red.  
-> Fuente objetivo primaria: CABASE (IXPs), ENACOM, PeeringDB.
+> Fuente objetivo primaria: ENACOM, IGN, CABASE (IXPs), PeeringDB.
 
 | Columna | Tipo Pandas | Unidad | Optimización | Fuente Oficial Objetivo | Estado |
 |---------|------------|--------|-------------|------------------------|--------|
-| `ixp_cabase_nodos` | `int64` | Cantidad de nodos | ↑ | CABASE — Mapa de IXPs Argentina (cabase.org.ar) | 🔴 NaN |
-| `fibra_troncal_cobertura_score` | `float64` | Índice 0–10 | ↑ | ENACOM — Mapa de conectividad (datos.enacom.gob.ar) | 🔴 NaN |
-| `distancia_las_toninas_km` | `float64` | km | ↓ | Calculado en `src/gis/`: distancia geodésica desde capital a Las Toninas (38.0°S, 57.4°W) | 🟡 PROXY |
+| `distancia_las_toninas_km` | `float64` | km | ↓ | Calculado en `src/gis/`: Haversine WGS84 a Las Toninas (-36.487, -56.696) | 🟢 LISTO |
+| `fibra_optica_accesos` | `int64` | Cantidad de accesos | ↑ | ENACOM — Accesos a internet fijo por tecnología | 🟢 LISTO |
+| `fibra_optica_pct` | `float64` | % (0–100) | ↑ | Derivado: accesos fibra óptica / total accesos fijos ENACOM | 🟢 LISTO |
+| `penetracion_hogares_pct` | `float64` | Accesos / 100 hogares | ↑ | ENACOM — Penetración de internet fijo provincial | 🟢 LISTO |
+| `penetracion_habitantes_pct` | `float64` | Accesos / 100 hab. | ↑ | ENACOM — Penetración de internet fijo provincial | 🟢 LISTO |
+| `velocidad_media_bajada_mbps` | `float64` | Mbps | ↑ | ENACOM — Velocidad media de descarga provincial | 🟢 LISTO |
+| `ixp_cabase_nodos` | `float64` | Cantidad de nodos | ↑ | CABASE — Mapa de IXPs Argentina (cabase.org.ar) | 🔴 NaN |
+| `fibra_troncal_cobertura_score` | `float64` | Índice 0–10 | ↑ | ENACOM / ARSAT — Cobertura de fibra troncal (Fase 3) | 🔴 NaN |
 
 **Notas:**
-- Las Toninas (Provincia de Buenos Aires) es el principal punto de aterrizaje de cables submarinos de Argentina (ARBR, AA, GlobeNet, PCCS). Distancia usada como proxy de latencia a conectividad internacional.
-- `fibra_troncal_cobertura_score` se construirá en `src/etl/` a partir del dataset ENACOM de localidades con fibra óptica disponible.
-- `ixp_cabase_nodos` puede ser 0 para provincias sin nodo IXP propio (ej: gran parte de Patagonia).
+- Las Toninas (Provincia de Buenos Aires, `-36.487, -56.696`) es el principal punto de aterrizaje de cables submarinos de Argentina (ARBR, Tannat, Firmina, Malbec, Atlantis-2, etc.). Distancia usada como proxy de latencia a conectividad internacional mínima.
+- `ixp_cabase_nodos`: Mantenido explícitamente en NaN auditable dado que el portal web de CABASE no ofrece descarga estática o API automatizable. Pendiente de carga manual verificada por censo.
+- Período de corte ENACOM: 2026-T2 (segundo trimestre de 2026).
+- Datos interim consolidados en `data/02_interim/dim_conectividad.csv`.
 
 ---
 
@@ -130,19 +136,26 @@ Los perfiles de demanda que consumen estas variables están definidos en
 ## Sección 5 — Capital Humano y Riesgo
 
 > Relevancia: **Perfil B** (talento IT para operaciones) y **ambos perfiles** (riesgo físico).  
-> Fuente objetivo primaria: INDEC (EPH), INPRES, SMN, IGN.
+> Fuente objetivo primaria: CEP XXI / OEDE, INPRES, SPU, SMN, IGN.
 
 | Columna | Tipo Pandas | Unidad | Optimización | Fuente Oficial Objetivo | Estado |
 |---------|------------|--------|-------------|------------------------|--------|
-| `densidad_stem_it_score` | `float64` | Índice 0–10 | ↑ | INDEC EPH — Ocupados en rama TIC + matrícula universitaria STEM (SPU) | 🔴 NaN |
-| `riesgo_sismico_zona` | `int64` | Zona 0–4 (INPRES-CIRSOC 103) | ↓ | INPRES — Mapa de peligrosidad sísmica de Argentina | 🔴 NaN |
-| `riesgo_climatico_score` | `float64` | Índice 0–10 | ↓ | SMN + IGN — Frecuencia de eventos extremos (granizo, inundación, tornado) | 🔴 NaN |
+| `puestos_privados_totales` | `int64` | Puestos | ↑ | CEP XXI — Puestos registrados del sector privado (panel mensual) | 🟢 LISTO |
+| `puestos_software_clae62` | `int64` | Puestos | ↑ | CEP XXI — CLAE 62: Programación y consultoría informática | 🟢 LISTO |
+| `puestos_tic_clae61_63` | `int64` | Puestos | ↑ | CEP XXI — CLAE 61-63: Sector TIC y Servicios de Información | 🟢 LISTO |
+| `pct_empleo_tic_privado` | `float64` | % (0–100) | ↑ | Derivado: puestos TIC / puestos privados totales jurisdicción | 🟢 LISTO |
+| `densidad_stem_it_score` | `float64` | Índice 0–10 | ↑ | Normalizado relativo al máximo provincial (CABA = 10.0) | 🟢 LISTO |
+| `graduados_stem_anual` | `float64` | Personas/año | ↑ | SPU — Anuarios Universitarios (SPU sin desglose provincial en datos abiertos) | 🔴 NaN |
+| `riesgo_sismico_zona` | `int64` | Zona 0–4 (INPRES-CIRSOC 103) | ↓ | INPRES — Servicio oficial de zonificación sísmica por coordenadas WGS84 | 🟢 LISTO |
+| `riesgo_climatico_score` | `float64` | Índice 0–10 | ↓ | SMN + IGN — Frecuencia de eventos extremos (Fase 3/5) | 🔴 NaN |
 | `riesgo_combinado_score` | `float64` | Índice 0–10 | ↓ | Calculado: combinación ponderada de `riesgo_sismico_zona` + `riesgo_climatico_score` | 🟡 PROXY |
 
 **Notas:**
-- `riesgo_sismico_zona`: escala INPRES-CIRSOC 103 — Zona 0 (sin riesgo) a Zona 4 (alto riesgo). Provincias como Mendoza, San Juan y Jujuy tienen zonas 3–4.
-- `densidad_stem_it_score` se normalizará a escala 0–10 respecto al máximo provincial observado (CABA o Córdoba).
-- `riesgo_combinado_score` es un PROXY. Fórmula pendiente de aprobación (Bloque 5.x).
+- `riesgo_sismico_zona`: escala reglamentaria INPRES-CIRSOC 103 Parte I — Zona 0 (peligrosidad muy reducida) a Zona 4 (peligrosidad muy elevada). Obtenido mediante consulta al endpoint oficial del INPRES (`zonas_result.php`) con las coordenadas oficiales de las capitales provinciales. San Juan y Mendoza registran Zona 4; Salta, Jujuy y Tierra del Fuego registran Zona 3; provincias pampeanas y mesopotámicas registran Zona 0.
+- `puestos_software_clae62`, `puestos_tic_clae61_63` y `pct_empleo_tic_privado`: conservadas explícitamente sin comprimir para habilitar transformaciones logarítmicas o escalados robustos en la Fase 3, mitigando el efecto outlier de CABA.
+- `densidad_stem_it_score`: escalado lineal 0–10 tomando el máximo nacional (CABA = 10.0, Córdoba = 4.03, Chaco = 2.59, Santa Fe = 2.54).
+- `graduados_stem_anual`: se mantiene en NaN explícito al no contar con desglose oficial a nivel de las 24 jurisdicciones en la base abierta de Araucano-SIPA (agrupada en 5 macrorregiones).
+- Datos interim consolidados en `data/02_interim/dim_talento_riesgo.csv`.
 
 ---
 
@@ -168,14 +181,23 @@ Estas columnas están reservadas para el módulo `src/finance/` (CAPEX/OPEX/RIGI
 | `temp_media_anual_c` | 🟢 Incorporado | ERA5 diario 2000–2023 en `dim_clima_agua.csv` | 2.2 (Listo) |
 | `horas_free_cooling_estimadas` | 🟡 PROXY — Calculado | Tbs < 15°C (ASHRAE 90.4) anualizado | 2.2 (Listo) |
 | `pue_climatologico_estimado` | 🟡 PROXY — Calculado | Rango 1.10–1.58 LATAM Uptime en `dim_clima_agua.csv` | 2.2 (Listo) |
+| `distancia_las_toninas_km` | 🟢 Incorporado | Haversine WGS84 en `dim_conectividad.csv` | 2.3 (Listo) |
+| `fibra_optica_accesos` | 🟢 Incorporado | ENACOM 2026-T2 en `dim_conectividad.csv` | 2.3 (Listo) |
+| `velocidad_media_bajada_mbps` | 🟢 Incorporado | ENACOM 2026-T2 en `dim_conectividad.csv` | 2.3 (Listo) |
+| `puestos_software_clae62` | 🟢 Incorporado | CEP XXI 2023-11 en `dim_talento_riesgo.csv` | 2.3 (Listo) |
+| `puestos_tic_clae61_63` | 🟢 Incorporado | CEP XXI 2023-11 en `dim_talento_riesgo.csv` | 2.3 (Listo) |
+| `densidad_stem_it_score` | 🟢 Incorporado | Derivado CEP XXI en `dim_talento_riesgo.csv` | 2.3 (Listo) |
+| `riesgo_sismico_zona` | 🟢 Incorporado | INPRES-CIRSOC 103 oficial en `dim_talento_riesgo.csv` | 2.3 (Listo) |
+| `ixp_cabase_nodos` | 🔴 NaN — Sin API/CSV abierto | Carga manual verificada por censo CABASE | 2.3 (Manual) |
+| `graduados_stem_anual` | 🔴 NaN — Microdatos SPU sin prov. | Pendiente desagregación provincial SPU | 2.3 (Manual) |
 | `indice_estres_hidrico` | 🔴 NaN — Formulario web WRI | Descargar manual CSV desde portal Aqueduct | 2.2 (Manual) |
 | `sadi_uptime_index` | 🔴 NaN — ENRE solo cubre AMBA | Pendiente fuente nacional uniforme CAMMESA | 2.2 (Manual) |
 | `sadi_margen_disponible_mw` | 🔴 NaN — Datos nodales CAMMESA | Descargar informe anual CAMMESA PDF | 2.2 (Manual) |
-| `distancia_las_toninas_km` | 🟡 PROXY — Cálculo geodésico | `src/gis/` con coordenadas WGS84 | 3.1 |
+| `fibra_troncal_cobertura_score` | 🔴 NaN — En construcción | Desarrollar en Bloque 3.x con datos REFEFO/ENACOM | 3.x |
 | `indice_promocion_fiscal` | 🟡 PROXY — Fórmula compuesta | Definir en Bloque 4.x | 4.x |
 | `riesgo_combinado_score` | 🟡 PROXY — Ponderación | Definir en Bloque 5.x | 5.x |
 
 ---
 
 *Diccionario mantenido por: Ingeniero de Datos y GIS*  
-*Próxima revisión programada: Bloque 2.2 (ingesta de datos CAMMESA/SMN)*
+*Próxima revisión programada: Bloque 2.4 / Fase 3 (unificación master parquet)*
