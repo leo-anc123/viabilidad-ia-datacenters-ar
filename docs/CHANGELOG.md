@@ -6,6 +6,24 @@ Formato: `[versión] — YYYY-MM-DD | Rol`
 
 ---
 
+## [0.8.0] — 2026-11-20 | Especialista UX/BI
+
+### Added
+- `.streamlit/config.toml`: archivo de configuración de Streamlit con tema oscuro unificado (`base = "dark"`, fondo `#0e1117`, secundario `#161b22`, primario cian `#38bdf8`) y modo headless para despliegue productivo.
+- `app/styles.css`: hoja de estilos CSS ejecutiva dark-mode profesional con diseño a medida para tarjetas KPI (`.kpi-container`), caja metodológica (`.methodology-box`), badges categóricos, microtipografía, ocultamiento de elementos genéricos de Streamlit y compatibilidad de contrastes WCAG.
+- `app/main.py`: aplicación web interactiva completa en Streamlit organizada en 4 pestañas analíticas:
+  1. *Panel Ejecutivo:* 5 KPIs dinámicos calculados al 100% desde los datos reales (Santa Cruz líder IA con 67.00 pts, CABA líder Edge con 81.58 pts, Tierra del Fuego mejor PUE climatológico a 1.245, 39.332,2 MW SADI y 474 centrales monitoreadas); gráfico Plotly comparativo horizontal del Top 10 (Perfil IA vs. Perfil Edge); y caja de Transparencia Metodológica detallando fuentes auditadas (CAMMESA, SMN, NASA POWER, ENACOM, CEP XXI, INPRES, RIGI) y las 13 variables excluidas por ausencia de fuente abierta sin inventar datos.
+  2. *Mapa GIS y Centrales SADI:* mapa interactivo Plotly con `scatter_map` y teselas `carto-darkmatter` (sin token de Mapbox), representando las 474 centrales del SADI dimensionadas por MW y coloreadas por tecnología de generación, con filtros cruzados multiselección por tecnología y provincia, métricas dinámicas de participación renovable y tabla detallada expandible.
+  3. *Simulador en Tiempo Real:* selector de 4 casos de uso (Campus IA Training, Nodos Edge, Benchmark CABASE, Personalizado) y 5 sliders dimensionales renormalizados automáticamente a $\sum w = 1.0$ con control de seguridad contra división por cero; cálculo dinámico del ranking en vivo importando directamente `calculate_composite_score()` de `src/modeling/mcda_engine.py` (cero lógica de negocio duplicada); despliegue de provincia ganadora, gráfico Radar (`go.Scatterpolar`) comparando la provincia seleccionada contra el promedio nacional, y tabla de ranking simulado para las 24 jurisdicciones.
+  4. *Ciencia de Datos (Arquetipos & Monte Carlo):* visualización de los 4 arquetipos de infraestructura resultantes de K-Means ($k=4$, Silhouette 0.478) mediante gráfico de barras por centroide dimensional y panel explicativo; visualización de la simulación Monte Carlo (1.000 iteraciones con perturbación $\pm 20\%$) mostrando intervalos de confianza P5–P95 y probabilidades empíricas de calificar en Top 3 y Top 5 por jurisdicción.
+
+### QA & Validation
+- Verificación de compilación sintáctica `python -m py_compile app/main.py`: **PASS** (código 0).
+- Suite automatizada de pruebas con `streamlit.testing.v1.AppTest`: **PASS** (0 excepciones, renderizado completo de gráficos Plotly, mapas, sliders y llamadas a `src.modeling.mcda_engine`).
+- Cierre formal del **Bloque 4.1 (Aplicación Web Interactiva Streamlit)** de la Fase 4.
+
+---
+
 ## [0.7.0] — 2026-11-20 | Científico de Datos
 
 ### Added

@@ -1,0 +1,189 @@
+/* ==============================================================================
+   ESTILOS EJECUTIVOS DARK-MODE — PROYECTO VIABILIDAD DATA CENTERS & CAMPUS IA AR
+   Fase 4 — Bloque 4.1 | Especialista UX/BI
+   ============================================================================== */
+
+/* Tipografía y variables globales */
+:root {
+  --bg-primary: #0e1117;
+  --bg-secondary: #161b22;
+  --bg-card: #1c2128;
+  --border-subtle: #30363d;
+  --border-focus: #38bdf8;
+  --text-main: #f0f6fc;
+  --text-muted: #8b949e;
+  --accent-cyan: #38bdf8;
+  --accent-emerald: #34d399;
+  --accent-amber: #fbbf24;
+  --accent-purple: #a78bfa;
+  --accent-rose: #f43f5e;
+}
+
+/* Ocultar elementos estándar de Streamlit para aspecto ejecutivo */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {background-color: transparent !important;}
+
+/* Contenedor principal */
+.block-container {
+  padding-top: 1.8rem;
+  padding-bottom: 3rem;
+  max-width: 95% !important;
+}
+
+/* Tarjetas KPI Ejecutivas */
+.kpi-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  min-height: 130px;
+}
+
+.kpi-container:hover {
+  border-color: var(--border-focus);
+  transform: translateY(-2px);
+}
+
+.kpi-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.kpi-value {
+  font-size: 1.85rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.3rem;
+}
+
+.kpi-value.cyan { color: var(--accent-cyan); }
+.kpi-value.emerald { color: var(--accent-emerald); }
+.kpi-value.amber { color: var(--accent-amber); }
+.kpi-value.purple { color: var(--accent-purple); }
+
+.kpi-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* Caja de Transparencia Metodológica */
+.methodology-box {
+  background-color: #161b22;
+  border-left: 4px solid var(--accent-cyan);
+  border-top: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  border-radius: 0 8px 8px 0;
+  padding: 1.2rem 1.4rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #c9d1d9;
+}
+
+.methodology-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Tarjetas de Sección */
+.section-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Badges de Estado y Categorías */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  letter-spacing: 0.025em;
+}
+
+.badge-cyan {
+  background-color: rgba(56, 189, 248, 0.15);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.badge-emerald {
+  background-color: rgba(52, 211, 153, 0.15);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.badge-amber {
+  background-color: rgba(251, 191, 36, 0.15);
+  color: var(--accent-amber);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.badge-purple {
+  background-color: rgba(167, 139, 250, 0.15);
+  color: var(--accent-purple);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+}
+
+/* Ajustes a Pestañas (Tabs) */
+.stTabs [data-baseweb="tab-list"] {
+  gap: 1.5rem;
+  background-color: transparent;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.25rem;
+}
+
+.stTabs [data-baseweb="tab"] {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 0.6rem 1rem;
+  border-radius: 6px 6px 0 0;
+  transition: all 0.2s ease;
+}
+
+.stTabs [data-baseweb="tab"]:hover {
+  color: var(--text-main);
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.stTabs [aria-selected="true"] {
+  color: var(--accent-cyan) !important;
+  border-bottom: 2px solid var(--accent-cyan) !important;
+  background-color: transparent !important;
+}
+
+/* Tablas estilizadas */
+.stDataFrame {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+/* Radio buttons y Selectboxes */
+div[data-baseweb="select"] {
+  border-radius: 6px;
+}
