@@ -1,0 +1,29 @@
+# ═══════════════════════════════════════════════════════════════
+#  requirements.txt — Viabilidad IA Datacenters AR
+#  Fase 1–2 | Generado: 2026-11-19 | Rol: Orquestador (PMO)
+#  Referencia: AGENTS.md §2 Stack Tecnológico
+# ═══════════════════════════════════════════════════════════════
+
+# ── Core Data & ETL ────────────────────────────────────────────
+pandas>=2.2.0
+numpy>=1.26.0
+pyarrow>=15.0.0        # Serialización Parquet (data/03_processed/, data/04_outputs/)
+
+# ── Config & I/O ───────────────────────────────────────────────
+pyyaml>=6.0.1          # Lectura de config/data_sources.yaml
+requests>=2.31.0       # Descarga de fuentes (src/etl/)
+openpyxl>=3.1.2        # Lectura/escritura de .xlsx
+
+# ── Dashboard / Visualización ──────────────────────────────────
+streamlit>=1.35.0      # Aplicación principal (app/)
+plotly>=5.22.0         # Mapas interactivos y gráficos ejecutivos
+
+# ── Machine Learning / MCDA ────────────────────────────────────
+scikit-learn>=1.5.0    # Clustering y escalado (src/modeling/)
+
+# ── Pendiente — Fase 3 (GIS y Monte Carlo) ─────────────────────
+# geopandas            → src/gis/ — procesar GeoJSON EPSG:4326
+# shapely              → src/gis/ — operaciones geométricas
+# folium               → app/ — mapas interactivos alternativos
+# scipy                → src/modeling/ — simulaciones Monte Carlo
+# Agregar tras definir capas territoriales y aprobar en CHANGELOG.md

@@ -1,0 +1,35 @@
+{
+  "_meta": {
+    "version": "0.1.0",
+    "estado": "borrador",
+    "fecha": "2026-11-19",
+    "descripcion": "Perfiles de ponderación para el índice de viabilidad multicriterio (MCDA). Referencia: AGENTS.md §1.",
+    "nota": "Pesos orientativos. Validar con SMEs y el Científico de Datos antes de Fase 2. Toda modificación debe registrarse en docs/CHANGELOG.md.",
+    "suma_requerida": 1.0
+  },
+  "campus_ia_training": {
+    "_nombre": "Perfil A — Campus de Entrenamiento IA (Alta Densidad)",
+    "_descripcion": "GPU clusters y alta densidad energética. Prioriza SADI, free cooling, disponibilidad hídrica e incentivos fiscales. Tolerante a latencia.",
+    "_suma": 1.0,
+    "energia_disponibilidad_sadi": 0.25,
+    "energia_costo_kwh": 0.18,
+    "clima_free_cooling_pue": 0.15,
+    "hidrica_disponibilidad": 0.12,
+    "fiscal_incentivos_rigi": 0.10,
+    "infraestructura_logistica": 0.08,
+    "marco_regulatorio": 0.07,
+    "conectividad_fibra": 0.05
+  },
+  "nodo_inferencia_edge": {
+    "_nombre": "Perfil B — Nodos de Inferencia / Edge",
+    "_descripcion": "Baja latencia, cercanía a IXPs y cables submarinos, densidad de fibra troncal y capital humano IT.",
+    "_suma": 1.0,
+    "conectividad_fibra_troncal": 0.28,
+    "conectividad_latencia_ixp": 0.22,
+    "talento_humano_it": 0.15,
+    "energia_disponibilidad_sadi": 0.12,
+    "marco_regulatorio": 0.10,
+    "infraestructura_logistica": 0.08,
+    "fiscal_incentivos_rigi": 0.05
+  }
+}

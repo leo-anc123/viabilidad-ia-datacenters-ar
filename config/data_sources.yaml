@@ -1,0 +1,47 @@
+# ═══════════════════════════════════════════════════════════════
+#  config/data_sources.yaml — Viabilidad IA Datacenters AR
+#  Catálogo de fuentes de datos del proyecto
+#
+#  REGLA AGENTS.md §4.5 (Trazabilidad total):
+#  Todo dataset incorporado al pipeline DEBE tener una entrada aquí
+#  antes de ser descargado a data/01_raw/.
+#
+#  Campos obligatorios:
+#    nombre         — Nombre descriptivo del dataset
+#    dimension      — Categoría analítica (ver valores válidos abajo)
+#    fuente_oficial — Organismo / entidad responsable del dato
+#    url            — URL de descarga directa o endpoint de API
+#    fecha_corte    — Fecha del último dato disponible (YYYY-MM-DD)
+#    estado         — Estado de incorporación al pipeline
+#
+#  Dimensiones válidas:
+#    energia        — Generación, capacidad, red SADI, costo kWh
+#    conectividad   — Fibra troncal, IXPs, cables submarinos, latencia
+#    clima          — Temperatura, humedad, free cooling, PUE potencial
+#    hidrica        — Disponibilidad hídrica para refrigeración
+#    regulatorio    — Marco legal, habilitaciones, zonas francas
+#    fiscal         — RIGI, IIBB, incentivos provinciales
+#    logistica      — Infraestructura vial, ferroviaria, aeroportuaria
+#    talento        — Capital humano IT, universidades, egresados
+#
+#  Estados válidos:
+#    borrador       — Identificada, no validada
+#    validado       — Fuente oficial confirmada, URL verificada
+#    descargado     — Archivo presente en data/01_raw/
+#    procesado      — Incorporado a data/02_interim/ o superior
+# ═══════════════════════════════════════════════════════════════
+
+fuentes: []
+
+# ── Plantilla de entrada — copiar, descomentar y completar ─────
+#
+# - nombre:          ""
+#   dimension:       ""          # Ver dimensiones válidas arriba
+#   fuente_oficial:  ""          # Ej: CAMMESA, INDEC, ENACOM, IGN, Ministerio de Energía
+#   url:             ""          # URL directa de descarga o endpoint REST/SPARQL
+#   fecha_corte:     null        # YYYY-MM-DD — último dato disponible en la fuente
+#   periodicidad:    ""          # anual | trimestral | mensual | puntual | tiempo_real
+#   estado:          borrador
+#   archivo_raw:     ""          # Nombre exacto del archivo en data/01_raw/ (si descargado)
+#   script_etl:      ""          # Script responsable en src/etl/ (si existe)
+#   notas:           ""          # Proxies usados, advertencias de calidad, caveats

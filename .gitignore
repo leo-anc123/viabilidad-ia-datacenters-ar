@@ -1,0 +1,90 @@
+# ═══════════════════════════════════════════════════════════════
+#  .gitignore — Viabilidad IA Datacenters AR
+#  Generado: 2026-11-19 | Rol: Orquestador (PMO)
+# ═══════════════════════════════════════════════════════════════
+
+# ── Entorno Virtual ────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Python ─────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+.Python
+
+# ── Variables de entorno y secretos ────────────────────────────
+.env
+.env.*
+secrets.yaml
+secrets.yml
+*.pem
+*.key
+
+# ── Jupyter Notebooks ──────────────────────────────────────────
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# ── Power BI (binarios — no versionables) ──────────────────────
+bi/*.pbix
+bi/*.pbit
+*.pbix
+*.pbit
+
+# ── Datasets crudos (pesados, se obtienen via src/etl/) ────────
+data/01_raw/*
+!data/01_raw/.gitkeep
+
+# ── Outputs intermedios grandes (opcional: descomentar si pesan)
+# data/02_interim/*
+# !data/02_interim/.gitkeep
+# data/03_processed/*
+# !data/03_processed/.gitkeep
+
+# ── Sistema Operativo ──────────────────────────────────────────
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+# Windows
+Thumbs.db
+ehthumbs.db
+desktop.ini
+*.lnk
+$RECYCLE.BIN/
+# Linux
+*~
+
+# ── IDEs y Editores ────────────────────────────────────────────
+.idea/
+.vscode/settings.json
+.vscode/.ropeproject
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.swp
+*.swo
+
+# ── Mypy / Linters ─────────────────────────────────────────────
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# ── Archivos temporales ────────────────────────────────────────
+*.tmp
+*.temp
+*.bak
+*.log
