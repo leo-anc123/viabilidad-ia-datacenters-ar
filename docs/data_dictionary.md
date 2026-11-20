@@ -46,21 +46,23 @@ Los perfiles de demanda que consumen estas variables están definidos en
 ## Sección 1 — Energía y Red SADI
 
 > Relevancia principal: **Perfil A (Campus IA)**. Máxima ponderación en `weights_profiles.json`.  
-> Fuente objetivo primaria: CAMMESA (informes anuales de demanda y potencia), ENRE, IENOVA.
+> Fuente objetivo primaria: Secretaría de Energía / CAMMESA (Centrales de Generación SADI), ENRE.
 
 | Columna | Tipo Pandas | Unidad | Optimización | Fuente Oficial Objetivo | Estado |
 |---------|------------|--------|-------------|------------------------|--------|
-| `sadi_potencia_instalada_mw` | `float64` | MW | ↑ | CAMMESA — Informe Anual de Potencia Instalada por Provincia | 🔴 NaN |
-| `sadi_pct_renovable` | `float64` | % (0–100) | ↑ | CAMMESA / MINEM — Mix energético provincial (RenovAR) | 🔴 NaN |
-| `sadi_uptime_index` | `float64` | Índice 0–1 | ↑ | ENRE — Interrupciones del Servicio (SAIDI/SAIFI por distribuidora) | 🔴 NaN |
+| `sadi_potencia_instalada_mw` | `float64` | MW | ↑ | Sec. Energía / CAMMESA — Centrales de Generación SADI | 🟢 LISTO |
+| `sadi_pct_renovable` | `float64` | % (0–100) | ↑ | Sec. Energía / CAMMESA — Renovables Ley 27.191 | 🟢 LISTO |
+| `sadi_uptime_index` | `float64` | Índice 0–1 | ↑ | ENRE — SAIDI/SAIFI (solo AMBA; pendiente fuente nacional uniforme) | 🔴 NaN |
 | `sadi_margen_disponible_mw` | `float64` | MW | ↑ | CAMMESA — Margen de reserva operativa por nodo de 500 kV | 🔴 NaN |
 | `proyeccion_potencia_2028_mw` | `float64` | MW | ↑ | MINEM — Plan Federal de Transmisión 2028 / Proyectos RenovAR | 🔴 NaN |
 | `proyeccion_potencia_2036_mw` | `float64` | MW | ↑ | MINEM — Hoja de Ruta Energética 2030–2036 | 🔴 NaN |
 | `potencial_offgrid_score` | `float64` | Índice 0–10 | ↑ | INENCO (solar/eólico) + CONICET (Patagonia) — Recurso renovable off-grid | 🔴 NaN |
 
 **Notas:**
-- `sadi_uptime_index` se derivará de SAIDI (System Average Interruption Duration Index): `uptime = 1 - (SAIDI_horas / 8760)`.
-- `potencial_offgrid_score` es un índice compuesto (solar + eólico + biomasa). Su fórmula de composición debe aprobarse antes de calcularse (Bloque 3.x).
+- `sadi_potencia_instalada_mw` agrega todas las centrales interconectadas al SADI por provincia (decisión D6). Tierra del Fuego registra 0.0 MW por tratarse de un sistema provincial no interconectado.
+- `sadi_pct_renovable` computa solar, eólica, biomasa, biogás y mini-hidro (≤50 MW) bajo el régimen de la Ley 27.191.
+- `sadi_uptime_index` se derivará de SAIDI cuando se disponga de fuente nacional uniforme (CAMMESA/distribuidoras regionales), ya que ENRE regula únicamente Edenor y Edesur (AMBA).
+- `sadi_margen_disponible_mw` requiere extracción de informes anuales nodales CAMMESA (PDF).
 - Variables de proyección (`2028`, `2036`) alimentarán el módulo Monte Carlo en `src/modeling/`.
 
 ---
@@ -68,18 +70,23 @@ Los perfiles de demanda que consumen estas variables están definidos en
 ## Sección 2 — Clima y Agua
 
 > Relevancia principal: **Perfil A** (eficiencia térmica / PUE). Considerado en Perfil B como factor de riesgo.  
-> Fuente objetivo primaria: SMN (Servicio Meteorológico Nacional), CONAE, INA.
+> Fuente objetivo primaria: Open-Meteo Historical API (ERA5 / ECMWF 2000–2023), WRI Aqueduct 4.0.
 
 | Columna | Tipo Pandas | Unidad | Optimización | Fuente Oficial Objetivo | Estado |
 |---------|------------|--------|-------------|------------------------|--------|
-| `temp_media_anual_c` | `float64` | °C | ↓ | SMN — Normales Climatológicas 1991–2020 (por capital provincial) | 🔴 NaN |
-| `horas_free_cooling_estimadas` | `float64` | horas/año | ↑ | Derivado de SMN: horas con Tbs < 15°C (umbral estándar data center) | 🟡 PROXY |
-| `pue_climatologico_estimado` | `float64` | Adimensional (1.0–2.5) | ↓ | Calculado en `src/gis/`: función de `temp_media_anual_c` y `horas_free_cooling_estimadas` | 🟡 PROXY |
-| `indice_estres_hidrico` | `float64` | Índice 0–5 (Aqueduct / WRI) | ↓ | INA / WRI Aqueduct Water Risk Atlas (capa provincial) | 🔴 NaN |
+| `temp_media_anual_c` | `float64` | °C | ↓ | Open-Meteo ERA5 / ECMWF (serie diaria 2000–2023) | 🟢 LISTO |
+| `temp_max_verano_prom_c` | `float64` | °C | ↓ | Open-Meteo ERA5 / ECMWF (promedio meses DJF 2000–2023) | 🟢 LISTO |
+| `horas_free_cooling_estimadas` | `float64` | horas/año | ↑ | Derivado ERA5: promedio anual de horas con Tbs < 15°C (ASHRAE 90.4) | 🟡 PROXY |
+| `pue_climatologico_estimado` | `float64` | Adimensional (1.10–1.58) | ↓ | Calculado en `src/gis/`: interpolación lineal PUE mecánico (1.58) a free-cooling (1.10) | 🟡 PROXY |
+| `indice_estres_hidrico` | `float64` | Índice 0–5 (Aqueduct / WRI) | ↓ | WRI Aqueduct 4.0 Water Risk Atlas (capa provincial) | 🔴 NaN |
 
 **Notas:**
-- `horas_free_cooling_estimadas` y `pue_climatologico_estimado` son **variables derivadas (PROXY)**. Su metodología de cálculo debe documentarse en `docs/metodologia.md` y aprobarse antes de incorporarse al scoring.
-- `indice_estres_hidrico` es crítico para data centers con cooling húmedo (torres evaporativas). Escala Aqueduct: 0 = sin estrés, 5 = estrés extremo.
+- `horas_free_cooling_estimadas` y `pue_climatologico_estimado` calculados con fórmulas transparentes aprobadas (Bloque 2.2):
+  - Umbral: Tbs < 15.0 °C (ASHRAE 90.4-2019, decisión D1).
+  - Factor horario ajuste: 0.70 (concentración de horas frías nocturnas).
+  - PUE base mecánico: 1.58 (benchmark LATAM Uptime Institute 2023, decisión D3); PUE mínimo ideal: 1.10.
+  - Período climático: 2000–2023 (decisión D4).
+- `indice_estres_hidrico` (bws_score WRI Aqueduct 4.0) pendiente de descarga manual de tabla provincial desde portal WRI. Cero datos inventados.
 
 ---
 
@@ -156,15 +163,17 @@ Estas columnas están reservadas para el módulo `src/finance/` (CAPEX/OPEX/RIGI
 
 | Variable | Motivo NaN/PROXY | Próximo paso | Bloque |
 |----------|-----------------|-------------|--------|
-| `sadi_potencia_instalada_mw` | Requiere ETL de informes CAMMESA | Scraping/descarga manual PDF | 2.2 |
-| `sadi_pct_renovable` | Requiere ETL de informes CAMMESA | Scraping/descarga manual PDF | 2.2 |
-| `sadi_uptime_index` | Requiere datos SAIDI/SAIFI por distribuidora | Consulta ENRE | 2.2 |
-| `sadi_margen_disponible_mw` | Requiere datos nodales CAMMESA | Consulta CAMMESA | 2.2 |
-| `horas_free_cooling_estimadas` | PROXY — fórmula pendiente aprobación | Definir umbral Tbs y procesar SMN | 2.3 |
-| `pue_climatologico_estimado` | PROXY — depende de `temp_media_anual_c` | Tras aprobación fórmula | 2.3 |
-| `distancia_las_toninas_km` | PROXY — cálculo geodésico pendiente | `src/gis/` con shapely/geopy | 3.1 |
-| `indice_promocion_fiscal` | PROXY — fórmula compuesta pendiente | Definir en Bloque 4.x | 4.x |
-| `riesgo_combinado_score` | PROXY — ponderación pendiente | Definir en Bloque 5.x | 5.x |
+| `sadi_potencia_instalada_mw` | 🟢 Incorporado | Datos procesados en `dim_energia_sadi.csv` | 2.2 (Listo) |
+| `sadi_pct_renovable` | 🟢 Incorporado | Datos procesados en `dim_energia_sadi.csv` | 2.2 (Listo) |
+| `temp_media_anual_c` | 🟢 Incorporado | ERA5 diario 2000–2023 en `dim_clima_agua.csv` | 2.2 (Listo) |
+| `horas_free_cooling_estimadas` | 🟡 PROXY — Calculado | Tbs < 15°C (ASHRAE 90.4) anualizado | 2.2 (Listo) |
+| `pue_climatologico_estimado` | 🟡 PROXY — Calculado | Rango 1.10–1.58 LATAM Uptime en `dim_clima_agua.csv` | 2.2 (Listo) |
+| `indice_estres_hidrico` | 🔴 NaN — Formulario web WRI | Descargar manual CSV desde portal Aqueduct | 2.2 (Manual) |
+| `sadi_uptime_index` | 🔴 NaN — ENRE solo cubre AMBA | Pendiente fuente nacional uniforme CAMMESA | 2.2 (Manual) |
+| `sadi_margen_disponible_mw` | 🔴 NaN — Datos nodales CAMMESA | Descargar informe anual CAMMESA PDF | 2.2 (Manual) |
+| `distancia_las_toninas_km` | 🟡 PROXY — Cálculo geodésico | `src/gis/` con coordenadas WGS84 | 3.1 |
+| `indice_promocion_fiscal` | 🟡 PROXY — Fórmula compuesta | Definir en Bloque 4.x | 4.x |
+| `riesgo_combinado_score` | 🟡 PROXY — Ponderación | Definir en Bloque 5.x | 5.x |
 
 ---
 

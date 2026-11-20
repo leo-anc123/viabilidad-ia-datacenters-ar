@@ -31,17 +31,58 @@
 #    procesado      — Incorporado a data/02_interim/ o superior
 # ═══════════════════════════════════════════════════════════════
 
-fuentes: []
+fuentes:
+  - nombre: "Open-Meteo Historical API (ERA5 / ECMWF)"
+    dimension: "clima"
+    fuente_oficial: "ECMWF / Open-Meteo"
+    url: "https://archive-api.open-meteo.com/v1/archive"
+    fecha_corte: "2023-12-31"
+    periodicidad: "diaria"
+    estado: "procesado"
+    archivo_raw: "data/01_raw/clima_24_jurisdicciones_raw.json"
+    script_etl: "src/gis/fetch_clima_pue.py"
+    notas: "Serie 2000-01-01 a 2023-12-31 (8.766 días por jurisdicción). Variables calculadas: temp_media_anual_c, temp_max_verano_prom_c, horas_free_cooling_estimadas (Tbs < 15°C ASHRAE 90.4) y pue_climatologico_estimado."
 
-# ── Plantilla de entrada — copiar, descomentar y completar ─────
-#
-# - nombre:          ""
-#   dimension:       ""          # Ver dimensiones válidas arriba
-#   fuente_oficial:  ""          # Ej: CAMMESA, INDEC, ENACOM, IGN, Ministerio de Energía
-#   url:             ""          # URL directa de descarga o endpoint REST/SPARQL
-#   fecha_corte:     null        # YYYY-MM-DD — último dato disponible en la fuente
-#   periodicidad:    ""          # anual | trimestral | mensual | puntual | tiempo_real
-#   estado:          borrador
-#   archivo_raw:     ""          # Nombre exacto del archivo en data/01_raw/ (si descargado)
-#   script_etl:      ""          # Script responsable en src/etl/ (si existe)
-#   notas:           ""          # Proxies usados, advertencias de calidad, caveats
+  - nombre: "WRI Aqueduct 4.0 — Water Risk Atlas"
+    dimension: "hidrica"
+    fuente_oficial: "World Resources Institute (WRI)"
+    url: "https://www.wri.org/applications/aqueduct/water-risk-atlas/"
+    fecha_corte: "2023-01-01"
+    periodicidad: "puntual"
+    estado: "borrador"
+    archivo_raw: "data/01_raw/aqueduct40_province_rankings_arg.csv"
+    script_etl: "src/gis/fetch_clima_pue.py"
+    notas: "Descarga automatizada no disponible sin formulario. Variable indice_estres_hidrico quedó explícitamente en NaN (100% auditable) a la espera de descarga manual según regla de cero datos inventados."
+
+  - nombre: "Centrales de Generación Eléctrica SADI"
+    dimension: "energia"
+    fuente_oficial: "Secretaría de Energía / CAMMESA"
+    url: "http://datos.energia.gob.ar/dataset/c62df6c6-73af-4039-b956-db081ff6eebe/resource/230fdf38-8f12-4017-a1e8-d7a1bc4a1c1c/download/generacin-elctrica-centrales-de-generacin.csv"
+    fecha_corte: "2024-01-01"
+    periodicidad: "anual"
+    estado: "procesado"
+    archivo_raw: "data/01_raw/cammesa_centrales_generacion_sadi_raw.csv"
+    script_etl: "src/etl/fetch_energia_sadi.py"
+    notas: "474 centrales registradas en el SADI con geolocalización, provincia, tecnología y potencia instalada en MW. Tierra del Fuego tratada como sistema aislado (0.0 MW en SADI)."
+
+  - nombre: "CAMMESA — Potencia Instalada Histórica"
+    dimension: "energia"
+    fuente_oficial: "CAMMESA / datos.energia.gob.ar"
+    url: "http://datos.energia.gob.ar/dataset/2b4dfee6-6fca-4e4d-9611-a12d65cd4aa8/resource/b05fbb16-7278-463f-8895-087e2495bfee/download/potencia-instalada.csv"
+    fecha_corte: "2020-02-01"
+    periodicidad: "mensual"
+    estado: "descargado"
+    archivo_raw: "data/01_raw/cammesa_potencia_instalada_raw.csv"
+    script_etl: "src/etl/fetch_energia_sadi.py"
+    notas: "Serie mensual histórica de potencia instalada desagregada por agente y región eléctrica CAMMESA."
+
+  - nombre: "Proyectos y Centrales RenovAr / MATER"
+    dimension: "energia"
+    fuente_oficial: "Secretaría de Energía / Subsecretaría de Energías Renovables"
+    url: "http://datos.energia.gob.ar/dataset/7c30754f-7ee7-45c4-bbb8-fb853b20fe3a/resource/dc334eb4-3450-45c6-a340-37494c78e090/download/centrales-y-proyectos-de-centrales-de-energa-renovable.csv"
+    fecha_corte: "2020-01-01"
+    periodicidad: "anual"
+    estado: "descargado"
+    archivo_raw: "data/01_raw/minem_renovar_mater_raw.csv"
+    script_etl: "src/etl/fetch_energia_sadi.py"
+    notas: "Catálogo geolocalizado de proyectos renovables adjudicados por rondas RenovAr y régimen MATER."

@@ -1,0 +1,25 @@
+﻿jurisdiccion_id,jurisdiccion_nombre,temp_media_anual_c,temp_max_verano_prom_c,horas_free_cooling_estimadas,pue_climatologico_estimado,indice_estres_hidrico,n_dias_datos,fuente_clima,fuente_hidrica,periodo_referencia,umbral_free_cooling_c,pue_base_mecanico,pue_min_free_cooling,factor_horario_ajuste
+02,Ciudad Autónoma de Buenos Aires,17.31,27.26,2240.0,1.4573,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+06,Buenos Aires,16.99,26.95,2349.0,1.4513,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+10,Catamarca,19.33,29.56,1631.0,1.4906,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+14,Córdoba,17.45,28.76,2133.0,1.4631,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+18,Corrientes,21.52,31.11,889.0,1.5313,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+22,Chaco,21.64,31.52,899.0,1.5307,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+26,Chubut,14.25,25.99,3344.0,1.3968,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+30,Entre Ríos,18.76,29.5,1744.0,1.4844,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+34,Formosa,22.59,32.02,692.0,1.5421,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+38,Jujuy,15.44,23.21,2535.0,1.4411,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+42,La Pampa,16.3,29.42,2717.0,1.4311,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+46,La Rioja,19.01,30.12,1826.0,1.4799,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+50,Mendoza,16.47,29.05,2649.0,1.4348,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+54,Misiones,21.41,30.69,774.0,1.5376,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+58,Neuquén,15.81,30.66,2924.0,1.4198,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+62,Río Negro,15.09,27.91,3118.0,1.4092,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+66,Salta,16.22,24.78,2239.0,1.4573,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+70,San Juan,18.1,31.68,2163.0,1.4615,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+74,San Luis,17.61,29.37,2186.0,1.4602,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+78,Santa Cruz,7.73,17.96,5710.0,1.2671,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+82,Santa Fe,19.16,30.04,1644.0,1.4899,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+86,Santiago del Estero,21.89,32.37,875.0,1.5321,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+90,Tucumán,18.8,28.36,1567.0,1.4941,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7
+94,Tierra del Fuego,4.02,12.05,6121.0,1.2446,,8766,Open-Meteo ERA5 (ECMWF),,2000–2023,15.0,1.58,1.1,0.7

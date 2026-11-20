@@ -6,6 +6,41 @@ Formato: `[versión] — YYYY-MM-DD | Rol`
 
 ---
 
+## [0.3.0] — 2026-11-20 | Ingeniero de Datos y GIS
+
+### Added
+- `src/gis/fetch_clima_pue.py`: script ETL para ingesta y cálculo de métricas climáticas
+  a partir de la API histórica de Open-Meteo (reanálisis ERA5 / ECMWF 2000–2023, 8.766 días
+  por capital provincial).
+- `data/01_raw/clima_24_jurisdicciones_raw.json`: respuesta cruda de Open-Meteo para las 24
+  coordenadas geográficas oficiales de las capitales argentinas (cero errores de red).
+- `data/02_interim/dim_clima_agua.csv`: tabla de 24 jurisdicciones con métricas calculadas:
+  `temp_media_anual_c`, `temp_max_verano_prom_c` (DJF), `horas_free_cooling_estimadas`
+  (umbral Tbs < 15 °C según ASHRAE 90.4-2019, anualizadas con factor horario 0.70) y
+  `pue_climatologico_estimado` (interpolación entre 1.58 y 1.10 según Uptime Institute).
+  Variable `indice_estres_hidrico` dejada explícitamente en NaN por requerir descarga
+  manual desde WRI Aqueduct 4.0.
+- `src/etl/fetch_energia_sadi.py`: script ETL que descarga y procesa datos abiertos de la
+  Secretaría de Energía / CAMMESA (`datos.energia.gob.ar`).
+- `data/01_raw/cammesa_centrales_generacion_sadi_raw.csv`: archivo crudo de 474 centrales
+  eléctricas en el SADI con geolocalización, tecnología y potencia nominal en MW.
+- `data/01_raw/cammesa_potencia_instalada_raw.csv`: serie histórica mensual CAMMESA.
+- `data/01_raw/minem_renovar_mater_raw.csv`: catálogo geolocalizado de proyectos RenovAr / MATER.
+- `data/02_interim/dim_energia_sadi.csv`: tabla de 24 jurisdicciones con `sadi_potencia_instalada_mw`
+  y `sadi_pct_renovable` (Ley 27.191). Variables `sadi_uptime_index` (ENRE solo cubre AMBA),
+  `sadi_margen_disponible_mw`, proyecciones 2028/2036 y potencial off-grid documentadas
+  en NaN de acuerdo a las reglas de calidad de datos. Tierra del Fuego computa 0.0 MW
+  por constituir un subsistema provincial aislado no interconectado.
+- `config/data_sources.yaml`: incorporadas 5 fuentes de datos con metadata completa de trazabilidad.
+
+### QA & Validation
+- Ejecutado `src/etl/validate_master.py` sobre `data/02_interim/dim_clima_agua.csv`:
+  **PASS** (24/24 filas, match ancla INDEC, 0% nulos en clima y PUE, 100% nulo documentado en hídrico).
+- Ejecutado `src/etl/validate_master.py` sobre `data/02_interim/dim_energia_sadi.csv`:
+  **PASS** (24/24 filas, match ancla INDEC, 0% nulos en potencia y % renovable).
+
+---
+
 ## [0.2.0] — 2026-11-20 | Ingeniero de Datos y GIS
 
 ### Added
