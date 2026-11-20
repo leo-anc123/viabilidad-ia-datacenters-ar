@@ -1,6 +1,6 @@
 # Diccionario de Datos — Viabilidad IA Data Centers AR
 
-**Versión:** 0.4.0  
+**Versión:** 0.5.0  
 **Fecha:** 2026-11-20  
 **Tabla objetivo:** `data/03_processed/master_24_jurisdicciones.parquet`  
 **Clave primaria:** `jurisdiccion_id` (código INDEC 2 dígitos, string zero-padded)  
@@ -117,19 +117,20 @@ Los perfiles de demanda que consumen estas variables están definidos en
 ## Sección 4 — Fiscal y Regulatorio
 
 > Relevancia: **Ambos perfiles**. Factor habilitante / desbloqueador de inversión.  
-> Fuente objetivo primaria: Secretaría de Inversiones (RIGI), AFIP/ARCA, legislaturas provinciales.
+> Fuente objetivo primaria: Secretaría de Inversiones (RIGI), AFIP/ARCA, legislaturas y administraciones tributarias provinciales.
 
 | Columna | Tipo Pandas | Unidad | Optimización | Fuente Oficial Objetivo | Estado |
 |---------|------------|--------|-------------|------------------------|--------|
-| `rigi_adhesion` | `bool` | Booleano (True/False) | ↑ | Secretaría de Inversiones — Ley 27.742 / adhesiones provinciales | 🔴 NaN |
-| `iibb_alicuota_tech_pct` | `float64` | % (0–100) | ↓ | Códigos Fiscales Provinciales — Alícuota IIBB para servicios tecnológicos/comunicaciones | 🔴 NaN |
-| `iibb_alicuota_energia_pct` | `float64` | % (0–100) | ↓ | Códigos Fiscales Provinciales — Alícuota IIBB para distribución/venta de energía | 🔴 NaN |
-| `indice_promocion_fiscal` | `float64` | Índice 0–10 | ↑ | Compuesto: `rigi_adhesion` + leyes provinciales de promoción IT/parques tecnológicos | 🟡 PROXY |
+| `rigi_adhesion` | `bool` | Booleano (True/False) | ↑ | Secretaría de Inversiones — Ley 27.742 / leyes provinciales de adhesión | 🟢 LISTO |
+| `iibb_alicuota_tech_pct` | `float64` | % (0–100) | ↓ | Códigos Fiscales Provinciales — Alícuota IIBB software/IT promovida (LEC/Distritos) o gral | 🟢 LISTO |
+| `iibb_alicuota_energia_pct` | `float64` | % (0–100) | ↓ | Cuadros tarifarios provinciales de distribución eléctrica (mantenido en NaN auditable) | 🔴 NaN |
+| `indice_promocion_fiscal` | `float64` | Índice 0–10 | ↑ | Compuesto: Score régimen grandes inversiones (RIGI/TDF/RPI) + Score régimen IIBB tech | 🟡 PROXY |
 
 **Notas:**
-- `rigi_adhesion` requiere verificación de actos legislativos provinciales formales, no solo adhesión de intención. Fuente: Boletín Oficial de cada provincia.
-- `indice_promocion_fiscal` es un PROXY compuesto. Su fórmula debe aprobarse en Bloque 4.x (Rol: Analista Regulatorio).
-- Las alícuotas IIBB cambian frecuentemente. El campo `fecha_corte` en `config/data_sources.yaml` es obligatorio.
+- `rigi_adhesion` verifica leyes provinciales de adhesión formales sancionadas (18 provincias adheridas, 6 no adheridas). Documentadas exhaustivamente en `docs/supuestos_regulatorios.md`.
+- `iibb_alicuota_tech_pct`: consigna 0.0% para jurisdicciones con leyes activas de Economía del Conocimiento o distritos tecnológicos con exención plena para empresas inscriptas; alícuota general de servicios (3.0%–3.5%) para jurisdicciones sin régimen equivalente universal.
+- `indice_promocion_fiscal`: suma normalizada de 0 a 10 puntos (hasta 5 pts por gran inversión y hasta 5 pts por régimen IIBB tech). Reconoce el Área Aduanera Especial de Tierra del Fuego (Ley 19.640, 5.0 pts) y el RPI de la Provincia de Buenos Aires (3.5 pts) para evitar penalizaciones distorsivas.
+- `iibb_alicuota_energia_pct`: se conserva en `NaN` auditable en las 24 jurisdicciones al depender de esquemas nodales mayoristas (CAMMESA/MATER) y no de alícuotas minoristas planas.
 
 ---
 
@@ -188,16 +189,19 @@ Estas columnas están reservadas para el módulo `src/finance/` (CAPEX/OPEX/RIGI
 | `puestos_tic_clae61_63` | 🟢 Incorporado | CEP XXI 2023-11 en `dim_talento_riesgo.csv` | 2.3 (Listo) |
 | `densidad_stem_it_score` | 🟢 Incorporado | Derivado CEP XXI en `dim_talento_riesgo.csv` | 2.3 (Listo) |
 | `riesgo_sismico_zona` | 🟢 Incorporado | INPRES-CIRSOC 103 oficial en `dim_talento_riesgo.csv` | 2.3 (Listo) |
+| `rigi_adhesion` | 🟢 Incorporado | 18 adheridas / 6 no adheridas en `dim_fiscal_regulatoria.csv` | 2.4 (Listo) |
+| `iibb_alicuota_tech_pct` | 🟢 Incorporado | Leyes LEC y Códigos Fiscales en `dim_fiscal_regulatoria.csv` | 2.4 (Listo) |
+| `indice_promocion_fiscal` | 🟡 PROXY — Calculado | Compuesto Inversión + IIBB Tech (0-10) en `dim_fiscal_regulatoria.csv` | 2.4 (Listo) |
+| `iibb_alicuota_energia_pct` | 🔴 NaN — Tarifas nodales | Mantener en NaN por complejidad de contratos PPA | 2.4 (Auditable) |
 | `ixp_cabase_nodos` | 🔴 NaN — Sin API/CSV abierto | Carga manual verificada por censo CABASE | 2.3 (Manual) |
 | `graduados_stem_anual` | 🔴 NaN — Microdatos SPU sin prov. | Pendiente desagregación provincial SPU | 2.3 (Manual) |
 | `indice_estres_hidrico` | 🔴 NaN — Formulario web WRI | Descargar manual CSV desde portal Aqueduct | 2.2 (Manual) |
 | `sadi_uptime_index` | 🔴 NaN — ENRE solo cubre AMBA | Pendiente fuente nacional uniforme CAMMESA | 2.2 (Manual) |
 | `sadi_margen_disponible_mw` | 🔴 NaN — Datos nodales CAMMESA | Descargar informe anual CAMMESA PDF | 2.2 (Manual) |
 | `fibra_troncal_cobertura_score` | 🔴 NaN — En construcción | Desarrollar en Bloque 3.x con datos REFEFO/ENACOM | 3.x |
-| `indice_promocion_fiscal` | 🟡 PROXY — Fórmula compuesta | Definir en Bloque 4.x | 4.x |
 | `riesgo_combinado_score` | 🟡 PROXY — Ponderación | Definir en Bloque 5.x | 5.x |
 
 ---
 
-*Diccionario mantenido por: Ingeniero de Datos y GIS*  
-*Próxima revisión programada: Bloque 2.4 / Fase 3 (unificación master parquet)*
+*Diccionario mantenido por: Analista Regulatorio y Negocio / Ingeniero de Datos y GIS*  
+*Próxima revisión programada: Fase 3 (Modelado, Clustering y Scoring Multicriterio MCDA)*

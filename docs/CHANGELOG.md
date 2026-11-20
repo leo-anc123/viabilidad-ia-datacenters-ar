@@ -6,6 +6,30 @@ Formato: `[versión] — YYYY-MM-DD | Rol`
 
 ---
 
+## [0.5.0] — 2026-11-20 | Analista Regulatorio y Negocio / Ingeniero de Datos y GIS
+
+### Added
+- `docs/supuestos_regulatorios.md`: marco normativo y respaldo documental exhaustivo de las 24 jurisdicciones argentinas para el Régimen de Incentivo para Grandes Inversiones (RIGI, Ley 27.742) y las alícuotas referenciales de Ingresos Brutos (IIBB) sobre software y servicios tecnológicos bajo Leyes de Economía del Conocimiento.
+- `src/etl/build_fiscal_regulatoria.py`: script ETL reproducible para la construcción y validación de la dimensión fiscal y regulatoria.
+- `data/02_interim/dim_fiscal_regulatoria.csv`: tabla interim de 24 jurisdicciones con métricas normativas:
+  `rigi_adhesion` (18 provincias adheridas por ley, 6 no adheridas), `rigi_normativa`, `rigi_fecha_sancion`,
+  `iibb_alicuota_tech_pct` (0.0% para promovidas; 3.0%–3.5% para alícuota general), `iibb_regimen_promocion`,
+  `indice_promocion_fiscal` (score 0–10 ponderando gran inversión y fomento IIBB, reconociendo el Régimen de la Ley 19.640 de Tierra del Fuego y el RPI de Buenos Aires) y `estado_verificacion_normativa` (`verificado_oficial`). Variable `iibb_alicuota_energia_pct` documentada formalmente en NaN auditable.
+- `src/etl/build_master_table.py`: script de consolidación maestra que ejecuta el cruce 1:1 sobre `jurisdiccion_id` entre `jurisdicciones_base.csv` y las 5 tablas dimensionales (`dim_energia_sadi.csv`, `dim_clima_agua.csv`, `dim_conectividad.csv`, `dim_talento_riesgo.csv` y `dim_fiscal_regulatoria.csv`).
+- `data/03_processed/master_24_jurisdicciones.parquet`: tabla maestra oficial consolidada (24 filas × 62 columnas), con tipado estricto y compresión Snappy.
+- `data/03_processed/master_24_jurisdicciones.csv`: copia espejo en formato CSV (UTF-8 con BOM) para visualización inmediata en Excel y Power BI.
+- `docs/qa_report_fase2.md`: reporte formal de control de calidad y cobertura de Fase 2, con auditoría exhaustiva columna por columna: 48 columnas 100% completas, 1 columna con nulos parciales justificados de negocio (`rigi_fecha_sancion`) y 13 columnas 100% NaN documentadas sin inventar datos para Fases 3 a 5.
+- `config/data_sources.yaml`: incorporadas las fuentes oficiales de RIGI (Secretaría de Inversiones) y administraciones tributarias provinciales para la dimensión fiscal.
+- `docs/data_dictionary.md`: actualizado a versión 0.5.0 reflejando el estado de la dimensión fiscal y la unificación de la tabla maestra.
+
+### QA & Validation
+- Ejecutado `src/etl/validate_master.py` sobre `data/02_interim/dim_fiscal_regulatoria.csv`: **PASS** (24 filas, 0 errores, match 100% ancla).
+- Ejecutado `src/etl/validate_master.py` sobre `data/03_processed/master_24_jurisdicciones.parquet`: **PASS** (24 filas, 62 columnas, 0 errores, 0 advertencias, coordenadas WGS84 e IDs INDEC verificados).
+- Ejecutado `src/etl/validate_master.py` sobre `data/03_processed/master_24_jurisdicciones.csv`: **PASS** (24 filas, 62 columnas, 0 errores, 0 advertencias).
+- Cierre formal de la **Fase 2 (Ingesta, Limpieza y Master Data)**. Pipeline listo para la Fase 3 (Modelado, Clustering y Scoring Multicriterio).
+
+---
+
 ## [0.4.0] — 2026-11-20 | Ingeniero de Datos y GIS
 
 ### Added
