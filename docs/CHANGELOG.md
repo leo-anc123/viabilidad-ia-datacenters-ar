@@ -6,6 +6,30 @@ Formato: `[versión] — YYYY-MM-DD | Rol`
 
 ---
 
+## [0.7.0] — 2026-11-20 | Científico de Datos
+
+### Added
+- `src/modeling/clustering.py`: módulo de clustering no supervisado (K-Means con semilla reproducible `random_state=42`) sobre los 5 sub-scores dimensionales; barrido de hiperparámetro $k \in [3, 6]$ con evaluación de Silhouette Score e inercia; selección de $k=4$ óptimo de negocio (Silhouette 0.4784) identificando 4 arquetipos de infraestructura con asignación semántica determinística:
+  1. *Hub Metropolitano & Conectividad Core* (CABA, Buenos Aires).
+  2. *Polo Austral & Free-Cooling Extremo* (Santa Cruz, Tierra del Fuego).
+  3. *Corredor Productivo & Energético SADI/Renovable* (16 jurisdicciones: Córdoba, Mendoza, Neuquén, Río Negro, Chubut, etc.).
+  4. *Brecha Fiscal e Infraestructura Rezagada* (Formosa, La Pampa, La Rioja, Santiago del Estero).
+- `data/04_outputs/clusters_arquetipos.parquet` y `data/04_outputs/clusters_arquetipos.csv`: datasets exportados con identificación de cluster, etiquetas semánticas y descripción de negocio para las 24 jurisdicciones.
+- `src/modeling/montecarlo.py`: motor estocástico de simulación Monte Carlo vectorizado (1.000 iteraciones por perfil con semilla fija `seed=42`) aplicando perturbación simétrica de $\pm 20\%$ sobre ponderaciones directivas y renormalización estricta a $\sum w = 1.0$; cálculo de score medio, desviación estándar, intervalo P5–P95, ranking mediano y probabilidades empíricas de calificar en Top 3 y Top 5.
+- `data/04_outputs/montecarlo_sensibilidad.parquet` y `data/04_outputs/montecarlo_sensibilidad.csv`: datasets consolidados de sensibilidad y estabilidad de rankings en formato tabular largo y ancho.
+- `src/modeling/export_bi_feeds.py`: orquestador de exportación del Modelo Estrella en `data/04_outputs/pbi_ready/` codificado en CSV con BOM (`UTF-8-SIG`) listo para consumo nativo en Power BI y Streamlit:
+  - `dim_jurisdicciones.csv` (24 filas × 9 columnas): dimensión con claves INDEC, geografía y arquetipos.
+  - `fact_scores_perfiles.csv` (72 filas × 15 columnas): hechos con scores determinísticos, rankings y métricas Monte Carlo de los 3 perfiles.
+  - `fact_subscores_radar.csv` (120 filas × 5 columnas): hechos normalizados para gráficos de radar (5 dimensiones por jurisdicción).
+  - `geo_centrales_sadi.csv` (474 filas × 11 columnas): capa geoespacial limpia de centrales eléctricas de CAMMESA en EPSG:4326 validadas estrictamente dentro del Bounding Box de Argentina (0 nulos, 0 en 0,0) y mapeadas a `jurisdiccion_id`.
+- `src/modeling/validate_fase3.py`: suite automatizada de control de calidad para Fase 3 que valida al 100% la partición de clusters, congruencia estocástica de Monte Carlo e integridad referencial y espacial del Modelo Estrella.
+- `docs/resultados_fase3_ml.md`: reporte técnico y ejecutivo exhaustivo resumiendo la justificación matemática de $k=4$, taxonomía de arquetipos, estabilidad estocástica (100% de probabilidad Top 3 para Santa Cruz, Chubut y CABA en Perfil A; 100% para CABA, Buenos Aires y Córdoba en Perfil B) e implicancias estratégicas territoriales.
+
+### Changed
+- Cierre formal de la **Fase 3 (Modelado, Clustering y Scoring Multicriterio)**. Pipeline analítico 100% precomputado, desacoplado y listo para alimentar la interfaz Streamlit y los tableros Power BI de la Fase 4.
+
+---
+
 ## [0.6.0] — 2026-11-20 | Científico de Datos
 
 ### Added
