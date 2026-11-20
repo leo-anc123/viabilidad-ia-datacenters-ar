@@ -85,6 +85,8 @@ COLOR_CYAN = "#38bdf8"
 COLOR_EMERALD = "#34d399"
 COLOR_AMBER = "#fbbf24"
 COLOR_PURPLE = "#a78bfa"
+COLOR_EDGE = "#c084fc"
+COLOR_PINK = "#f472b6"
 COLOR_ROSE = "#f43f5e"
 COLOR_BLUE = "#60a5fa"
 COLOR_MUTED = "#8b949e"
@@ -100,6 +102,13 @@ TECH_COLORS = {
     "Biogas": COLOR_EMERALD,
     "Biomasa": "#10b981",
     "Nuclear": COLOR_PURPLE,
+}
+
+CLUSTER_COLORS = {
+    "Hub Metropolitano & Conectividad Core": COLOR_CYAN,
+    "Polo Austral & Free-Cooling Extremo": COLOR_AMBER,
+    "Corredor Productivo & Energético SADI/Renovable": COLOR_EMERALD,
+    "Brecha Fiscal e Infraestructura Rezagada": COLOR_PINK,
 }
 
 # -----------------------------------------------------------------------------
@@ -229,7 +238,7 @@ with tab1:
             x=top10_ia["score_campus_ia_training"],
             name="Campus IA (Training)",
             orientation="h",
-            marker=dict(color=COLOR_CYAN, line=dict(color="rgba(0,0,0,0)", width=1)),
+            marker=dict(color=COLOR_CYAN, line=dict(color="#0e1117", width=1)),
             hovertemplate="<b>%{y}</b><br>Score IA: %{x:.2f} pts<extra></extra>",
         ))
         fig_comp.add_trace(go.Bar(
@@ -237,13 +246,15 @@ with tab1:
             x=top10_ia["score_nodo_inferencia_edge"],
             name="Nodos Edge (Inferencia)",
             orientation="h",
-            marker=dict(color=COLOR_EMERALD, line=dict(color="rgba(0,0,0,0)", width=1)),
+            marker=dict(color=COLOR_EDGE, line=dict(color="#0e1117", width=1)),
             hovertemplate="<b>%{y}</b><br>Score Edge: %{x:.2f} pts<extra></extra>",
         ))
 
         fig_comp.update_layout(
             barmode="group",
-            height=390,
+            bargap=0.35,
+            bargroupgap=0.15,
+            height=450,
             margin=dict(l=10, r=10, t=10, b=10),
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
@@ -369,8 +380,10 @@ with tab2:
     # Preparar datos para Scatter Map (Plotly 7+)
     if f_count > 0:
         plot_df = geo_filtered.copy()
-        # Manejo seguro de NaN para evitar error en Plotly 'size'
-        plot_df["potencia_display"] = plot_df["potencia_instalada_mw"].fillna(0.0)
+        # Formateo ejecutivo de potencia instalada para hover
+        plot_df["potencia_fmt"] = plot_df["potencia_instalada_mw"].apply(
+            lambda x: f"{x:,.1f} MW".replace(",", "X").replace(".", ",").replace("X", ".") if pd.notna(x) and x > 0 else "No informada"
+        )
         plot_df["marker_size"] = plot_df["potencia_instalada_mw"].fillna(15.0).clip(lower=8.0, upper=1500.0)
 
         # Centrado dinámico
@@ -385,24 +398,31 @@ with tab2:
             size="marker_size",
             color="tecnologia_etiqueta",
             color_discrete_map=TECH_COLORS,
-            hover_name="nombre",
-            hover_data={
-                "marker_size": False,
-                "potencia_display": ":,.1f",
-                "tecnologia_etiqueta": True,
-                "jurisdiccion_nombre": True,
-                "latitud": ":.3f",
-                "longitud": ":.3f",
-            },
+            custom_data=["nombre", "jurisdiccion_nombre", "tecnologia_etiqueta", "potencia_fmt"],
             zoom=zoom_level,
             center={"lat": center_lat, "lon": center_lon},
             map_style="carto-darkmatter",
         )
 
+        hover_template = (
+            "<b>%{customdata[0]}</b><br>"
+            "<span style='color: #8b949e;'>Provincia:</span> %{customdata[1]}<br>"
+            "<span style='color: #8b949e;'>Tecnología:</span> %{customdata[2]}<br>"
+            "<span style='color: #38bdf8;'>Potencia:</span> <b>%{customdata[3]}</b>"
+            "<extra></extra>"
+        )
+
+        fig_map.update_traces(hovertemplate=hover_template)
+
         fig_map.update_layout(
             height=600,
             margin=dict(l=0, r=0, t=0, b=0),
             paper_bgcolor="rgba(0,0,0,0)",
+            hoverlabel=dict(
+                bgcolor="#161b22",
+                bordercolor="#38bdf8",
+                font=dict(color="#f0f6fc", size=13)
+            ),
             legend=dict(
                 orientation="h",
                 yanchor="bottom",
@@ -502,12 +522,20 @@ with tab3:
             drift = 1.0 - sum(normalized_weights.values())
             normalized_weights["subscore_talento_riesgo"] += drift
 
-        st.markdown("<div style='margin-top: 0.8rem; font-size: 0.8rem; color: #8b949e;'>", unsafe_allow_html=True)
-        st.write("<b>Pesos Efectivos Normalizados (Suma = 100%):</b>")
-        pct_text = " | ".join([f"{k.replace('subscore_', '').capitalize()}: <b>{v*100:.1f}%</b>" for k, v in normalized_weights.items()])
-        st.markdown(f"<small>{pct_text}</small>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        pct_items = [f"{k.replace('subscore_', '').capitalize()}: <b style='color:#f0f6fc;'>{v*100:.1f}%</b>" for k, v in normalized_weights.items()]
+        pct_html = " &nbsp;|&nbsp; ".join(pct_items)
+        st.markdown(
+            f"""
+            <div style='margin-top: 0.85rem; font-size: 0.82rem; color: #8b949e;'>
+                <div style='font-weight: 600; color: #f0f6fc; margin-bottom: 0.35rem;'>Pesos Efectivos Normalizados (Suma = 100%):</div>
+                <div style='background-color: rgba(255, 255, 255, 0.03); border: 1px solid #30363d; border-radius: 6px; padding: 0.45rem 0.65rem; color: #8b949e; line-height: 1.4;'>
+                    {pct_html}
+                </div>
+            </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
     # 3. Cálculo en tiempo real usando DIRECTAMENTE src.modeling.mcda_engine
     df_sim = df_scores[["jurisdiccion_id", "jurisdiccion_nombre", "jurisdiccion_corta", "region_argentina"] + SUBSCORE_COLUMNS].copy()
@@ -659,11 +687,17 @@ with tab4:
             x="dimension",
             y="score_medio",
             color="cluster_nombre",
+            color_discrete_map=CLUSTER_COLORS,
             barmode="group",
-            height=340,
-            color_discrete_sequence=[COLOR_CYAN, COLOR_ROSE, COLOR_EMERALD, COLOR_AMBER],
+            height=360,
+        )
+        fig_clusters.update_traces(
+            marker_line_width=1,
+            marker_line_color="#0e1117",
         )
         fig_clusters.update_layout(
+            bargap=0.30,
+            bargroupgap=0.15,
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
             margin=dict(l=10, r=10, t=10, b=10),
@@ -736,7 +770,10 @@ with tab4:
         fig_ci.add_trace(go.Bar(
             x=mc_sub["jurisdiccion_corta"],
             y=mc_sub["mc_score_mean"],
-            marker=dict(color=COLOR_CYAN if mc_profile == "campus_ia_training" else COLOR_EMERALD),
+            marker=dict(
+                color=COLOR_CYAN if mc_profile == "campus_ia_training" else COLOR_EDGE,
+                line=dict(color="#0e1117", width=1)
+            ),
             error_y=dict(
                 type="data",
                 symmetric=False,
@@ -751,7 +788,8 @@ with tab4:
         ))
 
         fig_ci.update_layout(
-            height=320,
+            bargap=0.30,
+            height=340,
             margin=dict(l=10, r=10, t=10, b=10),
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
@@ -767,20 +805,22 @@ with tab4:
             x=mc_sub["jurisdiccion_corta"],
             y=mc_sub["prob_top3_pct"],
             name="Prob. Top 3",
-            marker=dict(color=COLOR_CYAN),
+            marker=dict(color=COLOR_CYAN, line=dict(color="#0e1117", width=1)),
             hovertemplate="<b>%{x}</b><br>Prob. Top 3: %{y:.1f}%<extra></extra>"
         ))
         fig_prob.add_trace(go.Bar(
             x=mc_sub["jurisdiccion_corta"],
             y=mc_sub["prob_top5_pct"],
             name="Prob. Top 5",
-            marker=dict(color=COLOR_PURPLE),
+            marker=dict(color=COLOR_PINK, line=dict(color="#0e1117", width=1)),
             hovertemplate="<b>%{x}</b><br>Prob. Top 5: %{y:.1f}%<extra></extra>"
         ))
 
         fig_prob.update_layout(
             barmode="group",
-            height=320,
+            bargap=0.30,
+            bargroupgap=0.15,
+            height=340,
             margin=dict(l=10, r=10, t=10, b=10),
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
