@@ -6,6 +6,26 @@ Formato: `[versión] — YYYY-MM-DD | Rol`
 
 ---
 
+## [0.6.0] — 2026-11-20 | Científico de Datos
+
+### Added
+- `src/modeling/__init__.py`: inicializador del paquete de modelado estadístico y scoring MCDA.
+- `src/modeling/preprocessing.py`: pipeline de preprocesamiento, aislamiento de 14 features operativas completas, exclusión formal de 13 columnas 100% NaN auditadas sin imputar valores sintéticos, transformación logarítmica (`log1p`) sobre variables con asimetría extrema (`puestos_software_clae62` con skew 4.61 y `sadi_potencia_instalada_mw` con skew 2.58), escalado Min-Max [0, 100], inversión de sentido para variables de costo/riesgo (`pue_climatologico_estimado`, `temp_max_verano_prom_c`, `distancia_las_toninas_km`, `riesgo_sismico_zona`, `iibb_alicuota_tech_pct`), y tratamiento riguroso de la restricción física de Tierra del Fuego (red aislada = 0.0 MW SADI).
+- `src/modeling/mcda_engine.py`: motor de scoring multicriterio jerárquico puro (WSM) en dos niveles:
+  1. Cálculo de 5 sub-scores dimensionales (0–100): `subscore_energia`, `subscore_clima`, `subscore_conectividad`, `subscore_fiscal`, `subscore_talento_riesgo`.
+  2. Validador estricto de pesos (comprobación de no-negatividad y suma = 1.0 con tolerancia 1e-6).
+  3. Cálculo de scores compuestos y rankings ordinales unívocos (1 a 24) por perfil de demanda.
+- `config/weights_profiles.json`: actualizado a versión 0.6.0 con el esquema formal de 5 macro-dimensiones y parametrización de 3 perfiles contrastantes: `campus_ia_training` (Alta densidad), `nodo_inferencia_edge` (Baja latencia) y `benchmark_cabase` (Línea base sectorial uniforme 20%).
+- `data/04_outputs/scores_mcda_perfiles.parquet`: dataset consolidado con las 24 jurisdicciones, los 5 sub-scores dimensionales [0, 100] y el score/ranking de los 3 perfiles de demanda (compresión Snappy).
+- `data/04_outputs/scores_mcda_perfiles.csv`: archivo espejo en CSV (UTF-8 con BOM) para visualización inmediata en Excel y conexión a Power BI.
+- `src/modeling/validate_mcda.py`: suite de pruebas estadísticas y de integridad con 7 validaciones automáticas pasando al 100% (rango [0, 100], 0 NaNs, consistencia de rankings 1..24, validación de tolerancias de pesos y persistencia).
+- `docs/resultados_mcda_v1.md`: reporte analítico ejecutivo detallando los rankings Top 10 y Bottom 5, análisis de sensibilidad entre entrenamiento vs. inferencia edge, y diagnóstico territorial de Patagonia, AMBA, Cuyo y Centro.
+
+### Changed
+- Cierre exitoso del **Bloque 3.1 (Preprocesamiento y Motor MCDA)** de la Fase 3. Código desacoplado y preparado para ser importado por los sliders de Streamlit en la Fase 4.
+
+---
+
 ## [0.5.0] — 2026-11-20 | Analista Regulatorio y Negocio / Ingeniero de Datos y GIS
 
 ### Added

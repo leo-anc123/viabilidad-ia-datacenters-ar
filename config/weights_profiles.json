@@ -1,35 +1,47 @@
 {
   "_meta": {
-    "version": "0.1.0",
-    "estado": "borrador",
-    "fecha": "2026-11-19",
-    "descripcion": "Perfiles de ponderación para el índice de viabilidad multicriterio (MCDA). Referencia: AGENTS.md §1.",
-    "nota": "Pesos orientativos. Validar con SMEs y el Científico de Datos antes de Fase 2. Toda modificación debe registrarse en docs/CHANGELOG.md.",
-    "suma_requerida": 1.0
+    "version": "0.6.0",
+    "estado": "operativo",
+    "fecha": "2026-11-20",
+    "descripcion": "Perfiles de ponderación multicriterio (MCDA) por macro-dimensión analítica para viabilidad de Data Centers e IA en Argentina.",
+    "dimensiones_requeridas": [
+      "dimension_energia",
+      "dimension_clima",
+      "dimension_conectividad",
+      "dimension_fiscal",
+      "dimension_talento_riesgo"
+    ],
+    "suma_requerida": 1.0,
+    "tolerancia_suma": 1e-6
   },
   "campus_ia_training": {
     "_nombre": "Perfil A — Campus de Entrenamiento IA (Alta Densidad)",
-    "_descripcion": "GPU clusters y alta densidad energética. Prioriza SADI, free cooling, disponibilidad hídrica e incentivos fiscales. Tolerante a latencia.",
+    "_descripcion": "Grandes clusters de GPU y alto consumo eléctrico continuo. Prioriza disponibilidad de potencia eléctrica SADI/renovable, clima frío para free cooling (bajo PUE) y beneficios fiscales/adhesión al RIGI.",
     "_suma": 1.0,
-    "energia_disponibilidad_sadi": 0.25,
-    "energia_costo_kwh": 0.18,
-    "clima_free_cooling_pue": 0.15,
-    "hidrica_disponibilidad": 0.12,
-    "fiscal_incentivos_rigi": 0.10,
-    "infraestructura_logistica": 0.08,
-    "marco_regulatorio": 0.07,
-    "conectividad_fibra": 0.05
+    "dimension_energia": 0.35,
+    "dimension_clima": 0.25,
+    "dimension_fiscal": 0.20,
+    "dimension_conectividad": 0.10,
+    "dimension_talento_riesgo": 0.10
   },
   "nodo_inferencia_edge": {
     "_nombre": "Perfil B — Nodos de Inferencia / Edge",
-    "_descripcion": "Baja latencia, cercanía a IXPs y cables submarinos, densidad de fibra troncal y capital humano IT.",
+    "_descripcion": "Servicios de inferencia y entrega de baja latencia. Prioriza cercanía al punto de amarre de cables submarinos (Las Toninas), capilaridad de fibra óptica, talento técnico de software/TIC y bajo riesgo sísmico.",
     "_suma": 1.0,
-    "conectividad_fibra_troncal": 0.28,
-    "conectividad_latencia_ixp": 0.22,
-    "talento_humano_it": 0.15,
-    "energia_disponibilidad_sadi": 0.12,
-    "marco_regulatorio": 0.10,
-    "infraestructura_logistica": 0.08,
-    "fiscal_incentivos_rigi": 0.05
+    "dimension_conectividad": 0.35,
+    "dimension_talento_riesgo": 0.25,
+    "dimension_fiscal": 0.15,
+    "dimension_energia": 0.15,
+    "dimension_clima": 0.10
+  },
+  "benchmark_cabase": {
+    "_nombre": "Perfil C — Benchmark CABASE / Línea Base Sectorial",
+    "_descripcion": "Ponderación uniforme y neutral (20% por dimensión) para servir de contraste estructural y referencia equilibrada frente a los perfiles especializados.",
+    "_suma": 1.0,
+    "dimension_energia": 0.20,
+    "dimension_clima": 0.20,
+    "dimension_conectividad": 0.20,
+    "dimension_fiscal": 0.20,
+    "dimension_talento_riesgo": 0.20
   }
 }
