@@ -6,6 +6,34 @@ Formato: `[versión] — YYYY-MM-DD | Rol`
 
 ---
 
+## [2.0.0-alpha.1] — 2026-11-21 | Científico de Datos
+
+### Added
+- `docs/metodologia_tier.md`: marco metodológico formal que desglosa el estándar de Uptime Institute (Tier I a IV) e introduce la dimensión estructural de **Aptitud Territorial Tier (Tier-Readiness)**. Define los 4 pilares auditados sin inventar datos: redundancia eléctrica territorial (nodos de generación y diversidad tecnológica CAMMESA, con 0.0 SADI en TDF), estabilidad sísmica de sitio (INPRES-CIRSOC 103), resiliencia térmica estival (temperatura máxima ERA5) y madurez de red/fibra (ENACOM). Incluye justificación de colinealidad controlada ($r < 0.70$ con todas las dimensiones).
+- `docs/resultados_tier_v2.md`: auditoría comparativa rigurosa del Top 10 de las 24 jurisdicciones entre la versión `v1.0.0` (5 dimensiones) y la versión `v2.0.0-alpha.1` (6 dimensiones), explicando los movimientos clave (ej. salto de Buenos Aires de #9 a #4 en Campus IA gracias a su máximo Tier-Readiness de 72.35 pts; ascenso de Córdoba de #7 a #5; caída de San Juan de #10 a #11 por sismicidad Zona 4; solidez de Santa Cruz y Chubut en los puestos #1 y #2; y liderazgo indiscutido de CABA en Nodos Edge con 75.16 pts).
+- Derivación oficial de `sadi_diversidad_tech` en `data/03_processed/master_24_jurisdicciones.parquet` (63 columnas, validado al 100% con `src/etl/validate_master.py` sin nulos ni errores).
+
+### Changed
+- `src/modeling/preprocessing.py`: incorporadas 2 nuevas features operativas de soporte Tier-Readiness (`norm_n_centrales_sadi` con `log1p` y `norm_sadi_diversidad_tech`), elevando el total a 16 features normalizadas en $[0, 100]$. Tratamiento robusto con fallback automático para derivar diversidad tecnológica desde `geo_centrales_sadi.csv` en caso de tablas desactualizadas.
+- `src/modeling/mcda_engine.py`: ampliado el motor MCDA a **6 sub-scores dimensionales** (`subscore_tier_readiness` integrado con pesos intra-dimensión auditados que suman exactamente 1.0). Incorporado mecanismo de desempate en ranking evaluando score continuo antes de truncamiento a 4 decimales para garantizar permutación perfecta $1 \dots 24$.
+- `config/weights_profiles.json`: recalibrados los 3 perfiles analíticos a 6 dimensiones con suma exacta igual a `1.0` (tolerancia estricta $10^{-6}$):
+  - `campus_ia_training`: Energía 0.30, Clima 0.20, Tier-Readiness 0.15, Fiscal 0.15, Conectividad 0.10, Talento/Riesgo 0.10.
+  - `nodo_inferencia_edge`: Conectividad 0.30, Talento/Riesgo 0.20, Tier-Readiness 0.15, Energía 0.15, Fiscal 0.10, Clima 0.10.
+  - `benchmark_cabase`: Equiponderado en 6 dimensiones ($1/6$ cada una = 0.166667 / 0.166666).
+- `src/modeling/clustering.py`: actualizado para entrenar K-Means sobre el vector de 6 dimensiones. Evaluación de $k \in [3, 6]$ confirma $k=4$ óptimo (Silhouette 0.4641, inercia 18.077,6), preservando los 4 arquetipos ejecutivos (`Hub Metropolitano`, `Polo Austral`, `Corredor Energético`, `Brecha Fiscal/Infraestructura`).
+- `src/modeling/montecarlo.py`: adaptado para simular vectorizadamente perturbaciones estocásticas ($\pm 20\%$) sobre las 6 dimensiones con 1.000 iteraciones (`seed=42`).
+- `src/modeling/export_bi_feeds.py`: ampliado `DIMENSION_DISPLAY_NAMES` con `"subscore_tier_readiness": "Aptitud Territorial Tier (Tier-Readiness)"`. Regenerada la tabla `data/04_outputs/pbi_ready/fact_subscores_radar.csv` con exactamente **144 filas** ($24 \text{ jurisdicciones} \times 6 \text{ dimensiones}$).
+- `docs/data_dictionary.md`: actualizado incorporando `n_centrales_sadi` y `sadi_diversidad_tech` en la Sección 1.
+
+### QA & Validation
+- `src/etl/validate_master.py`: **PASS** (24 filas, 63 columnas, 0 errores, 0 advertencias).
+- `src/modeling/validate_mcda.py`: **PASS** (7/7 pruebas aprobadas: exclusión de 13 NaNs, 16 features normalizadas, regla física TDF = 0.0 MW y 0 fuentes SADI, tolerancia de pesos $10^{-6}$, 6 sub-scores acotados a $[0, 100]$, contrato Parquet/CSV y rankings $1 \dots 24$ sin empates).
+- `src/modeling/validate_fase3.py`: **PASS** (Clustering $k=4$, Monte Carlo 1.000 runs, Modelo Estrella pbi_ready validado con radar en 144 filas y 474 centrales SADI en BBOX argentino).
+- `python -m py_compile app/main.py`: **PASS** (compilación limpia).
+- **Hito:** Cierre exitoso de la **Iteración 2 — Bloque 2A (Integración Estructural de Tier-Readiness en el Motor MCDA)**.
+
+---
+
 ## [1.0.0] — 2026-11-20 | Especialista UX/BI y Orquestador (PMO)
 
 ### Added

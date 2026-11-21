@@ -168,6 +168,25 @@ FEATURE_CONFIG: List[Dict[str, Any]] = [
         "direction": "minimize",
         "description": "Zonificación sísmica oficial INPRES CIRSOC 103 (0 a 4). Invertida: Zona 0 = 100 (seguridad máxima), Zona 4 = 0.",
     },
+    # -------------------------------------------------------------
+    # Dimensión 6: Soporte de Aptitud Territorial Tier (Tier-Readiness)
+    # -------------------------------------------------------------
+    {
+        "source_col": "n_centrales_sadi",
+        "norm_col": "norm_n_centrales_sadi",
+        "dimension": "dimension_tier_readiness",
+        "transform": "log1p",
+        "direction": "maximize",
+        "description": "Cantidad de nodos y centrales de generación eléctrica SADI. log1p mitiga concentración. TDF = 0.0.",
+    },
+    {
+        "source_col": "sadi_diversidad_tech",
+        "norm_col": "norm_sadi_diversidad_tech",
+        "dimension": "dimension_tier_readiness",
+        "transform": None,
+        "direction": "maximize",
+        "description": "Cantidad de tecnologías de generación distintas en el territorio provincial para evitar punto único de falla (CAMMESA). TDF = 0.",
+    },
 ]
 
 # Columnas de anclaje territorial que deben preservarse sin alteración
@@ -230,9 +249,21 @@ def preprocess_features(df_master: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[str
         if col not in df_master.columns:
             raise KeyError(f"Columna de anclaje obligatoria '{col}' ausente en el DataFrame de entrada.")
 
-    df_norm = df_master[ANCHOR_COLUMNS].copy()
+    df_input = df_master.copy()
+    if "sadi_diversidad_tech" not in df_input.columns:
+        from pathlib import Path
+        geo_path = Path("data/04_outputs/pbi_ready/geo_centrales_sadi.csv")
+        if geo_path.exists():
+            geo_df = pd.read_csv(geo_path, dtype={"jurisdiccion_id": str})
+            geo_df["jurisdiccion_id"] = geo_df["jurisdiccion_id"].str.zfill(2)
+            tech_counts = geo_df.groupby("jurisdiccion_id")["tecnologia"].nunique().to_dict()
+        else:
+            tech_counts = {}
+        df_input["sadi_diversidad_tech"] = df_input["jurisdiccion_id"].map(tech_counts).fillna(0).astype(int)
+
+    df_norm = df_input[ANCHOR_COLUMNS].copy()
     metadata: Dict[str, Any] = {
-        "n_jurisdicciones": len(df_master),
+        "n_jurisdicciones": len(df_input),
         "excluded_nan_columns": EXCLUDED_NAN_COLUMNS,
         "features": {},
     }
@@ -245,11 +276,11 @@ def preprocess_features(df_master: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[str
         transform = cfg["transform"]
         direction = cfg["direction"]
 
-        if src not in df_master.columns:
+        if src not in df_input.columns:
             raise KeyError(f"Feature fuente requerida '{src}' ausente en la tabla maestra.")
 
         # Extraer serie y manejar tipos
-        raw_series = df_master[src].copy()
+        raw_series = df_input[src].copy()
 
         # Tratamiento especial para booleanos (ej. rigi_adhesion)
         if raw_series.dtype == bool or set(raw_series.dropna().unique()).issubset({True, False, 0, 1}):

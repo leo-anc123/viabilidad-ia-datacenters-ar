@@ -52,6 +52,8 @@ Los perfiles de demanda que consumen estas variables están definidos en
 |---------|------------|--------|-------------|------------------------|--------|
 | `sadi_potencia_instalada_mw` | `float64` | MW | ↑ | Sec. Energía / CAMMESA — Centrales de Generación SADI | 🟢 LISTO |
 | `sadi_pct_renovable` | `float64` | % (0–100) | ↑ | Sec. Energía / CAMMESA — Renovables Ley 27.191 | 🟢 LISTO |
+| `n_centrales_sadi` | `float64` | Cantidad | ↑ | CAMMESA — Conteo de nodos/centrales de generación | 🟢 LISTO |
+| `sadi_diversidad_tech` | `int64` | Cantidad tecnologías | ↑ | CAMMESA — Diversidad tecnológica de generación provincial | 🟢 LISTO |
 | `sadi_uptime_index` | `float64` | Índice 0–1 | ↑ | ENRE — SAIDI/SAIFI (solo AMBA; pendiente fuente nacional uniforme) | 🔴 NaN |
 | `sadi_margen_disponible_mw` | `float64` | MW | ↑ | CAMMESA — Margen de reserva operativa por nodo de 500 kV | 🔴 NaN |
 | `proyeccion_potencia_2028_mw` | `float64` | MW | ↑ | MINEM — Plan Federal de Transmisión 2028 / Proyectos RenovAR | 🔴 NaN |

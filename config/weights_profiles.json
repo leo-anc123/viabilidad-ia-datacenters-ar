@@ -1,47 +1,51 @@
 {
   "_meta": {
-    "version": "0.6.0",
+    "version": "2.0.0-alpha.1",
     "estado": "operativo",
-    "fecha": "2026-11-20",
-    "descripcion": "Perfiles de ponderación multicriterio (MCDA) por macro-dimensión analítica para viabilidad de Data Centers e IA en Argentina.",
+    "fecha": "2026-11-21",
+    "descripcion": "Perfiles de ponderación multicriterio (MCDA) por macro-dimensión analítica para viabilidad de Data Centers e IA en Argentina, incorporando Aptitud Territorial Tier (Tier-Readiness).",
     "dimensiones_requeridas": [
       "dimension_energia",
       "dimension_clima",
       "dimension_conectividad",
       "dimension_fiscal",
-      "dimension_talento_riesgo"
+      "dimension_talento_riesgo",
+      "dimension_tier_readiness"
     ],
     "suma_requerida": 1.0,
     "tolerancia_suma": 1e-6
   },
   "campus_ia_training": {
     "_nombre": "Perfil A — Campus de Entrenamiento IA (Alta Densidad)",
-    "_descripcion": "Grandes clusters de GPU y alto consumo eléctrico continuo. Prioriza disponibilidad de potencia eléctrica SADI/renovable, clima frío para free cooling (bajo PUE) y beneficios fiscales/adhesión al RIGI.",
+    "_descripcion": "Grandes clusters de GPU y alto consumo eléctrico continuo. Prioriza disponibilidad de potencia eléctrica SADI/renovable, clima frío para free cooling (bajo PUE), aptitud territorial Tier-Readiness (resiliencia de sitio y redundancia) y beneficios fiscales/adhesión al RIGI.",
     "_suma": 1.0,
-    "dimension_energia": 0.35,
-    "dimension_clima": 0.25,
-    "dimension_fiscal": 0.20,
+    "dimension_energia": 0.30,
+    "dimension_clima": 0.20,
+    "dimension_tier_readiness": 0.15,
+    "dimension_fiscal": 0.15,
     "dimension_conectividad": 0.10,
     "dimension_talento_riesgo": 0.10
   },
   "nodo_inferencia_edge": {
     "_nombre": "Perfil B — Nodos de Inferencia / Edge",
-    "_descripcion": "Servicios de inferencia y entrega de baja latencia. Prioriza cercanía al punto de amarre de cables submarinos (Las Toninas), capilaridad de fibra óptica, talento técnico de software/TIC y bajo riesgo sísmico.",
+    "_descripcion": "Servicios de inferencia y entrega de baja latencia. Prioriza cercanía al punto de amarre de cables submarinos (Las Toninas), capilaridad de fibra óptica, talento técnico de software/TIC, aptitud territorial Tier-Readiness (doble acometida) y bajo riesgo sísmico.",
     "_suma": 1.0,
-    "dimension_conectividad": 0.35,
-    "dimension_talento_riesgo": 0.25,
-    "dimension_fiscal": 0.15,
+    "dimension_conectividad": 0.30,
+    "dimension_talento_riesgo": 0.20,
+    "dimension_tier_readiness": 0.15,
     "dimension_energia": 0.15,
+    "dimension_fiscal": 0.10,
     "dimension_clima": 0.10
   },
   "benchmark_cabase": {
     "_nombre": "Perfil C — Benchmark CABASE / Línea Base Sectorial",
-    "_descripcion": "Ponderación uniforme y neutral (20% por dimensión) para servir de contraste estructural y referencia equilibrada frente a los perfiles especializados.",
+    "_descripcion": "Ponderación uniforme y neutral (16.6667% por dimensión en 6 dimensiones) para servir de contraste estructural y referencia equilibrada frente a los perfiles especializados.",
     "_suma": 1.0,
-    "dimension_energia": 0.20,
-    "dimension_clima": 0.20,
-    "dimension_conectividad": 0.20,
-    "dimension_fiscal": 0.20,
-    "dimension_talento_riesgo": 0.20
+    "dimension_energia": 0.166667,
+    "dimension_clima": 0.166667,
+    "dimension_conectividad": 0.166667,
+    "dimension_fiscal": 0.166667,
+    "dimension_talento_riesgo": 0.166666,
+    "dimension_tier_readiness": 0.166666
   }
 }

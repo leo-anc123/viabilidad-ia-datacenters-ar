@@ -111,8 +111,8 @@ def test_bi_feeds_star_schema(output_dir: Path) -> None:
     fk_scores = set(fact_scores["jurisdiccion_id"])
     assert fk_scores.issubset(pk_set), f"FKs huérfanas en fact_scores: {fk_scores - pk_set}"
 
-    # Integridad referencial fact_subscores_radar
-    assert len(fact_radar) == 120, f"fact_radar debe tener 120 filas, tiene {len(fact_radar)}"
+    # Integridad referencial fact_subscores_radar (24 jurisdicciones x 6 dimensiones = 144 filas)
+    assert len(fact_radar) == 144, f"fact_radar debe tener 144 filas, tiene {len(fact_radar)}"
     fk_radar = set(fact_radar["jurisdiccion_id"])
     assert fk_radar.issubset(pk_set), f"FKs huérfanas en fact_radar: {fk_radar - pk_set}"
 

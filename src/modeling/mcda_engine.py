@@ -54,6 +54,14 @@ INTRA_DIMENSION_WEIGHTS: Dict[str, Dict[str, float]] = {
         "norm_puestos_software": 0.30,
         "norm_seguridad_sismica": 0.30,
     },
+    "subscore_tier_readiness": {
+        "norm_n_centrales_sadi": 0.15,
+        "norm_sadi_diversidad_tech": 0.15,
+        "norm_seguridad_sismica": 0.25,
+        "norm_temp_max_verano": 0.25,
+        "norm_fibra_optica_pct": 0.10,
+        "norm_velocidad_bajada": 0.10,
+    },
 }
 
 # Mapeo de dimensión conceptual a columna de subscore
@@ -63,6 +71,7 @@ DIMENSION_TO_SUBSCORE_MAP: Dict[str, str] = {
     "dimension_conectividad": "subscore_conectividad",
     "dimension_fiscal": "subscore_fiscal",
     "dimension_talento_riesgo": "subscore_talento_riesgo",
+    "dimension_tier_readiness": "subscore_tier_readiness",
 }
 
 SUBSCORE_COLUMNS: List[str] = list(INTRA_DIMENSION_WEIGHTS.keys())
@@ -157,7 +166,7 @@ def calculate_composite_score(
     for subscore_col, w in normalized_weights.items():
         composite += df_subscores[subscore_col].astype(float) * w
 
-    return composite.clip(lower=0.0, upper=100.0).round(4)
+    return composite.clip(lower=0.0, upper=100.0).round(6)
 
 
 def evaluate_all_profiles(
@@ -181,12 +190,11 @@ def evaluate_all_profiles(
         score_col = f"score_{profile_id}"
         rank_col = f"rank_{profile_id}"
 
-        # Cálculo de score
+        # Cálculo de score con precisión suficiente para desempate
         score_series = calculate_composite_score(df_subscores, weights)
-        df_out[score_col] = score_series
 
-        # Cálculo de ranking ordinal (1 = mejor score / posición más alta)
-        # ascending=False para que el mayor puntaje tenga rank 1
+        # Asignar primero score y luego ranking para mantener orden de columnas
+        df_out[score_col] = score_series.round(4)
         df_out[rank_col] = score_series.rank(ascending=False, method="min").astype(int)
 
     return df_out

@@ -35,6 +35,7 @@ DIMENSION_DISPLAY_NAMES: Dict[str, str] = {
     "subscore_conectividad": "Conectividad y Red Troncal",
     "subscore_fiscal": "Marco Fiscal y RIGI",
     "subscore_talento_riesgo": "Talento STEM y Seguridad Sísmica",
+    "subscore_tier_readiness": "Aptitud Territorial Tier (Tier-Readiness)",
 }
 
 # Mapeo de provincias de CAMMESA a códigos INDEC estándar de 2 dígitos

@@ -46,7 +46,7 @@ def run_all_validations() -> None:
     # 2. Validación de Preprocesamiento y log1p
     df_norm, meta = preprocess_features(df_raw)
     norm_cols = [c for c in df_norm.columns if c.startswith("norm_")]
-    assert len(norm_cols) == 14, f"Se esperaban 14 features normalizadas, obtenidas {len(norm_cols)}"
+    assert len(norm_cols) == 16, f"Se esperaban 16 features normalizadas, obtenidas {len(norm_cols)}"
     assert df_norm[norm_cols].isna().sum().sum() == 0, "No debe haber ningún NaN en features normalizadas"
 
     for col in norm_cols:
@@ -69,10 +69,12 @@ def run_all_validations() -> None:
     tdf_row = df_norm[df_norm["jurisdiccion_id"] == "94"].iloc[0]
     assert tdf_row["norm_potencia_sadi"] == 0.0, "TDF debe tener 0.0 en potencia SADI normalizada"
     assert tdf_row["norm_pct_renovable"] == 0.0, "TDF debe tener 0.0 en % renovable SADI"
+    assert tdf_row["norm_n_centrales_sadi"] == 0.0, "TDF debe tener 0.0 en n_centrales_sadi"
+    assert tdf_row["norm_sadi_diversidad_tech"] == 0.0, "TDF debe tener 0.0 en sadi_diversidad_tech"
     assert tdf_row["norm_pue_climatologico"] == 100.0, "TDF debe tener el PUE más eficiente (100 pts)"
     assert tdf_row["norm_indice_promocion_fiscal"] == 100.0, "TDF debe tener máxima promoción fiscal (100 pts)"
 
-    print("✔ [3/7] Restricción física de Tierra del Fuego (red aislada = 0 MW) modelada con rigurosidad.")
+    print("✔ [3/7] Restricción física de Tierra del Fuego (red aislada = 0 MW y 0 fuentes SADI) modelada con rigurosidad.")
 
     # 4. Validación de Suma de Pesos y Control de Errores
     try:
@@ -91,13 +93,14 @@ def run_all_validations() -> None:
 
     # 5. Validación de Sub-scores Dimensionales
     df_subscores = calculate_dimensional_subscores(df_norm)
+    assert len(SUBSCORE_COLUMNS) == 6, f"Se esperaban 6 subscores dimensionales, obtenidos {len(SUBSCORE_COLUMNS)}"
     for sub in SUBSCORE_COLUMNS:
         assert sub in df_subscores.columns, f"Falta {sub} en df_subscores"
         assert df_subscores[sub].isna().sum() == 0, f"NaNs en {sub}"
         assert df_subscores[sub].min() >= 0.0, f"{sub} min < 0"
         assert df_subscores[sub].max() <= 100.0, f"{sub} max > 100"
 
-    print("✔ [5/7] 5 Sub-scores dimensionales calculados y acotados estrictamente a [0, 100].")
+    print("✔ [5/7] 6 Sub-scores dimensionales (incluyendo subscore_tier_readiness) calculados y acotados estrictamente a [0, 100].")
 
     # 6. Validación de Outputs Persistidos (Parquet y CSV)
     out_parquet = Path("data/04_outputs/scores_mcda_perfiles.parquet")
@@ -111,7 +114,7 @@ def run_all_validations() -> None:
 
     expected_cols = [
         "jurisdiccion_id", "jurisdiccion_nombre", "jurisdiccion_corta", "region_argentina", "lat_capital", "lon_capital",
-        "subscore_energia", "subscore_clima", "subscore_conectividad", "subscore_fiscal", "subscore_talento_riesgo",
+        "subscore_energia", "subscore_clima", "subscore_conectividad", "subscore_fiscal", "subscore_talento_riesgo", "subscore_tier_readiness",
         "score_campus_ia_training", "rank_campus_ia_training",
         "score_nodo_inferencia_edge", "rank_nodo_inferencia_edge",
         "score_benchmark_cabase", "rank_benchmark_cabase",

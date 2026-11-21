@@ -32,6 +32,7 @@ FEATURE_COLUMNS: List[str] = [
     "subscore_conectividad",
     "subscore_fiscal",
     "subscore_talento_riesgo",
+    "subscore_tier_readiness",
 ]
 
 ARCHETYPE_DEFINITIONS: Dict[str, Dict[str, str]] = {
@@ -179,6 +180,7 @@ def run_clustering_pipeline(
         "subscore_conectividad",
         "subscore_fiscal",
         "subscore_talento_riesgo",
+        "subscore_tier_readiness",
         "score_campus_ia_training",
         "rank_campus_ia_training",
         "score_nodo_inferencia_edge",
