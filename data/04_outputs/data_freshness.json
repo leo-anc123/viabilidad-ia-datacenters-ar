@@ -1,0 +1,67 @@
+{
+  "pipeline_version": "2.0.0-alpha.2",
+  "generated_at_utc": "2026-11-21T12:55:05.828018+00:00",
+  "pipeline_status": "HEALTHY",
+  "sources": {
+    "clima_era5": {
+      "dimension": "clima",
+      "fuente_oficial": "ECMWF / Open-Meteo Historical API (ERA5)",
+      "url": "https://archive-api.open-meteo.com/v1/archive",
+      "last_checked_utc": "2026-11-21T12:55:05.828018+00:00",
+      "data_cutoff_date": "2023-12-31",
+      "status": "UPDATED",
+      "update_frequency": "diaria",
+      "notes": "Serie climatológica diaria 2000-01-01 hasta 2023-12-31. Libre de imputaciones sintéticas."
+    },
+    "cammesa_sadi": {
+      "dimension": "energia",
+      "fuente_oficial": "Secretaría de Energía / CAMMESA",
+      "url": "http://datos.energia.gob.ar/dataset/c62df6c6-73af-4039-b956-db081ff6eebe/resource/230fdf38-8f12-4017-a1e8-d7a1bc4a1c1c/download/generacin-elctrica-centrales-de-generacin.csv",
+      "last_checked_utc": "2026-11-21T12:55:05.828018+00:00",
+      "data_cutoff_date": "2026-09-22",
+      "status": "STATIC_VERIFIED",
+      "update_frequency": "anual",
+      "notes": "474 centrales SADI georreferenciadas vigentes en BBOX nacional. Serie mensual histórica en portal datos.gob.ar congelada en 2020-02."
+    },
+    "enacom_conectividad": {
+      "dimension": "conectividad",
+      "fuente_oficial": "ENACOM / Datos Abiertos",
+      "url": "https://indicadores.enacom.gob.ar/Files/DatosAbiertos/",
+      "last_checked_utc": "2026-11-21T12:55:05.828018+00:00",
+      "data_cutoff_date": "2026-06-30",
+      "status": "STATIC_VERIFIED",
+      "update_frequency": "trimestral",
+      "notes": "Accesos FTTH, penetración de internet por hogares/habitantes y velocidad media provincial hasta 2026-T2."
+    },
+    "cepxxi_talento": {
+      "dimension": "talento",
+      "fuente_oficial": "CEP XXI / Secretaría de Industria y Desarrollo Productivo",
+      "url": "https://cdn.produccion.gob.ar/cdn-cep/datos-por-provincia/por-provincia-clae2/puestos/puestos_priv.csv",
+      "last_checked_utc": "2026-11-21T12:55:05.828018+00:00",
+      "data_cutoff_date": "2023-11-01",
+      "status": "STATIC_VERIFIED",
+      "update_frequency": "mensual",
+      "notes": "Último corte público disponible en portal oficial (marzo 2024). Verificado formalmente sin datos inventados."
+    },
+    "inpres_sismico": {
+      "dimension": "talento_riesgo",
+      "fuente_oficial": "Instituto Nacional de Prevención Sísmica (INPRES CIRSOC 103)",
+      "url": "https://www.inpres.gob.ar/zonas_result.php",
+      "last_checked_utc": "2026-11-21T12:55:05.828018+00:00",
+      "data_cutoff_date": "2024-01-01",
+      "status": "STATIC_VERIFIED",
+      "update_frequency": "reglamentaria",
+      "notes": "Zonificación sísmica oficial según norma sismorresistente INPRES-CIRSOC 103 (escala 0 a 4)."
+    },
+    "rigi_fiscal": {
+      "dimension": "fiscal",
+      "fuente_oficial": "Boletines Oficiales Provinciales / RIGI Ley 27.742",
+      "url": "https://www.boletinoficial.gob.ar/detalleAviso/primera/310239/20240708",
+      "last_checked_utc": "2026-11-21T12:55:05.828018+00:00",
+      "data_cutoff_date": "2026-11-20",
+      "status": "STATIC_VERIFIED",
+      "update_frequency": "legislativa",
+      "notes": "18 provincias adheridas formalmente; regímenes provinciales de IIBB tech para economía del conocimiento."
+    }
+  }
+}

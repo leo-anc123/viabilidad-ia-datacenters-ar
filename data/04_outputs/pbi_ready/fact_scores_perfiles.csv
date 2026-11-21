@@ -8,8 +8,8 @@
 82,Santa Fe,Santa Fe,Centro,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,56.0073,7,56.0073,0.0,56.0073,56.0073,7,0.0,0.0
 58,Neuquén,Neuquén,Patagonia,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,54.7017,8,54.7017,0.0,54.7017,54.7017,8,0.0,0.0
 74,San Luis,San Luis,Cuyo,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,53.7945,9,53.7945,0.0,53.7945,53.7945,9,0.0,0.0
-18,Corrientes,Corrientes,NEA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,49.0399,10,49.0399,0.0,49.0399,49.0399,10,0.0,0.0
-30,Entre Ríos,Entre Ríos,Centro,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,49.0316,11,49.0316,0.0,49.0316,49.0316,11,0.0,0.0
+30,Entre Ríos,Entre Ríos,Centro,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,49.0316,10,49.0316,0.0,49.0316,49.0316,10,0.0,0.0
+18,Corrientes,Corrientes,NEA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,48.8126,11,48.8126,0.0,48.8126,48.8126,11,0.0,0.0
 90,Tucumán,Tucumán,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,48.7886,12,48.7886,0.0,48.7886,48.7886,12,0.0,0.0
 38,Jujuy,Jujuy,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,48.084,13,48.084,0.0,48.084,48.084,13,0.0,0.0
 66,Salta,Salta,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,47.4585,14,47.4585,0.0,47.4585,47.4585,14,0.0,0.0
@@ -35,9 +35,9 @@
 82,Santa Fe,Santa Fe,Centro,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),53.3094,10,53.32,1.15,51.36,55.18,10,0.0,0.0
 70,San Juan,San Juan,Cuyo,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),50.4072,11,50.4,1.34,48.11,52.59,11,0.0,0.0
 66,Salta,Salta,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),49.8702,12,49.85,1.02,48.16,51.47,12,0.0,0.0
-90,Tucumán,Tucumán,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),48.1087,13,48.11,1.11,46.23,49.89,14,0.0,0.0
+90,Tucumán,Tucumán,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),48.1087,13,48.11,1.11,46.23,49.89,13,0.0,0.0
 50,Mendoza,Mendoza,Cuyo,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),47.9081,14,47.9,1.03,46.18,49.57,14,0.0,0.0
-18,Corrientes,Corrientes,NEA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),47.776,15,47.78,1.31,45.5,49.98,15,0.0,0.0
+18,Corrientes,Corrientes,NEA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),47.5715,15,47.58,1.31,45.32,49.79,15,0.0,0.0
 30,Entre Ríos,Entre Ríos,Centro,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),47.1875,16,47.19,1.1,45.36,49.0,16,0.0,0.0
 10,Catamarca,Catamarca,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),45.8922,17,45.89,1.16,43.9,47.75,17,0.0,0.0
 22,Chaco,Chaco,NEA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),43.301,18,43.31,1.31,41.15,45.49,18,0.0,0.0
@@ -56,7 +56,7 @@
 74,San Luis,San Luis,Cuyo,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,53.0916,7,53.13,0.98,51.4,54.61,7,0.0,0.0
 58,Neuquén,Neuquén,Patagonia,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,52.8265,8,52.87,0.76,51.55,54.1,8,0.0,0.0
 78,Santa Cruz,Santa Cruz,Patagonia,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,50.6673,9,50.69,0.97,49.15,52.33,9,0.0,0.0
-18,Corrientes,Corrientes,NEA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,47.7665,10,47.79,0.81,46.47,49.14,10,0.0,0.0
+18,Corrientes,Corrientes,NEA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,47.562,10,47.59,0.81,46.26,48.94,10,0.0,0.0
 30,Entre Ríos,Entre Ríos,Centro,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,47.3219,11,47.36,0.73,46.14,48.61,11,0.0,0.0
 90,Tucumán,Tucumán,NOA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,46.7636,12,46.8,0.8,45.45,48.12,12,0.0,0.0
 22,Chaco,Chaco,NEA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,45.4205,13,45.45,0.83,44.12,46.85,13,0.0,0.0

@@ -238,7 +238,7 @@ def _fetch_una_jurisdiccion(
         try:
             resp = client.get(OPEN_METEO_URL, params=params, timeout=TIMEOUT_SEG)
             if resp.status_code == 429:
-                wait_time = 5 * intento
+                wait_time = 10 * intento
                 time.sleep(wait_time)
                 continue
             resp.raise_for_status()
@@ -249,7 +249,7 @@ def _fetch_una_jurisdiccion(
         except (httpx.HTTPError, httpx.TimeoutException) as exc:
             ultimo_error = exc
             if intento < MAX_REINTENTOS:
-                time.sleep(3 * intento)
+                time.sleep(4 * intento)
     # Si agotó reintentos
     return {
         "_jid":    jid,
@@ -268,8 +268,8 @@ def descargar_clima_open_meteo(
 ) -> dict:
     """
     Descarga datos climáticos diarios para las 24 jurisdicciones vía Open-Meteo con fallback seguro.
-    Si ya existe un raw parcial con el mismo fecha_fin, reutiliza registros válidos.
-    Si la descarga remota falla, preserva el snapshot previo y registra CACHED_FALLBACK.
+    Utiliza checkpoint local para no perder descargas ante límites de tasa temporales (HTTP 429).
+    Si la descarga remota no se completa al 100%, preserva el snapshot previo y activa CACHED_FALLBACK.
     """
     if not fecha_inicio or not fecha_fin:
         fecha_inicio, fecha_fin, periodo_ref = resolver_horizonte_era5()
@@ -296,6 +296,20 @@ def descargar_clima_open_meteo(
         except Exception:
             pass
 
+    # Checkpoint persistente para descargas parciales
+    checkpoint_file = RAW_CLIMA_JSON.parent / f"clima_checkpoint_{fecha_fin}.json"
+    if checkpoint_file.exists() and prev_fecha_fin != fecha_fin:
+        try:
+            with open(checkpoint_file, "r", encoding="utf-8") as f:
+                cp_data = json.load(f)
+                for k, v in cp_data.items():
+                    if "_error" not in v and v.get("daily") and v["daily"].get("time"):
+                        resultados[k] = v
+                if resultados:
+                    print(f"  ⚡ Checkpoint recuperado: {len(resultados)} jurisdicciones ya descargadas para {fecha_fin}.")
+        except Exception:
+            pass
+
     errores: list[str] = []
 
     with httpx.Client(follow_redirects=True) as client:
@@ -305,9 +319,9 @@ def descargar_clima_open_meteo(
             lat    = float(fila["lat_capital"])
             lon    = float(fila["lon_capital"])
 
-            if jid in resultados:
+            if jid in resultados and "_error" not in resultados[jid]:
                 n_dias = len(resultados[jid].get("daily", {}).get("time", []))
-                tqdm.write(f"  ⚡ {nombre:30s} → Reutilizado de raw ({n_dias:,} días)")
+                tqdm.write(f"  ⚡ {nombre:30s} → Reutilizado ({n_dias:,} días)")
                 continue
 
             datos = _fetch_una_jurisdiccion(
@@ -321,37 +335,84 @@ def descargar_clima_open_meteo(
             elif not dry_run:
                 n_dias = len(datos.get("daily", {}).get("time", []))
                 tqdm.write(f"  ✓ {nombre:30s} → {n_dias:,} días descargados")
+                # Guardar checkpoint incremental
+                try:
+                    with open(checkpoint_file, "w", encoding="utf-8") as f:
+                        json.dump(resultados, f, ensure_ascii=False)
+                except Exception:
+                    pass
 
             if not dry_run:
                 time.sleep(PAUSA_ENTRE_REQ)
 
-    # Si hubo errores y tenemos un snapshot previo con las 24 jurisdicciones, aplicamos fallback seguro
+    # Reintento secundario con pausa si hubo errores aislados
+    if errores and not dry_run:
+        print(f"\n[CLIMA] Pausa de cortesía (12s) para reintentar {len(errores)} jurisdicciones fallidas...")
+        time.sleep(12)
+        nuevos_errores = []
+        with httpx.Client(follow_redirects=True) as client:
+            for _, fila in df_ancla.iterrows():
+                jid = fila["jurisdiccion_id"]
+                if jid in resultados and "_error" in resultados[jid]:
+                    nombre = fila["jurisdiccion_nombre"]
+                    lat = float(fila["lat_capital"])
+                    lon = float(fila["lon_capital"])
+                    datos = _fetch_una_jurisdiccion(
+                        client, jid, nombre, lat, lon,
+                        fecha_inicio=fecha_inicio, fecha_fin=fecha_fin, dry_run=False
+                    )
+                    resultados[jid] = datos
+                    if "_error" in datos:
+                        nuevos_errores.append(f"{nombre} ({jid}): {datos['_error']}")
+                    else:
+                        n_dias = len(datos.get("daily", {}).get("time", []))
+                        print(f"  ✓ {nombre:30s} → {n_dias:,} días recuperados con éxito")
+                        try:
+                            with open(checkpoint_file, "w", encoding="utf-8") as f:
+                                json.dump(resultados, f, ensure_ascii=False)
+                        except Exception:
+                            pass
+                    time.sleep(PAUSA_ENTRE_REQ * 2)
+        errores = nuevos_errores
+
+    # Si aún hay errores y tenemos un snapshot previo con las 24 jurisdicciones, aplicamos fallback seguro
     if errores and len(prev_jurs_backup) == 24:
-        print(f"\n  [CACHED_FALLBACK] {len(errores)} fallas en Open-Meteo. Conservando snapshot previo íntegro.")
+        print(f"\n  [CACHED_FALLBACK] {len(errores)} fallas en Open-Meteo tras reintento. Conservando snapshot previo íntegro.")
         return prev_jurs_backup
 
-    # Guardar raw si no hubo errores críticos o si no había backup
-    RAW_CLIMA_JSON.parent.mkdir(parents=True, exist_ok=True)
-    with open(RAW_CLIMA_JSON, "w", encoding="utf-8") as f:
-        json.dump(
-            {
-                "_metadata": {
-                    "fuente":        "Open-Meteo Historical API (ERA5 / ECMWF)",
-                    "endpoint":      OPEN_METEO_URL,
-                    "variables":     VARIABLES_DAILY,
-                    "fecha_inicio":  fecha_inicio,
-                    "fecha_fin":     fecha_fin,
-                    "periodo_ref":   periodo_ref,
-                    "generado_en":   pd.Timestamp.now().isoformat(),
-                    "dry_run":       dry_run,
+    # Guardar raw definitivo si todas las 24 están completas y sin error
+    jurs_validas = sum(1 for v in resultados.values() if "_error" not in v and v.get("daily"))
+    if jurs_validas == len(df_ancla):
+        RAW_CLIMA_JSON.parent.mkdir(parents=True, exist_ok=True)
+        with open(RAW_CLIMA_JSON, "w", encoding="utf-8") as f:
+            json.dump(
+                {
+                    "_metadata": {
+                        "fuente":        "Open-Meteo Historical API (ERA5 / ECMWF)",
+                        "endpoint":      OPEN_METEO_URL,
+                        "variables":     VARIABLES_DAILY,
+                        "fecha_inicio":  fecha_inicio,
+                        "fecha_fin":     fecha_fin,
+                        "periodo_ref":   periodo_ref,
+                        "generado_en":   pd.Timestamp.now().isoformat(),
+                        "dry_run":       dry_run,
+                    },
+                    "jurisdicciones": resultados,
                 },
-                "jurisdicciones": resultados,
-            },
-            f,
-            ensure_ascii=False,
-            indent=2,
-        )
-    print(f"\n[OK] Raw guardado → {RAW_CLIMA_JSON}")
+                f,
+                ensure_ascii=False,
+                indent=2,
+            )
+        print(f"\n[OK] Raw guardado con éxito (24/24 completas) → {RAW_CLIMA_JSON}")
+        if checkpoint_file.exists():
+            try:
+                checkpoint_file.unlink()
+            except Exception:
+                pass
+    else:
+        if len(prev_jurs_backup) == 24:
+            print(f"\n  [CACHED_FALLBACK] Ingesta incompleta ({jurs_validas}/24). Conservando snapshot previo.")
+            return prev_jurs_backup
 
     if errores:
         print(f"\n[ADVERTENCIA] {len(errores)} jurisdicción(es) con error de descarga:")

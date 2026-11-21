@@ -1,6 +1,6 @@
 # Reporte de Control de Calidad y Cobertura — Fase 2 (v0.5.0)
 
-**Fecha de generación:** 2026-11-20 17:38:04  
+**Fecha de generación:** 2026-11-21 09:55:07  
 **Tabla auditada:** `data/03_processed/master_24_jurisdicciones.parquet`  
 **Registros territoriales:** 24 jurisdicciones (23 provincias + CABA) — 100% match ancla INDEC.  
 
@@ -8,10 +8,10 @@
 
 ## 1. Resumen Ejecutivo de Cobertura
 
-- **Total de columnas unificadas:** 62
-- **Columnas 100% completas (0% nulos):** 48 (77.4%)
+- **Total de columnas unificadas:** 63
+- **Columnas 100% completas (0% nulos):** 49 (77.8%)
 - **Columnas con nulos parciales justificados:** 1 (1.6%)
-- **Columnas 100% NaN documentadas para Fase 3/4/5:** 13 (21.0%)
+- **Columnas 100% NaN documentadas para Fase 3/4/5:** 13 (20.6%)
 
 ---
 
@@ -20,7 +20,7 @@
 | Dimensión | Columnas Totales | 100% Completas | Parciales | 100% NaN | Estado de Viabilidad |
 |:---|:---:|:---:|:---:|:---:|:---|
 | Sección 0 — Ancla Territorial | 6 | 6 | 0 | 0 | 🟢 Operativa |
-| Sección 1 — Energía y Red SADI | 10 | 5 | 0 | 5 | 🔴 Requiere ingesta |
+| Sección 1 — Energía y Red SADI | 11 | 6 | 0 | 5 | 🟡 Operativa c/ pendientes |
 | Sección 2 — Clima y Agua | 13 | 11 | 0 | 2 | 🟡 Operativa c/ pendientes |
 | Sección 3 — Conectividad | 10 | 8 | 0 | 2 | 🟡 Operativa c/ pendientes |
 | Sección 4 — Fiscal y Regulatorio | 10 | 8 | 1 | 1 | 🟡 Operativa c/ pendientes |
@@ -46,6 +46,7 @@
 | Energía y Red SADI | `proyeccion_potencia_2036_mw` | 0 | 24 | 100.0% | 🔴 100% NaN | Sin datos oficiales uniformes. No inventar. Conservar o excluir en scoring Fase 3. |
 | Energía y Red SADI | `potencial_offgrid_score` | 0 | 24 | 100.0% | 🔴 100% NaN | Sin datos oficiales uniformes. No inventar. Conservar o excluir en scoring Fase 3. |
 | Energía y Red SADI | `n_centrales_sadi` | 24 | 0 | 0.0% | 🟢 Completo | Ingresa directamente al modelo multicriterio (MCDA) / clustering. |
+| Energía y Red SADI | `sadi_diversidad_tech` | 24 | 0 | 0.0% | 🟢 Completo | Ingresa directamente al modelo multicriterio (MCDA) / clustering. |
 | Energía y Red SADI | `fuente_energia` | 24 | 0 | 0.0% | 🟢 Completo | Ingresa directamente al modelo multicriterio (MCDA) / clustering. |
 | Energía y Red SADI | `fecha_corte_energia` | 24 | 0 | 0.0% | 🟢 Completo | Ingresa directamente al modelo multicriterio (MCDA) / clustering. |
 | Clima y Agua | `temp_media_anual_c` | 24 | 0 | 0.0% | 🟢 Completo | Ingresa directamente al modelo multicriterio (MCDA) / clustering. |

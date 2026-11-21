@@ -213,9 +213,23 @@ def main() -> int:
     if args.usar_raw_existente:
         cmd_clima.append("--usar-raw-existente")
     rc_clima = _run_step("1.1 Ingesta Clima y PUE (ERA5 / Open-Meteo)", cmd_clima)
-    statuses["clima_era5"] = "UPDATED" if rc_clima == 0 and not args.usar_raw_existente else (
-        "CACHED_FALLBACK" if rc_clima != 0 else "STATIC_VERIFIED"
-    )
+
+    # Verificar si el raw de clima fue efectivamente actualizado o si se aplicó CACHED_FALLBACK
+    raw_clima_path = RAW_DIR / "clima_24_jurisdicciones_raw.json"
+    if rc_clima == 0 and raw_clima_path.exists():
+        try:
+            with open(raw_clima_path, "r", encoding="utf-8") as f:
+                c_meta = json.load(f).get("_metadata", {})
+                gen_date = c_meta.get("generado_en", "")[:10]
+                today_date = datetime.date.today().isoformat()
+                if gen_date == today_date and not args.usar_raw_existente:
+                    statuses["clima_era5"] = "UPDATED"
+                else:
+                    statuses["clima_era5"] = "STATIC_VERIFIED" if args.usar_raw_existente else "CACHED_FALLBACK"
+        except Exception:
+            statuses["clima_era5"] = "CACHED_FALLBACK"
+    else:
+        statuses["clima_era5"] = "CACHED_FALLBACK"
 
     # 1.2 Energía SADI
     cmd_energia = [py_exe, "src/etl/fetch_energia_sadi.py", "--usar-raw-existente"]

@@ -3,7 +3,7 @@
 06,Buenos Aires,Buenos Aires,AMBA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),58.9985,4,59.03,0.81,57.68,60.28,4,0.0,100.0
 10,Catamarca,Catamarca,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),45.8922,17,45.89,1.16,43.9,47.75,17,0.0,0.0
 14,Córdoba,Córdoba,Centro,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),56.5327,5,56.54,1.03,54.79,58.22,5,0.0,97.8
-18,Corrientes,Corrientes,NEA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),47.776,15,47.78,1.31,45.5,49.98,15,0.0,0.0
+18,Corrientes,Corrientes,NEA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),47.5715,15,47.58,1.31,45.32,49.79,15,0.0,0.0
 22,Chaco,Chaco,NEA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),43.301,18,43.31,1.31,41.15,45.49,18,0.0,0.0
 26,Chubut,Chubut,Patagonia,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),63.5711,2,63.55,0.89,62.07,65.0,2,100.0,100.0
 30,Entre Ríos,Entre Ríos,Centro,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),47.1875,16,47.19,1.1,45.36,49.0,16,0.0,0.0
@@ -21,13 +21,13 @@
 78,Santa Cruz,Santa Cruz,Patagonia,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),64.0912,1,64.04,0.88,62.59,65.49,1,100.0,100.0
 82,Santa Fe,Santa Fe,Centro,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),53.3094,10,53.32,1.15,51.36,55.18,10,0.0,0.0
 86,Santiago del Estero,Stgo. Estero,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),24.3679,23,24.39,0.9,22.89,25.87,23,0.0,0.0
-90,Tucumán,Tucumán,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),48.1087,13,48.11,1.11,46.23,49.89,14,0.0,0.0
+90,Tucumán,Tucumán,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),48.1087,13,48.11,1.11,46.23,49.89,13,0.0,0.0
 94,Tierra del Fuego,Tierra del Fuego,Patagonia,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),38.2212,19,38.15,2.14,34.74,41.79,20,0.0,0.0
 02,Ciudad Autónoma de Buenos Aires,CABA,AMBA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,75.1614,1,75.16,1.09,73.33,76.94,1,100.0,100.0
 06,Buenos Aires,Buenos Aires,AMBA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,64.8261,2,64.81,0.66,63.69,65.87,2,100.0,100.0
 10,Catamarca,Catamarca,NOA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,43.3959,16,43.44,0.92,41.86,44.94,16,0.0,0.0
 14,Córdoba,Córdoba,Centro,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,57.5282,3,57.55,0.65,56.51,58.64,3,93.8,100.0
-18,Corrientes,Corrientes,NEA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,47.7665,10,47.79,0.81,46.47,49.14,10,0.0,0.0
+18,Corrientes,Corrientes,NEA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,47.562,10,47.59,0.81,46.26,48.94,10,0.0,0.0
 22,Chaco,Chaco,NEA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,45.4205,13,45.45,0.83,44.12,46.85,13,0.0,0.0
 26,Chubut,Chubut,Patagonia,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,56.5373,4,56.57,0.81,55.26,57.94,4,6.2,100.0
 30,Entre Ríos,Entre Ríos,Centro,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,47.3219,11,47.36,0.73,46.14,48.61,11,0.0,0.0

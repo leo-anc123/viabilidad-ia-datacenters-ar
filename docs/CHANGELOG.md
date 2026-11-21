@@ -6,6 +6,30 @@ Formato: `[versión] — YYYY-MM-DD | Rol`
 
 ---
 
+## [2.0.0-alpha.2] — 2026-11-21 | Ingeniero de Datos y MLOps
+
+### Added
+- `src/pipeline/run_full_pipeline.py`: orquestador idempotente end-to-end con soporte de modos `--mode full` y `--mode refresh-apis`. Integra compuerta de calidad estricta (Quality Gate) y tolerancia a fallos por fallback seguro (`CACHED_FALLBACK`) ante interrupciones de red o rate-limits en APIs externas para proteger la integridad de crudos e interim.
+- `.github/workflows/update_data_pipeline.yml`: pipeline de CI/CD para GitHub Actions programado quincenalmente (días 1 y 15 a las 06:00 UTC) y ejecutable bajo demanda (`workflow_dispatch`). Incorpora permisos de escritura (`contents: write`), compuerta de calidad obligatoria (100% tests PASS para autorizar auto-commit) y detección de diferencias reales (`git status --porcelain`) para omitir commits redundantes.
+- `data/04_outputs/data_freshness.json`: contrato formal de trazabilidad y frescura de datos estructurado por dimensión analítica y fuente oficial (Clima ERA5, CAMMESA SADI, ENACOM, CEP XXI, INPRES y RIGI/Fiscal), documentando timestamps UTC, cortes de datos y estados de actualización para consumo directo de la arquitectura React UI (`nodo / IA`).
+- `src/pipeline/__init__.py`: módulo para empaquetado y orquestación de tareas de ingeniería de datos y MLOps.
+
+### Changed
+- `src/gis/fetch_clima_pue.py`: resolución dinámica del horizonte de corte temporal hacia el último año calendario completo disponible (`year - 1`) con fallback ordenado; checkpointing local por jurisdicción (`clima_checkpoint_<corte>.json`) para garantizar persistencia incremental ante límites de tasa HTTP 429 de Open-Meteo ERA5.
+- `src/etl/fetch_energia_sadi.py`: cálculo e integración nativa de `sadi_diversidad_tech` desde el dataset oficial de centrales CAMMESA (con asignación estricta de 0 tecnologías en Tierra del Fuego como red aislada), incorporando la variable a `data/02_interim/dim_energia_sadi.csv`.
+- `src/etl/build_master_table.py`: incorporación formal de `sadi_diversidad_tech` en la *Sección 1 — Energía y Red SADI*, garantizando la preservación determinística de las 63 columnas canónicas en `data/03_processed/master_24_jurisdicciones.parquet` sin requerir parches posteriores.
+- `src/gis/fetch_conectividad.py` & `src/etl/fetch_talento_riesgo.py`: mecanismos robustos de reintento y fallback a snapshots existentes en caso de fallos de conexión o indisponibilidad temporal en los servidores de ENACOM, CEP XXI e INPRES.
+- `config/data_sources.yaml`: auditoría y actualización de metadatos de fuentes, registrando los cortes verificados (ENACOM 2026-T2, CAMMESA snapshot activo 2026 y CEP XXI formalmente congelado en 2023-11-01 como `STATIC_VERIFIED` sin inventar datos).
+
+### QA & Validation
+- `src/etl/validate_master.py`: **PASS** (24 filas × 63 columnas, 0 errores, 0 advertencias, tipos correctos y 100% IDs INDEC verificados).
+- `src/modeling/validate_mcda.py`: **PASS** (7/7 pruebas aprobadas: exclusión de 13 NaNs, 16 features normalizadas en $[0, 100]$, restricción física TDF = 0.0 MW / 0 tech SADI, tolerancia de pesos $10^{-6}$, 6 sub-scores acotados y rankings $1 \dots 24$ sin empates).
+- `src/modeling/validate_fase3.py`: **PASS** (Clustering $k=4$ Silhouette 0.4641, Monte Carlo 1.000 iteraciones y Modelo Estrella pbi_ready validado con radar en 144 filas y 474 centrales SADI dentro de BBOX Argentina).
+- `python -m py_compile app/main.py`: **PASS** (compilación limpia).
+- **Hito:** Cierre formal de la **Iteración 2 — Bloque 2B (Pipeline de Actualización Continua Automatizada CI/CD, Auditoría Post-2024 y Frescura de Datos)**.
+
+---
+
 ## [2.0.0-alpha.1] — 2026-11-21 | Científico de Datos
 
 ### Added
