@@ -6,6 +6,30 @@ Formato: `[versión] — YYYY-MM-DD | Rol`
 
 ---
 
+## [1.0.0] — 2026-11-20 | Especialista UX/BI y Orquestador (PMO)
+
+### Added
+- `bi/guia_powerbi_modelo_estrella.md`: manual de ingeniería de BI paso a paso para Power BI Desktop que documenta la conexión de las 4 tablas planas de `data/04_outputs/pbi_ready/` (`dim_jurisdicciones`, `fact_scores_perfiles`, `fact_subscores_radar`, `geo_centrales_sadi`), el esquema de relaciones 1:N estrictas (`jurisdiccion_id`), tipado de datos estricto (códigos INDEC como texto, coordenadas en decimal con categoría geográfica), tabla de medidas DAX (`_Medidas`) lista para producción sin duplicar el motor WSM, y propuesta de layout de 2 páginas ejecutivas dark-mode.
+- `bi/theme_dark_ivid.json`: archivo de tema visual oficial dark-mode importable en dos clics en Power BI Desktop, alineado a la paleta ejecutiva (`#0e1117`, `#161b22`, `#38bdf8`, `#fbbf24`, `#34d399`, `#c084fc`, `#f472b6`).
+- `docs/assets/`: directorio creado para alojamiento de capturas de pantalla de la aplicación y reportes, con instructivo `docs/assets/README.md` de nomenclatura y resolución recomendada.
+
+### Changed
+- `README.md`: reescritura integral de alto impacto para reclutadores y líderes de infraestructura tecnológica, incorporando badges de estado de release, análisis del dilema de negocio (Campus IA 100+ MW vs. Nodos Edge <5 ms), arquitectura end-to-end en diagrama Mermaid, matriz de resultados clave (Top 3 IA vs. Top 3 Edge, 4 Arquetipos K-Means, robustez Monte Carlo 1.000 runs), caja de transparencia metodológica detallando las 13 variables excluidas en NaN sin inventar datos, guía de despliegue en un clic para Streamlit Community Cloud y enlaces a capturas relativas en `docs/assets/`.
+- `requirements.txt`: actualizado y auditado formalmente para despliegue en producción en Streamlit Community Cloud (`v1.0.0 — Fase 4 MVP Ready`), verificando la ausencia de dependencias faltantes o incompatibles.
+- **Hito:** Cierre formal de la **Fase 4 (MVP de Portafolio v1.0.0)**. El repositorio alcanza el estado de producto completo, reproducible y auditable.
+
+### QA & Validation
+- Verificación de no-exclusión en `.gitignore`: 100% de los datasets consumidos por `app/main.py` (`data/03_processed/`, `data/04_outputs/` y `config/`) confirmados como trackeados en Git y no ignorados.
+- Coherencia numérica auditada: Santa Cruz (67.00 pts en IA, Rank #1), CABA (81.58 pts en Edge, Rank #1), Tierra del Fuego (PUE climatológico 1.245, 0.0 MW SADI), 39.332,2 MW totales en SADI y 474 centrales CAMMESA validadas.
+- Suite de pruebas de regresión completa ejecutada y aprobada al 100%:
+  - `src/etl/validate_master.py`: **PASS** (24 filas, 62 columnas, 0 errores, 0 advertencias).
+  - `src/modeling/validate_mcda.py`: **PASS** (7/7 pruebas aprobadas).
+  - `src/modeling/validate_fase3.py`: **PASS** (clustering K-Means, Monte Carlo y capa BI validadas).
+  - `python -m py_compile app/main.py`: **PASS** (código 0).
+  - `streamlit.testing.v1.AppTest`: **PASS** (0 excepciones).
+
+---
+
 ## [0.8.0] — 2026-11-20 | Especialista UX/BI
 
 ### Added

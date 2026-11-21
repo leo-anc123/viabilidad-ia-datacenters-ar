@@ -1,0 +1,72 @@
+{
+  "name": "Dark Mode IVIA - Viabilidad IA Datacenters AR",
+  "dataColors": [
+    "#38bdf8",
+    "#34d399",
+    "#fbbf24",
+    "#c084fc",
+    "#f472b6",
+    "#60a5fa",
+    "#f43f5e",
+    "#8b949e"
+  ],
+  "background": "#0e1117",
+  "foreground": "#f0f6fc",
+  "tableAccent": "#38bdf8",
+  "good": "#34d399",
+  "neutral": "#fbbf24",
+  "bad": "#f43f5e",
+  "maximum": "#38bdf8",
+  "center": "#fbbf24",
+  "minimum": "#f43f5e",
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "color": { "solid": { "color": "#161b22" } },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": true,
+            "color": { "solid": { "color": "#30363d" } },
+            "radius": 6
+          }
+        ],
+        "dropShadow": [
+          {
+            "show": false
+          }
+        ],
+        "title": [
+          {
+            "show": true,
+            "fontColor": { "solid": { "color": "#f0f6fc" } },
+            "fontFamily": "Segoe UI Semibold",
+            "fontSize": 12,
+            "alignment": "Left"
+          }
+        ],
+        "labels": [
+          {
+            "color": { "solid": { "color": "#8b949e" } },
+            "fontFamily": "Segoe UI",
+            "fontSize": 9
+          }
+        ]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [
+          {
+            "color": { "solid": { "color": "#0e1117" } },
+            "transparency": 0
+          }
+        ]
+      }
+    }
+  }
+}
