@@ -83,23 +83,29 @@ MAPA_PROVINCIAS_CEP: Dict[str, str] = {
 
 
 def descargar_crudo_cepxxi() -> Path:
-    """Descarga el panel mensual completo de puestos privados de CEP XXI."""
+    """Descarga el panel mensual completo de puestos privados de CEP XXI con fallback a snapshot."""
     DIR_RAW.mkdir(parents=True, exist_ok=True)
     destino = DIR_RAW / "cepxxi_puestos_trabajo_clae2_provincias_raw.csv"
 
     print(f"[TALENTO] Descargando panel CEP XXI desde {URL_CEP_XXI_PUESTOS}...")
-    req = urllib.request.Request(
-        URL_CEP_XXI_PUESTOS,
-        headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"},
-    )
-    with urllib.request.urlopen(req, timeout=60) as resp:
-        content = resp.read()
+    try:
+        req = urllib.request.Request(
+            URL_CEP_XXI_PUESTOS,
+            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"},
+        )
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            content = resp.read()
 
-    with open(destino, "wb") as f:
-        f.write(content)
+        with open(destino, "wb") as f:
+            f.write(content)
 
-    print(f"  -> Guardado crudo CEP XXI: {destino} ({len(content):,} bytes)")
-    return destino
+        print(f"  -> Guardado crudo CEP XXI: {destino} ({len(content):,} bytes)")
+        return destino
+    except Exception as exc:
+        if destino.exists() and destino.stat().st_size > 0:
+            print(f"  [CACHED_FALLBACK] Error al descargar CEP XXI: {exc}. Utilizando snapshot previo en {destino}")
+            return destino
+        raise RuntimeError(f"Fallo al descargar CEP XXI y no existe snapshot local: {exc}") from exc
 
 
 def procesar_empleo_cepxxi(path_csv: Path) -> Tuple[pd.DataFrame, str]:
@@ -224,37 +230,58 @@ def procesar_riesgo_inpres(df_base: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[st
     resultados = []
     payloads_raw: Dict[str, Any] = {}
 
-    for idx, row in df_base.iterrows():
-        jid = str(row["jurisdiccion_id"]).zfill(2)
-        nombre = str(row["jurisdiccion_nombre"])
-        lat = float(row["lat_capital"])
-        lon = float(row["lon_capital"])
+    # Intentar cargar caché local para fallback seguro
+    cached_payloads = None
+    if path_raw_inpres.exists() and path_raw_inpres.stat().st_size > 0:
+        try:
+            with open(path_raw_inpres, "r", encoding="utf-8") as f:
+                cached_payloads = json.load(f)
+        except Exception:
+            cached_payloads = None
 
-        print(f"  [{idx+1:02d}/24] {nombre:<32} ({lat:.4f}, {lon:.4f})...", end=" ", flush=True)
-        zona, html_raw = consultar_inpres_zona(lat, lon)
-        print(f"-> Zona Sísmica {zona}")
+    try:
+        for idx, row in df_base.iterrows():
+            jid = str(row["jurisdiccion_id"]).zfill(2)
+            nombre = str(row["jurisdiccion_nombre"])
+            lat = float(row["lat_capital"])
+            lon = float(row["lon_capital"])
 
-        resultados.append({
-            "jurisdiccion_id": jid,
-            "riesgo_sismico_zona": zona,
-        })
-        payloads_raw[jid] = {
-            "jurisdiccion_nombre": nombre,
-            "lat_capital": lat,
-            "lon_capital": lon,
-            "zona_detectada": zona,
-            "html_response": html_raw,
-        }
+            print(f"  [{idx+1:02d}/24] {nombre:<32} ({lat:.4f}, {lon:.4f})...", end=" ", flush=True)
+            zona, html_raw = consultar_inpres_zona(lat, lon)
+            print(f"-> Zona Sísmica {zona}")
 
-        # Pausa de cortesía para no saturar el servidor del INPRES
-        time.sleep(0.8)
+            resultados.append({
+                "jurisdiccion_id": jid,
+                "riesgo_sismico_zona": zona,
+            })
+            payloads_raw[jid] = {
+                "jurisdiccion_nombre": nombre,
+                "lat_capital": lat,
+                "lon_capital": lon,
+                "zona_detectada": zona,
+                "html_response": html_raw,
+            }
 
-    # Persistir crudo completo
-    with open(path_raw_inpres, "w", encoding="utf-8") as f:
-        json.dump(payloads_raw, f, ensure_ascii=False, indent=2)
-    print(f"  -> Guardado crudo INPRES: {path_raw_inpres} ({path_raw_inpres.stat().st_size:,} bytes)")
+            # Pausa de cortesía para no saturar el servidor del INPRES
+            time.sleep(0.8)
 
-    return pd.DataFrame(resultados), payloads_raw
+        # Persistir crudo completo
+        with open(path_raw_inpres, "w", encoding="utf-8") as f:
+            json.dump(payloads_raw, f, ensure_ascii=False, indent=2)
+        print(f"  -> Guardado crudo INPRES: {path_raw_inpres} ({path_raw_inpres.stat().st_size:,} bytes)")
+        return pd.DataFrame(resultados), payloads_raw
+
+    except Exception as exc:
+        if cached_payloads and len(cached_payloads) == 24:
+            print(f"\n  [CACHED_FALLBACK] Error al consultar INPRES: {exc}. Utilizando snapshot previo en {path_raw_inpres}")
+            fallback_res = []
+            for jid, item in cached_payloads.items():
+                fallback_res.append({
+                    "jurisdiccion_id": jid,
+                    "riesgo_sismico_zona": item["zona_detectada"],
+                })
+            return pd.DataFrame(fallback_res), cached_payloads
+        raise RuntimeError(f"Fallo al consultar INPRES y no existe snapshot completo: {exc}") from exc
 
 
 def procesar_talento_riesgo() -> pd.DataFrame:

@@ -69,6 +69,7 @@ COLUMN_SECTIONS = {
         "proyeccion_potencia_2036_mw",
         "potencial_offgrid_score",
         "n_centrales_sadi",
+        "sadi_diversidad_tech",
         "fuente_energia",
         "fecha_corte_energia",
     ],

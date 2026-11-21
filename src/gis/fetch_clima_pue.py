@@ -75,8 +75,8 @@ OUT_CLIMA_CSV  = _REPO_ROOT / "data" / "02_interim" / "dim_clima_agua.csv"
 # API Open-Meteo
 OPEN_METEO_URL  = "https://archive-api.open-meteo.com/v1/archive"
 FECHA_INICIO    = "2000-01-01"
-FECHA_FIN       = "2023-12-31"
-PERIODO_REF     = "2000–2023"
+FECHA_FIN       = "2024-12-31"  # Valor base de fallback
+PERIODO_REF     = "2000–2024"   # Valor base de fallback
 PAUSA_ENTRE_REQ = 2.0   # segundos entre llamadas (fair-use Open-Meteo)
 TIMEOUT_SEG     = 60    # timeout por request (segundos)
 MAX_REINTENTOS  = 4     # reintentos ante error de red o rate limit
@@ -90,6 +90,67 @@ FACTOR_HORARIO        = 0.70   # proporción horas frías concentradas en noche
 PUE_BASE_MECANICO     = 1.58   # PUE con 100 % enfriamiento mecánico (LATAM Uptime 2023)
 PUE_MIN_FREE_COOLING  = 1.10   # PUE mínimo con 100 % free cooling ideal
 HORAS_ANO             = 8760
+
+
+def resolver_horizonte_era5(client: httpx.Client | None = None) -> tuple[str, str, str]:
+    """
+    Calcula dinámicamente el cierre al último año calendario completo disponible en Open-Meteo ERA5.
+    Calcula año candidato = current_year - 1 (ej. 2025).
+    Verifica si dicho año está completo (365 o 366 días).
+    Si no está completo o falla la red, retrocede limpiamente a 2024-12-31 o al metadata de caché.
+    """
+    now = pd.Timestamp.now()
+    candidate_year = now.year - 1
+    fallback_year = 2024
+
+    def _es_bisiesto(y: int) -> bool:
+        return y % 4 == 0 and (y % 100 != 0 or y % 400 == 0)
+
+    close_client = False
+    if client is None:
+        client = httpx.Client(follow_redirects=True, timeout=15)
+        close_client = True
+
+    try:
+        start_test = f"{candidate_year}-01-01"
+        end_test = f"{candidate_year}-12-31"
+        r = client.get(
+            OPEN_METEO_URL,
+            params={
+                "latitude": -34.6037,
+                "longitude": -58.3816,
+                "start_date": start_test,
+                "end_date": end_test,
+                "daily": "temperature_2m_mean",
+                "timezone": "America/Argentina/Buenos_Aires",
+            },
+        )
+        if r.status_code == 200:
+            times = r.json().get("daily", {}).get("time", [])
+            expected = 366 if _es_bisiesto(candidate_year) else 365
+            if len(times) == expected:
+                print(f"[CLIMA] Horizonte dinámico ERA5 verificado: año {candidate_year} completo ({len(times)} días).")
+                return ("2000-01-01", f"{candidate_year}-12-31", f"2000–{candidate_year}")
+            print(f"[CLIMA] Año {candidate_year} incompleto en ERA5 ({len(times)}/{expected} días). Usando fallback {fallback_year}.")
+    except Exception as exc:
+        print(f"[CLIMA] Verificación remota ERA5 no disponible ({exc}). Evaluando fallback.")
+    finally:
+        if close_client:
+            client.close()
+
+    if RAW_CLIMA_JSON.exists():
+        try:
+            with open(RAW_CLIMA_JSON, "r", encoding="utf-8") as f:
+                meta = json.load(f).get("_metadata", {})
+                if "fecha_inicio" in meta and "fecha_fin" in meta:
+                    fin = meta["fecha_fin"]
+                    ini = meta["fecha_inicio"]
+                    pref = f"{ini[:4]}–{fin[:4]}"
+                    return (ini, fin, pref)
+        except Exception:
+            pass
+
+    return ("2000-01-01", f"{fallback_year}-12-31", f"2000–{fallback_year}")
 
 # WRI Aqueduct 4.0 — Province Rankings CSV (World Bank Data Catalog)
 # Dataset: https://datacatalog.worldbank.org/search/dataset/0038173
@@ -139,6 +200,8 @@ def _fetch_una_jurisdiccion(
     nombre: str,
     lat: float,
     lon: float,
+    fecha_inicio: str = FECHA_INICIO,
+    fecha_fin: str = FECHA_FIN,
     dry_run: bool = False,
 ) -> dict:
     """
@@ -148,15 +211,14 @@ def _fetch_una_jurisdiccion(
     params = {
         "latitude":    round(lat, 4),
         "longitude":   round(lon, 4),
-        "start_date":  FECHA_INICIO,
-        "end_date":    FECHA_FIN,
+        "start_date":  fecha_inicio,
+        "end_date":    fecha_fin,
         "daily":       VARIABLES_DAILY,
         "timezone":    "America/Argentina/Buenos_Aires",
         "wind_speed_unit": "kmh",
     }
 
     if dry_run:
-        # Simula respuesta vacía para verificar configuración sin llamar a la API
         return {
             "_jid": jid,
             "_nombre": nombre,
@@ -197,30 +259,40 @@ def _fetch_una_jurisdiccion(
     }
 
 
-def descargar_clima_open_meteo(df_ancla: pd.DataFrame, dry_run: bool = False) -> dict:
+def descargar_clima_open_meteo(
+    df_ancla: pd.DataFrame,
+    dry_run: bool = False,
+    fecha_inicio: str | None = None,
+    fecha_fin: str | None = None,
+    periodo_ref: str | None = None,
+) -> dict:
     """
-    Descarga datos climáticos diarios para las 24 jurisdicciones vía Open-Meteo.
-    Si ya existe un raw parcial, reutiliza las jurisdicciones que ya se descargaron OK
-    y solo consulta las faltantes o con error.
-    Guarda la respuesta cruda en data/01_raw/clima_24_jurisdicciones_raw.json.
+    Descarga datos climáticos diarios para las 24 jurisdicciones vía Open-Meteo con fallback seguro.
+    Si ya existe un raw parcial con el mismo fecha_fin, reutiliza registros válidos.
+    Si la descarga remota falla, preserva el snapshot previo y registra CACHED_FALLBACK.
+    """
+    if not fecha_inicio or not fecha_fin:
+        fecha_inicio, fecha_fin, periodo_ref = resolver_horizonte_era5()
 
-    Returns
-    -------
-    dict  Mapa jid → datos JSON de Open-Meteo (o error)
-    """
-    print(f"\n[CLIMA] Descargando ERA5 ({FECHA_INICIO} → {FECHA_FIN}) para 24 jurisdicciones...")
+    print(f"\n[CLIMA] Descargando ERA5 ({fecha_inicio} → {fecha_fin}) para 24 jurisdicciones...")
     if dry_run:
         print("[CLIMA] Modo dry-run activado — no se realizarán llamadas reales a la API.")
 
     resultados: dict = {}
+    prev_jurs_backup: dict = {}
+    prev_fecha_fin = None
+
     if RAW_CLIMA_JSON.exists():
         try:
             with open(RAW_CLIMA_JSON, "r", encoding="utf-8") as f:
                 prev_raw = json.load(f)
                 prev_jurs = prev_raw.get("jurisdicciones", {})
+                prev_fecha_fin = prev_raw.get("_metadata", {}).get("fecha_fin")
                 for k, v in prev_jurs.items():
                     if "_error" not in v and v.get("daily") and v["daily"].get("time"):
-                        resultados[k] = v
+                        prev_jurs_backup[k] = v
+                if prev_fecha_fin == fecha_fin:
+                    resultados = dict(prev_jurs_backup)
         except Exception:
             pass
 
@@ -238,7 +310,10 @@ def descargar_clima_open_meteo(df_ancla: pd.DataFrame, dry_run: bool = False) ->
                 tqdm.write(f"  ⚡ {nombre:30s} → Reutilizado de raw ({n_dias:,} días)")
                 continue
 
-            datos = _fetch_una_jurisdiccion(client, jid, nombre, lat, lon, dry_run=dry_run)
+            datos = _fetch_una_jurisdiccion(
+                client, jid, nombre, lat, lon,
+                fecha_inicio=fecha_inicio, fecha_fin=fecha_fin, dry_run=dry_run
+            )
             resultados[jid] = datos
 
             if "_error" in datos:
@@ -250,7 +325,12 @@ def descargar_clima_open_meteo(df_ancla: pd.DataFrame, dry_run: bool = False) ->
             if not dry_run:
                 time.sleep(PAUSA_ENTRE_REQ)
 
-    # Guardar raw
+    # Si hubo errores y tenemos un snapshot previo con las 24 jurisdicciones, aplicamos fallback seguro
+    if errores and len(prev_jurs_backup) == 24:
+        print(f"\n  [CACHED_FALLBACK] {len(errores)} fallas en Open-Meteo. Conservando snapshot previo íntegro.")
+        return prev_jurs_backup
+
+    # Guardar raw si no hubo errores críticos o si no había backup
     RAW_CLIMA_JSON.parent.mkdir(parents=True, exist_ok=True)
     with open(RAW_CLIMA_JSON, "w", encoding="utf-8") as f:
         json.dump(
@@ -259,8 +339,9 @@ def descargar_clima_open_meteo(df_ancla: pd.DataFrame, dry_run: bool = False) ->
                     "fuente":        "Open-Meteo Historical API (ERA5 / ECMWF)",
                     "endpoint":      OPEN_METEO_URL,
                     "variables":     VARIABLES_DAILY,
-                    "fecha_inicio":  FECHA_INICIO,
-                    "fecha_fin":     FECHA_FIN,
+                    "fecha_inicio":  fecha_inicio,
+                    "fecha_fin":     fecha_fin,
+                    "periodo_ref":   periodo_ref,
                     "generado_en":   pd.Timestamp.now().isoformat(),
                     "dry_run":       dry_run,
                 },

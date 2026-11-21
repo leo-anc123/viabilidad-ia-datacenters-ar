@@ -108,21 +108,27 @@ def haversine_distance_km(lat1: float, lon1: float, lat2: float, lon2: float) ->
 
 def descargar_crudo_enacom(nombre: str, url: str) -> Path:
     """
-    Descarga el dataset crudo de ENACOM a data/01_raw/ asegurando inmutabilidad.
+    Descarga el dataset crudo de ENACOM a data/01_raw/ asegurando inmutabilidad y fallback a snapshot.
     """
     DIR_RAW.mkdir(parents=True, exist_ok=True)
     destino = DIR_RAW / f"enacom_internet_{nombre}_raw.csv"
 
     print(f"[CONECTIVIDAD] Descargando {nombre} desde {url}...")
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0)"})
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        content = resp.read()
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0)"})
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            content = resp.read()
 
-    with open(destino, "wb") as f:
-        f.write(content)
+        with open(destino, "wb") as f:
+            f.write(content)
 
-    print(f"  -> Guardado crudo: {destino} ({len(content):,} bytes)")
-    return destino
+        print(f"  -> Guardado crudo: {destino} ({len(content):,} bytes)")
+        return destino
+    except Exception as exc:
+        if destino.exists() and destino.stat().st_size > 0:
+            print(f"  [CACHED_FALLBACK] Error al descargar {nombre}: {exc}. Utilizando snapshot previo en {destino}")
+            return destino
+        raise RuntimeError(f"Fallo al descargar {nombre} y no existe snapshot local: {exc}") from exc
 
 
 def procesar_conectividad() -> pd.DataFrame:

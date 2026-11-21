@@ -172,6 +172,7 @@ def procesar_energia_sadi(df_ancla: pd.DataFrame, ruta_centrales: Path) -> pd.Da
             "sadi_potencia_instalada_mw": round(g["potencia_instalada_mw"].sum(), 2),
             "sadi_mw_renovable": round(g.loc[g["es_renovable"], "potencia_instalada_mw"].sum(), 2),
             "n_centrales_sadi": len(g),
+            "sadi_diversidad_tech": int(g["tecnologia"].nunique()),
         }),
         include_groups=False,
     ).reset_index()
@@ -191,12 +192,15 @@ def procesar_energia_sadi(df_ancla: pd.DataFrame, ruta_centrales: Path) -> pd.Da
 
     # Tratamiento explícito de Tierra del Fuego (jurisdiccion_id == "94"):
     # Tierra del Fuego no está conectada físicamente al SADI (sistema provincial aislado).
-    # Su potencia SADI conectada es 0.0 MW.
+    # Su potencia SADI conectada es 0.0 MW y 0 tecnologías SADI.
     mask_tdf = df_res["jurisdiccion_id"] == "94"
     df_res.loc[mask_tdf, "sadi_potencia_instalada_mw"] = 0.0
     df_res.loc[mask_tdf, "sadi_mw_renovable"] = 0.0
     df_res.loc[mask_tdf, "sadi_pct_renovable"] = 0.0
     df_res.loc[mask_tdf, "n_centrales_sadi"] = 0
+    df_res.loc[mask_tdf, "sadi_diversidad_tech"] = 0
+
+    df_res["sadi_diversidad_tech"] = df_res["sadi_diversidad_tech"].fillna(0).astype(int)
 
     # Columnas con NaN explícito según contrato de datos
     df_res["sadi_uptime_index"]           = np.nan  # ENRE cubre AMBA; pendiente fuente nacional uniforme
@@ -219,6 +223,7 @@ def procesar_energia_sadi(df_ancla: pd.DataFrame, ruta_centrales: Path) -> pd.Da
         "proyeccion_potencia_2036_mw",
         "potencial_offgrid_score",
         "n_centrales_sadi",
+        "sadi_diversidad_tech",
         "fuente_energia",
         "fecha_corte_energia",
     ]

@@ -1,25 +1,25 @@
-﻿jurisdiccion_id,jurisdiccion_nombre,sadi_potencia_instalada_mw,sadi_pct_renovable,sadi_uptime_index,sadi_margen_disponible_mw,proyeccion_potencia_2028_mw,proyeccion_potencia_2036_mw,potencial_offgrid_score,n_centrales_sadi,fuente_energia,fecha_corte_energia
-02,Ciudad Autónoma de Buenos Aires,3759.0,0.0,,,,,,3.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-06,Buenos Aires,10245.07,11.7,,,,,,82.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-10,Catamarca,119.7,46.37,,,,,,14.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-14,Córdoba,2999.24,7.95,,,,,,42.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-18,Corrientes,85.6,59.58,,,,,,7.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-22,Chaco,136.4,12.24,,,,,,21.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-26,Chubut,2210.31,57.6,,,,,,70.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-30,Entre Ríos,966.6,0.0,,,,,,3.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-34,Formosa,57.25,0.0,,,,,,5.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-38,Jujuy,443.86,76.06,,,,,,9.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-42,La Pampa,65.6,63.41,,,,,,11.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-46,La Rioja,334.35,61.96,,,,,,16.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-50,Mendoza,1352.6,5.67,,,,,,31.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-54,Misiones,15.0,0.0,,,,,,10.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-58,Neuquén,6214.78,1.62,,,,,,21.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-62,Río Negro,697.73,20.01,,,,,,16.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-66,Salta,1440.12,20.17,,,,,,15.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-70,San Juan,613.16,64.99,,,,,,31.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-74,San Luis,66.5,100.0,,,,,,16.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-78,Santa Cruz,345.87,100.0,,,,,,8.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-82,Santa Fe,2840.53,0.35,,,,,,22.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-86,Santiago del Estero,150.7,18.25,,,,,,6.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-90,Tucumán,1427.2,3.97,,,,,,14.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
-94,Tierra del Fuego,0.0,0.0,,,,,,0.0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+﻿jurisdiccion_id,jurisdiccion_nombre,sadi_potencia_instalada_mw,sadi_pct_renovable,sadi_uptime_index,sadi_margen_disponible_mw,proyeccion_potencia_2028_mw,proyeccion_potencia_2036_mw,potencial_offgrid_score,n_centrales_sadi,sadi_diversidad_tech,fuente_energia,fecha_corte_energia
+02,Ciudad Autónoma de Buenos Aires,3759.0,0.0,,,,,,3.0,2,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+06,Buenos Aires,10245.07,11.7,,,,,,82.0,9,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+10,Catamarca,119.7,46.37,,,,,,14.0,2,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+14,Córdoba,2999.24,7.95,,,,,,42.0,11,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+18,Corrientes,85.6,59.58,,,,,,7.0,2,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+22,Chaco,136.4,12.24,,,,,,21.0,3,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+26,Chubut,2210.31,57.6,,,,,,70.0,7,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+30,Entre Ríos,966.6,0.0,,,,,,3.0,2,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+34,Formosa,57.25,0.0,,,,,,5.0,2,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+38,Jujuy,443.86,76.06,,,,,,9.0,4,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+42,La Pampa,65.6,63.41,,,,,,11.0,4,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+46,La Rioja,334.35,61.96,,,,,,16.0,4,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+50,Mendoza,1352.6,5.67,,,,,,31.0,5,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+54,Misiones,15.0,0.0,,,,,,10.0,5,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+58,Neuquén,6214.78,1.62,,,,,,21.0,7,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+62,Río Negro,697.73,20.01,,,,,,16.0,6,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+66,Salta,1440.12,20.17,,,,,,15.0,8,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+70,San Juan,613.16,64.99,,,,,,31.0,4,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+74,San Luis,66.5,100.0,,,,,,16.0,3,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+78,Santa Cruz,345.87,100.0,,,,,,8.0,2,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+82,Santa Fe,2840.53,0.35,,,,,,22.0,6,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+86,Santiago del Estero,150.7,18.25,,,,,,6.0,4,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+90,Tucumán,1427.2,3.97,,,,,,14.0,5,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
+94,Tierra del Fuego,0.0,0.0,,,,,,0.0,0,Secretaría de Energía / CAMMESA — Centrales de Generación SADI,2024-01-01
