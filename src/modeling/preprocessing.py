@@ -42,15 +42,39 @@ EXCLUDED_NAN_COLUMNS: List[str] = [
 # - description: fundamento metodológico
 FEATURE_CONFIG: List[Dict[str, Any]] = [
     # -------------------------------------------------------------
-    # Dimensión 1: Energía y Red SADI
+    # Dimensión 1: Energía y Red SADI (v2.1.0 — 4 Sub-pilares Operativos)
     # -------------------------------------------------------------
+    {
+        "source_col": "sadi_potencia_firme_mw",
+        "norm_col": "norm_potencia_firme",
+        "dimension": "dimension_energia",
+        "transform": "log1p",
+        "direction": "maximize",
+        "description": "Potencia firme despachable de base (Nuclear + Hidroeléctrica + Ciclo Combinado + Bioenergía, MW). log1p mitiga concentración.",
+    },
     {
         "source_col": "sadi_potencia_instalada_mw",
         "norm_col": "norm_potencia_sadi",
         "dimension": "dimension_energia",
         "transform": "log1p",
         "direction": "maximize",
-        "description": "Potencia instalada de generación SADI (MW). log1p mitiga el outlier de Buenos Aires (10.2 GW). TDF es 0.0 MW (red aislada).",
+        "description": "Potencia total instalada de generación conectada al SADI (MW). log1p mitiga el outlier. TDF es 0.0 MW (red aislada).",
+    },
+    {
+        "source_col": "sadi_pct_limpia",
+        "norm_col": "norm_pct_limpia",
+        "dimension": "dimension_energia",
+        "transform": None,
+        "direction": "maximize",
+        "description": "Porcentaje de generación libre de emisiones de GEI directas (Hidroeléctrica TOTAL + Eólica + Solar + Bioenergía + Nuclear) según estándar ESG Data Centers.",
+    },
+    {
+        "source_col": "produccion_gas_operativa_mm3",
+        "norm_col": "norm_seguridad_gas",
+        "dimension": "dimension_energia",
+        "transform": "log1p",
+        "direction": "maximize",
+        "description": "Producción operativa de gas natural in-situ (Mm3/año, Secretaría de Energía 2025). Captura potencial Vaca Muerta y cuencas operativas.",
     },
     {
         "source_col": "sadi_pct_renovable",

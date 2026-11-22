@@ -62,7 +62,12 @@ COLUMN_SECTIONS = {
     ],
     "Sección 1 — Energía y Red SADI": [
         "sadi_potencia_instalada_mw",
+        "sadi_potencia_firme_mw",
+        "sadi_mw_renovable",
         "sadi_pct_renovable",
+        "sadi_mw_limpia",
+        "sadi_pct_limpia",
+        "produccion_gas_operativa_mm3",
         "sadi_uptime_index",
         "sadi_margen_disponible_mw",
         "proyeccion_potencia_2028_mw",

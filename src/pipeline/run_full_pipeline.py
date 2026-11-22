@@ -66,7 +66,7 @@ def _run_step(description: str, cmd: List[str], cwd: Path = _REPO_ROOT) -> int:
     return res.returncode
 
 
-def generar_contrato_frescura(statuses: Dict[str, str], pipeline_version: str = "2.0.0-alpha.3") -> Dict[str, Any]:
+def generar_contrato_frescura(statuses: Dict[str, str], pipeline_version: str = "2.1.0") -> Dict[str, Any]:
     """
     Construye y exporta data/04_outputs/data_freshness.json con la trazabilidad
     completa de cortes temporales y estados de actualización.
@@ -112,6 +112,16 @@ def generar_contrato_frescura(statuses: Dict[str, str], pipeline_version: str = 
                 "status": statuses.get("cammesa_sadi", "STATIC_VERIFIED"),
                 "update_frequency": "anual",
                 "notes": "474 centrales SADI georreferenciadas vigentes en BBOX nacional. Serie mensual histórica en portal datos.gob.ar congelada en 2020-02.",
+            },
+            "secretaria_energia_gas": {
+                "dimension": "energia",
+                "fuente_oficial": "Secretaría de Energía / SESCO Capítulo IV",
+                "url": "http://datos.energia.gob.ar/dataset/590d1284-fd6d-4686-afd8-b3da5d90a6e9/resource/ad1b9472-a370-47e7-8de3-b742495ec7f1/download/produccin-gas-sesco-tight-y-shale-captulo-iv-por-provincia.csv",
+                "last_checked_utc": now_utc,
+                "data_cutoff_date": "2025-12-31",
+                "status": statuses.get("secretaria_energia_gas", "STATIC_VERIFIED"),
+                "update_frequency": "mensual",
+                "notes": "Producción operativa de gas natural año 2025 completo (12 meses). Excluye registros extraterritoriales offshore de Estado Nacional.",
             },
             "enacom_conectividad": {
                 "dimension": "conectividad",

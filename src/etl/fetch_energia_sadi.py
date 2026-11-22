@@ -70,6 +70,14 @@ URL_RENOVAR_MATER = (
     "centrales-y-proyectos-de-centrales-de-energa-renovable.csv"
 )
 
+URL_GAS_SESCO = (
+    "http://datos.energia.gob.ar/dataset/590d1284-fd6d-4686-afd8-b3da5d90a6e9/"
+    "resource/ad1b9472-a370-47e7-8de3-b742495ec7f1/download/"
+    "produccin-gas-sesco-tight-y-shale-captulo-iv-por-provincia.csv"
+)
+
+RAW_GAS = _REPO_ROOT / "data" / "01_raw" / "secretaria_energia_produccion_gas_provincia_raw.csv"
+
 # Mapeo normalizado a IDs INDEC oficiales
 _MAPA_PROVINCIA_A_INDEC = {
     "ciudad autonoma de buenos": "02",
@@ -133,9 +141,10 @@ def descargar_archivo_raw(url: str, destino: Path, descripcion: str, usar_existe
     return destino
 
 
-def procesar_energia_sadi(df_ancla: pd.DataFrame, ruta_centrales: Path) -> pd.DataFrame:
+def procesar_energia_sadi(df_ancla: pd.DataFrame, ruta_centrales: Path, ruta_gas: Path) -> pd.DataFrame:
     """
-    Procesa las centrales eléctricas del SADI y genera la dimensión de energía.
+    Procesa las centrales eléctricas del SADI y la producción de gas natural operativa
+    para generar la dimensión integral de energía (v2.1.0).
     """
     print("\n[ETL ENERGÍA] Procesando centrales de generación del SADI...")
 
@@ -143,64 +152,153 @@ def procesar_energia_sadi(df_ancla: pd.DataFrame, ruta_centrales: Path) -> pd.Da
     # Limpiar posibles BOM en nombres de columnas
     df_cen.columns = [c.replace("ï»¿", "").strip() for c in df_cen.columns]
 
-    print(f"  Filas totales en dataset: {len(df_cen):,}")
+    print(f"  Filas totales en dataset de centrales: {len(df_cen):,}")
 
     # Normalizar provincia
     df_cen["prov_norm"] = df_cen["provincia"].apply(_normalizar_texto)
-    df_cen["jurisdiccion_id"] = df_cen["prov_norm"].map(_MAPA_PROVINCIA_A_INDEC)
 
-    # Identificar energías renovables según Ley 27.191:
-    # Solar Fotovoltaica, Eólica, Biomasa, Biogás, Hidroeléctrica <= 50 MW (mini-hidro)
-    def es_renovable_ley_27191(etiqueta: str) -> bool:
-        et_norm = _normalizar_texto(etiqueta)
-        if any(term in et_norm for term in ["fotovoltaica", "solar", "eolica", "biogas", "biomasa"]):
+    # Identificar Yacyretá (represa binacional sobre río Paraná, Ituzaingó, Corrientes)
+    # En el raw provincial de CAMMESA figura con provincia NaN. Se asigna formalmente a Corrientes (18).
+    es_yacyreta = df_cen["nombre"].astype(str).str.contains("YACYRETA", case=False, na=False)
+    df_cen.loc[es_yacyreta, "jurisdiccion_id"] = "18"
+
+    # Mapear el resto de centrales a jurisdiccion_id INDEC
+    mask_no_yacy = ~es_yacyreta
+    df_cen.loc[mask_no_yacy, "jurisdiccion_id"] = df_cen.loc[mask_no_yacy, "prov_norm"].map(_MAPA_PROVINCIA_A_INDEC)
+
+    # Convertir potencia instalada a numérico
+    df_cen["potencia_instalada_mw"] = pd.to_numeric(df_cen["potencia_instalada_mw"], errors="coerce").fillna(0.0)
+
+    # Clasificación tecnológica operativa:
+    # 1. Potencia Firme Despachable (Nuclear + Hidroeléctrica + Ciclo Combinado + Bioenergía)
+    def es_potencia_firme(row) -> bool:
+        tec = str(row["tecnologia"]).strip().upper()
+        et_norm = _normalizar_texto(str(row["tecnologia_etiqueta"]))
+        # Ciclos combinados (CC, CC,TG)
+        if tec in ["CC", "CC,TG"] or "ciclo combinado" in et_norm:
             return True
-        if "menor a 50 mw" in et_norm or "<=50" in et_norm or "<50" in et_norm:
+        # Hidroeléctricas (grandes y mini-hidro)
+        if tec in ["HI", "HI>50", "HI<50"] or "hidroelectrica" in et_norm:
+            return True
+        # Nuclear
+        if tec == "NUC" or "nuclear" in et_norm:
+            return True
+        # Bioenergía (Biomasa + Biogás)
+        if tec in ["BIOM", "BIOG"] or "biomasa" in et_norm or "biogas" in et_norm:
             return True
         return False
 
-    df_cen["es_renovable"] = df_cen["tecnologia_etiqueta"].apply(es_renovable_ley_27191)
+    # 2. Matriz Libre de Carbono (Hidroeléctrica TOTAL + Eólica + Solar + Bioenergía + Nuclear)
+    # Estándar ESG Data Centers: cero emisiones directas de GEI en generación 24/7
+    def es_libre_carbono(row) -> bool:
+        tec = str(row["tecnologia"]).strip().upper()
+        et_norm = _normalizar_texto(str(row["tecnologia_etiqueta"]))
+        if tec in ["HI", "HI>50", "HI<50"] or "hidroelectrica" in et_norm:
+            return True
+        if tec in ["EOL", "SOL", "BIOM", "BIOG"] or any(t in et_norm for t in ["eolica", "fotovoltaica", "solar", "biomasa", "biogas"]):
+            return True
+        if tec == "NUC" or "nuclear" in et_norm:
+            return True
+        return False
 
-    # Filtrar centrales con provincia identificada
-    # (Nota: Yacyretá tiene provincia NaN por ser binacional AR-PY sobre río Paraná; su energía es asignada a nivel despacho)
+    # 3. Renovables según Ley 27.191 (solar, eólica, biomasa, biogás, mini-hidro <= 50 MW)
+    def es_renovable_ley_27191(row) -> bool:
+        tec = str(row["tecnologia"]).strip().upper()
+        et_norm = _normalizar_texto(str(row["tecnologia_etiqueta"]))
+        if tec in ["EOL", "SOL", "BIOM", "BIOG"] or any(t in et_norm for t in ["fotovoltaica", "solar", "eolica", "biogas", "biomasa"]):
+            return True
+        if tec == "HI<50" or "menor a 50 mw" in et_norm or "<=50" in et_norm or "<50" in et_norm:
+            return True
+        return False
+
+    df_cen["es_firme"] = df_cen.apply(es_potencia_firme, axis=1)
+    df_cen["es_limpia"] = df_cen.apply(es_libre_carbono, axis=1)
+    df_cen["es_renovable_ley"] = df_cen.apply(es_renovable_ley_27191, axis=1)
+
+    # Filtrar centrales con provincia identificada (las 474 centrales del dataset)
     df_con_prov = df_cen.dropna(subset=["jurisdiccion_id"]).copy()
-    df_con_prov["potencia_instalada_mw"] = pd.to_numeric(df_con_prov["potencia_instalada_mw"], errors="coerce").fillna(0.0)
 
-    # Agregación por jurisdicción
-    agrup = df_con_prov.groupby("jurisdiccion_id").apply(
+    # Agregación eléctrica por jurisdicción
+    agrup_elec = df_con_prov.groupby("jurisdiccion_id").apply(
         lambda g: pd.Series({
             "sadi_potencia_instalada_mw": round(g["potencia_instalada_mw"].sum(), 2),
-            "sadi_mw_renovable": round(g.loc[g["es_renovable"], "potencia_instalada_mw"].sum(), 2),
+            "sadi_potencia_firme_mw": round(g.loc[g["es_firme"], "potencia_instalada_mw"].sum(), 2),
+            "sadi_mw_renovable": round(g.loc[g["es_renovable_ley"], "potencia_instalada_mw"].sum(), 2),
+            "sadi_mw_limpia": round(g.loc[g["es_limpia"], "potencia_instalada_mw"].sum(), 2),
             "n_centrales_sadi": len(g),
             "sadi_diversidad_tech": int(g["tecnologia"].nunique()),
         }),
         include_groups=False,
     ).reset_index()
 
-    agrup["sadi_pct_renovable"] = np.where(
-        agrup["sadi_potencia_instalada_mw"] > 0,
-        (agrup["sadi_mw_renovable"] / agrup["sadi_potencia_instalada_mw"] * 100).round(2),
+    agrup_elec["sadi_pct_renovable"] = np.where(
+        agrup_elec["sadi_potencia_instalada_mw"] > 0,
+        (agrup_elec["sadi_mw_renovable"] / agrup_elec["sadi_potencia_instalada_mw"] * 100).round(2),
+        0.0,
+    )
+    agrup_elec["sadi_pct_limpia"] = np.where(
+        agrup_elec["sadi_potencia_instalada_mw"] > 0,
+        (agrup_elec["sadi_mw_limpia"] / agrup_elec["sadi_potencia_instalada_mw"] * 100).round(2),
         0.0,
     )
 
-    # Unir con la tabla ancla de las 24 jurisdicciones
+    # -------------------------------------------------------------------------
+    # Ingesta y Agregación de Producción Operativa de Gas Natural (Año 2025)
+    # Fuente oficial: Secretaría de Energía / SESCO Capítulo IV
+    # -------------------------------------------------------------------------
+    print("\n[ETL GAS] Procesando extracción operativa de gas natural (2025)...")
+    df_gas = pd.read_csv(ruta_gas, encoding="utf-8", low_memory=False)
+    df_gas.columns = [c.replace("ï»¿", "").strip() for c in df_gas.columns]
+
+    # Filtrar año calendario completo 2025 (12 meses continuos)
+    df_gas_2025 = df_gas[df_gas["anio"] == 2025].copy()
+
+    # Exclusión explícita de registros extraterritoriales ("Estado Nacional" / offshore federal)
+    # Documentado formalmente en docs/auditoria_energia_v2_1.md
+    df_gas_prov = df_gas_2025[df_gas_2025["provincia"].astype(str).str.strip() != "Estado Nacional"].copy()
+
+    df_gas_prov["prov_norm"] = df_gas_prov["provincia"].apply(_normalizar_texto)
+    df_gas_prov["jurisdiccion_id"] = df_gas_prov["prov_norm"].map(_MAPA_PROVINCIA_A_INDEC)
+
+    agrup_gas = df_gas_prov.groupby("jurisdiccion_id")["cantidad_mm3"].sum().round(2).reset_index()
+    agrup_gas.rename(columns={"cantidad_mm3": "produccion_gas_operativa_mm3"}, inplace=True)
+
+    # -------------------------------------------------------------------------
+    # Unir ambas fuentes con la tabla ancla de las 24 jurisdicciones
+    # -------------------------------------------------------------------------
     df_res = df_ancla[["jurisdiccion_id", "jurisdiccion_nombre"]].merge(
-        agrup,
+        agrup_elec,
+        on="jurisdiccion_id",
+        how="left",
+    ).merge(
+        agrup_gas,
         on="jurisdiccion_id",
         how="left",
     )
 
+    # Rellenar provincias sin centrales ni producción de gas
+    df_res["produccion_gas_operativa_mm3"] = df_res["produccion_gas_operativa_mm3"].fillna(0.0)
+    df_res["sadi_potencia_instalada_mw"] = df_res["sadi_potencia_instalada_mw"].fillna(0.0)
+    df_res["sadi_potencia_firme_mw"] = df_res["sadi_potencia_firme_mw"].fillna(0.0)
+    df_res["sadi_mw_renovable"] = df_res["sadi_mw_renovable"].fillna(0.0)
+    df_res["sadi_pct_renovable"] = df_res["sadi_pct_renovable"].fillna(0.0)
+    df_res["sadi_mw_limpia"] = df_res["sadi_mw_limpia"].fillna(0.0)
+    df_res["sadi_pct_limpia"] = df_res["sadi_pct_limpia"].fillna(0.0)
+    df_res["n_centrales_sadi"] = df_res["n_centrales_sadi"].fillna(0).astype(int)
+    df_res["sadi_diversidad_tech"] = df_res["sadi_diversidad_tech"].fillna(0).astype(int)
+
     # Tratamiento explícito de Tierra del Fuego (jurisdiccion_id == "94"):
     # Tierra del Fuego no está conectada físicamente al SADI (sistema provincial aislado).
-    # Su potencia SADI conectada es 0.0 MW y 0 tecnologías SADI.
+    # Su potencia SADI conectada es 0.0 MW, pero conserva su producción de gas natural real de cuenca.
     mask_tdf = df_res["jurisdiccion_id"] == "94"
     df_res.loc[mask_tdf, "sadi_potencia_instalada_mw"] = 0.0
+    df_res.loc[mask_tdf, "sadi_potencia_firme_mw"] = 0.0
     df_res.loc[mask_tdf, "sadi_mw_renovable"] = 0.0
     df_res.loc[mask_tdf, "sadi_pct_renovable"] = 0.0
+    df_res.loc[mask_tdf, "sadi_mw_limpia"] = 0.0
+    df_res.loc[mask_tdf, "sadi_pct_limpia"] = 0.0
     df_res.loc[mask_tdf, "n_centrales_sadi"] = 0
     df_res.loc[mask_tdf, "sadi_diversidad_tech"] = 0
-
-    df_res["sadi_diversidad_tech"] = df_res["sadi_diversidad_tech"].fillna(0).astype(int)
 
     # Columnas con NaN explícito según contrato de datos
     df_res["sadi_uptime_index"]           = np.nan  # ENRE cubre AMBA; pendiente fuente nacional uniforme
@@ -209,14 +307,19 @@ def procesar_energia_sadi(df_ancla: pd.DataFrame, ruta_centrales: Path) -> pd.Da
     df_res["proyeccion_potencia_2036_mw"] = np.nan  # Requiere Hoja de Ruta Energética MINEM
     df_res["potencial_offgrid_score"]     = np.nan  # Reservado Fase 3 (INENCO / CONICET)
 
-    df_res["fuente_energia"]              = "Secretaría de Energía / CAMMESA — Centrales de Generación SADI"
-    df_res["fecha_corte_energia"]         = "2024-01-01"
+    df_res["fuente_energia"]              = "Secretaría de Energía / CAMMESA SADI + SESCO Gas 2025"
+    df_res["fecha_corte_energia"]         = "2025-12-31"
 
     cols_finales = [
         "jurisdiccion_id",
         "jurisdiccion_nombre",
         "sadi_potencia_instalada_mw",
+        "sadi_potencia_firme_mw",
+        "sadi_mw_renovable",
         "sadi_pct_renovable",
+        "sadi_mw_limpia",
+        "sadi_pct_limpia",
+        "produccion_gas_operativa_mm3",
         "sadi_uptime_index",
         "sadi_margen_disponible_mw",
         "proyeccion_potencia_2028_mw",
@@ -239,17 +342,17 @@ def exportar_dim_energia(df: pd.DataFrame) -> None:
     print(f"\n[OK] Dimensión Energía exportada → {OUT_ENERGIA_CSV}")
     print(f"     {len(df)} filas × {len(df.columns)} columnas")
 
-    print("\n[QA] Resumen de variables energéticas:")
-    print(df[["jurisdiccion_id", "jurisdiccion_nombre", "sadi_potencia_instalada_mw", "sadi_pct_renovable"]].to_string())
+    print("\n[QA] Resumen de variables energéticas v2.1.0:")
+    print(df[["jurisdiccion_id", "jurisdiccion_nombre", "sadi_potencia_instalada_mw", "sadi_potencia_firme_mw", "sadi_pct_limpia", "produccion_gas_operativa_mm3"]].to_string())
 
 
 def main():
-    parser = argparse.ArgumentParser(description="ETL Energía SADI — Bloque 2.2")
+    parser = argparse.ArgumentParser(description="ETL Energía SADI & Gas Operativo — v2.1.0")
     parser.add_argument("--usar-raw-existente", action="store_true", help="Reutiliza archivos crudos en data/01_raw/ si existen")
     args = parser.parse_args()
 
     print("=" * 65)
-    print("  ETL Energía SADI — Bloque 2.2")
+    print("  ETL Energía SADI & Gas Operativo — v2.1.0")
     print("  Viabilidad IA Data Centers AR")
     print("=" * 65)
 
@@ -277,15 +380,21 @@ def main():
         "Proyectos RenovAr / MATER",
         usar_existente=args.usar_raw_existente,
     )
+    p_gas = descargar_archivo_raw(
+        URL_GAS_SESCO,
+        RAW_GAS,
+        "Producción de Gas por Provincia (SESCO Capítulo IV)",
+        usar_existente=args.usar_raw_existente,
+    )
 
     # 3. Procesar y generar tabla
-    df_energia = procesar_energia_sadi(df_ancla, p_cen)
+    df_energia = procesar_energia_sadi(df_ancla, p_cen, p_gas)
 
     # 4. Exportar
     exportar_dim_energia(df_energia)
 
     print("\n" + "=" * 65)
-    print("  ✅ Módulo 2 (Energía SADI) completado.")
+    print("  ✅ Módulo 2 (Energía SADI & Gas v2.1.0) completado.")
     print("=" * 65)
 
 

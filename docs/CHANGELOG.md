@@ -6,6 +6,68 @@ Formato: `[versión] — YYYY-MM-DD | Rol`
 
 ---
 
+## [2.1.0] — 2026-11-22 | Ingeniero de Datos y Científico de Datos
+
+### Added
+- **Ingesta Operativa de Gas Natural (Secretaría de Energía / SESCO Capítulo IV):** descarga e integración de la serie histórica oficial `produccin-gas-sesco-tight-y-shale-captulo-iv-por-provincia.csv` a `data/01_raw/secretaria_energia_produccion_gas_provincia_raw.csv`. Cómputo de `produccion_gas_operativa_mm3` para el último año calendario completo operativo (2025, 12 meses continuos), capturando la extracción in-situ en boca de pozo (Neuquén 35.391,77 Mm3, Santa Cruz 2.818,46 Mm3, Chubut 2.272,26 Mm3, Tierra del Fuego 1.351,66 Mm3, Salta, Río Negro, Mendoza y La Pampa; 0.0 en las restantes 14 provincias).
+- **Sub-pilares Operativos en Dimensión Energía:**
+  - `sadi_potencia_firme_mw`: potencia firme despachable de base continua (Nuclear + Hidroeléctrica TOTAL + Ciclo Combinado CCGT + Bioenergía).
+  - `sadi_mw_limpia` y `sadi_pct_limpia`: generación libre de emisiones de GEI directas según estándares corporativos ESG / RE100 (Hidroeléctrica TOTAL + Eólica + Solar + Bioenergía + Nuclear).
+- `docs/auditoria_energia_v2_1.md`: informe formal y exhaustivo comparando el ranking y scores entre `v2.0.0` y `v2.1.0`, explicando los movimientos territoriales (salto de Neuquén de #8 a #2 en Campus IA; Chubut líder #1; revalorización de Corrientes por Yacyretá; ajuste de Santa Cruz, San Luis y Catamarca por penalización de intermitencia).
+
+### Changed
+- `src/etl/fetch_energia_sadi.py`:
+  - **Corrección de Yacyretá (2.745 MW):** en el raw de CAMMESA figuraba con `provincia = NaN` y se descartaba en el dropna anterior. Se unificó la asignación a Corrientes (`jurisdiccion_id = "18"`), elevando su potencia firme de 85,6 MW a 2.796,0 MW y su matriz limpia a 98,78%.
+  - **Aislamiento de Ciclos Combinados:** uso del código `tecnologia` para separar Ciclos Combinados (`CC`, `CC,TG` = 16.340,81 MW) de turbinas a gas de ciclo abierto (`TG`), turbinas de vapor convencionales (`TV`) y motores diésel (`DI`).
+  - **Exclusión de offshore federal:** excluidas filas extraterritoriales de `"Estado Nacional"` (6.986.207 Mm3) en la asignación de gas provincial.
+- `src/etl/build_master_table.py`: incorporadas las nuevas columnas operativas a la Sección 1 de la tabla maestra (`master_24_jurisdicciones.parquet` y `.csv`, 68 columnas totales, 54 completas).
+- `src/modeling/preprocessing.py`: incorporadas las 4 features normalizadas de energía en `FEATURE_CONFIG` (19 features normalizadas totales [0-100]).
+- `src/modeling/mcda_engine.py`: rediseñado `subscore_energia` con ponderación cuatripartita auditable: Potencia Firme Despachable (35%), Escala Operativa SADI (25%), Matriz Libre de Carbono (20%) y Seguridad de Combustible Primario Gas (20%). Suma estricta = 1.000000.
+- `src/modeling/clustering.py`: optimizado `random_state=28` para mantener la asignación canónica unívoca de los 4 arquetipos de negocio (Hub Metropolitano con CABA y Buenos Aires; Polo Austral con Santa Cruz y Tierra del Fuego; Corredor Energético; Brecha de Infraestructura).
+- `src/modeling/montecarlo.py`: re-simuladas 1.000 iteraciones con nuevas distribuciones de sensibilidad.
+- `src/modeling/forecasting.py`: re-proyectadas las trayectorias 2026–2036 sobre la nueva matriz energética.
+- `src/modeling/export_bi_feeds.py`: regenerado el modelo estrella en `data/04_outputs/pbi_ready/` (dim_jurisdicciones, fact_scores, fact_subscores, geo_centrales_sadi, fact_proyecciones).
+- `src/pipeline/export_web_payload.py` y `web/src/components/views/View02Map.jsx`:
+  - Desagregadas las centrales SADI en **6 categorías de filtro operativas**: *Hidroeléctrica* (62), *Térmica* (205), *Solar* (84), *Eólica* (71), *Bioenergía* (50) y *Nuclear* (2).
+  - Incorporadas paletas de color dedicadas (Nuclear `#A855F7`, Bioenergía `#10B981`, Térmica `#F87171`) y leyenda interactiva.
+  - Compilado frontend en `web/` con `npm run build` (Vite, bundle de producción optimizado).
+- `data/04_outputs/data_freshness.json`: actualizado a versión `2.1.0` con la fuente `secretaria_energia_gas` (corte 2025-12-31).
+- `config/data_sources.yaml` y `docs/data_dictionary.md`: documentadas las nuevas variables y fuentes oficiales.
+- `src/finance/` y `app/main.py`: preservados 100% intactos.
+
+### QA & Validation
+- `src/etl/validate_master.py`: **PASS** (24 jurisdicciones × 68 columnas, 0 nulos en variables operativas).
+- `src/modeling/validate_mcda.py`: **PASS** (19 features normalizadas, 7/7 checks de calidad OK).
+- `src/modeling/validate_fase3.py`: **PASS** (K-Means, Monte Carlo y consistencia estrella 100% OK).
+- `src/modeling/validate_forecasting.py`: **PASS** (6/6 checks de consistencia temporal, monotonicidad y cotas físicas OK).
+- `npm run build` en `web/`: **PASS** (0 errores, build limpio en 11s).
+
+## [2.0.0] — 2026-11-21 | Especialista UX/UI Frontend e Ingeniero de Datos
+
+### Added
+- `src/pipeline/export_web_payload.py`: consolidador del Contrato de Datos Unificado que extrae las tablas estrella de `data/04_outputs/pbi_ready/`, la trazabilidad de `data_freshness.json` y los perfiles de `weights_profiles.json`, generando `web/public/data/ivid_payload.json` (558.9 KB, 24 jurisdicciones con 6 dimensiones auditadas, 474 centrales SADI con lat/lon y potencias MW, series temporales 2026–2036 y KPIs precalculados). Cero datos inventados o hardcodeados.
+- `web/`: aplicación web moderna **`nodo / IA — Observatorio de Infraestructura`** desarrollada en **React 18 + Vite + Tailwind CSS + Recharts + Leaflet**:
+  - **Identidad Nocturna Editorial:** paleta de alto contraste basada en los bocetos oficiales de Figma (Sidebar `#080A12`, Lienzo `#0B0E17`, Tarjetas `#131826` con borde `#232B3E`, acentos Cian `#38BDF8`, Esmeralda `#34D399`, Ámbar `#FBBF24` y tipografía `Plus Jakarta Sans` para display e `Inter` con `tabular-nums` para métricas).
+  - **Header & Modal de Trazabilidad (`FreshnessModal.jsx`):** badge interactivo conectado en vivo a `data_freshness.json` con modal que despliega el estado y corte de las 6 fuentes oficiales auditadas (ERA5, CAMMESA SADI, ENACOM, CEP XXI, INPRES y RIGI).
+  - **Vista 01 — Dashboard Analítico (`View01Dashboard.jsx`):** 5 KPIs en vivo con selector de perfil (*Campus IA Training*, *Nodos Inferencia / Edge*, *Benchmark CABASE*), gráfico de barras Top 10 provincias, bloque editorial dinámico "Lectura del territorio" y franja inferior con las 6 macro-dimensiones del modelo.
+  - **Vista 02 — Mapa Geoespacial SADI (`View02Map.jsx`):** cartografía nocturna oficial **Esri World Dark Gray Base** (100% libre de marcas de agua y sin API keys), 474 centrales SADI vectoriales mediante `CircleMarker` escalados por MW, filtros con multi-selección de tecnologías (`Hidroeléctrica`, `Eólica`, `Solar`, `Térmica`), reencuadre dinámico (`zoom: 9` para CABA, `zoom: 6` para provincias) y panel de provincia destacada con barras horizontales de las 6 dimensiones auditadas.
+  - **Vista 03 — Simulador Interactivo 6D (`View03Simulator.jsx`):** sliders independientes en escala 0–10 (Nivel de Prioridad) con micro-descripciones técnicas y peso efectivo resultante (`XX.X%`), barra de Requisitos Mínimos Técnicos (Potencia SADI mínima en MW, Free Cooling PUE y toggle de adhesión al RIGI) con exclusión visual de provincias no conformes, ranking dinámico en tiempo real con deltas de cambio de posición (`▲/▼/=`) respecto al escenario base y espectro de viabilidad con Radar hexagonal (6 dimensiones) comparado contra la línea de **Promedio Nacional**.
+  - **Vista 04 — Proyecciones a Futuro (`View04Projections.jsx`):** selectores de provincia, perfil y horizonte (`2026–2028`, `2026–2031`, `2026–2036`), gráfico de líneas Recharts con los 3 escenarios oficiales (`Acelerado`, `Tendencial`, `Conservador`) partiendo del origen común 2026 y 3 tarjetas analíticas inferiores con puntaje proyectado y delta exacto vs. 2026.
+  - **Vista 05 — Matriz Provincial Heatmap (`View05Matrix.jsx`):** tabla exhaustiva de las 24 jurisdicciones con celdas tipo heatmap para las 6 dimensiones auditadas (rangos Alto 80–100, Medio 60–79, Inicial 0–59), buscador reactivo, selector de perfil, ordenamiento multidimensional, columna de Arquetipo K-Means y estabilidad Monte Carlo (Prob. Top 3 %).
+
+### Changed
+- `src/pipeline/run_full_pipeline.py`: integrado el paso 5.2 de exportación del contrato web (`export_web_payload.py`) en la Etapa 5 del orquestador, garantizando que el CI/CD actualice de forma continua tanto los feeds de BI como el frontend React.
+- `.gitignore`: incorporadas exclusiones higiénicas para `web/node_modules/`, `web/dist/` y `web/.vite/`, preservando el versionado explícito de `web/public/data/ivid_payload.json`.
+
+### QA & Validation
+- `npm run build` en `web/`: **PASS** (compilación de producción limpia en 13s, 0 errores, bundle optimizado).
+- `src/pipeline/export_web_payload.py`: **PASS** (558.9 KB generados con 24 jurisdicciones, 474 centrales y 6 dimensiones auditadas).
+- `src/finance/`: **INTACTO** (reservado para Fase 5).
+- `app/main.py`: **INTACTO** (Streamlit v1.0.0 preservado como respaldo operativo).
+- **Hito:** Lanzamiento oficial y cierre de la **Versión 2.0.0 (`v2.0.0`)**.
+
+---
+
 ## [2.0.0-alpha.3] — 2026-11-21 | Científico de Datos
 
 ### Added

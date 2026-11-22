@@ -1,145 +1,145 @@
 ﻿jurisdiccion_id,jurisdiccion_corta,dimension_id,dimension_nombre,subscore_valor
 02,CABA,subscore_clima,Clima y Eficiencia PUE,27.33
 02,CABA,subscore_conectividad,Conectividad y Red Troncal,88.08
-02,CABA,subscore_energia,Energía y Potencia SADI,53.49
+02,CABA,subscore_energia,Energía y Potencia SADI,54.66
 02,CABA,subscore_fiscal,Marco Fiscal y RIGI,100.0
 02,CABA,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,100.0
 02,CABA,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),53.21
 06,Buenos Aires,subscore_clima,Clima y Eficiencia PUE,29.17
 06,Buenos Aires,subscore_conectividad,Conectividad y Red Troncal,78.73
-06,Buenos Aires,subscore_energia,Energía y Potencia SADI,64.68
+06,Buenos Aires,subscore_energia,Energía y Potencia SADI,63.8
 06,Buenos Aires,subscore_fiscal,Marco Fiscal y RIGI,61.67
 06,Buenos Aires,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,57.84
 06,Buenos Aires,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),72.35
 10,Catamarca,subscore_clima,Clima y Eficiencia PUE,16.09
 10,Catamarca,subscore_conectividad,Conectividad y Red Troncal,46.73
-10,Catamarca,subscore_energia,Energía y Potencia SADI,49.69
+10,Catamarca,subscore_energia,Energía y Potencia SADI,22.25
 10,Catamarca,subscore_fiscal,Marco Fiscal y RIGI,100.0
 10,Catamarca,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,22.21
 10,Catamarca,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),39.15
 14,Córdoba,subscore_clima,Clima y Eficiencia PUE,23.48
 14,Córdoba,subscore_conectividad,Conectividad y Red Troncal,53.43
-14,Córdoba,subscore_energia,Energía y Potencia SADI,55.2
+14,Córdoba,subscore_energia,Energía y Potencia SADI,64.55
 14,Córdoba,subscore_fiscal,Marco Fiscal y RIGI,100.0
 14,Córdoba,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,59.37
 14,Córdoba,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),59.98
 18,Corrientes,subscore_clima,Clima y Eficiencia PUE,4.53
 18,Corrientes,subscore_conectividad,Conectividad y Red Troncal,43.48
-18,Corrientes,subscore_energia,Energía y Potencia SADI,52.82
+18,Corrientes,subscore_energia,Energía y Potencia SADI,73.14
 18,Corrientes,subscore_fiscal,Marco Fiscal y RIGI,100.0
 18,Corrientes,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,46.7
-18,Corrientes,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),45.35
+18,Corrientes,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),47.11
 22,Chaco,subscore_clima,Clima y Eficiencia PUE,3.95
 22,Chaco,subscore_conectividad,Conectividad y Red Troncal,40.89
-22,Chaco,subscore_energia,Energía y Potencia SADI,36.88
+22,Chaco,subscore_energia,Energía y Potencia SADI,27.31
 22,Chaco,subscore_fiscal,Marco Fiscal y RIGI,100.0
 22,Chaco,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,48.69
 22,Chaco,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),49.92
 26,Chubut,subscore_clima,Clima y Eficiencia PUE,42.74
 26,Chubut,subscore_conectividad,Conectividad y Red Troncal,45.9
-26,Chubut,subscore_energia,Energía y Potencia SADI,73.08
+26,Chubut,subscore_energia,Energía y Potencia SADI,81.95
 26,Chubut,subscore_fiscal,Marco Fiscal y RIGI,100.0
 26,Chubut,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,40.21
 26,Chubut,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),63.26
 30,Entre Ríos,subscore_clima,Clima y Eficiencia PUE,17.55
 30,Entre Ríos,subscore_conectividad,Conectividad y Red Troncal,45.52
-30,Entre Ríos,subscore_energia,Energía y Potencia SADI,44.67
+30,Entre Ríos,subscore_energia,Energía y Potencia SADI,65.68
 30,Entre Ríos,subscore_fiscal,Marco Fiscal y RIGI,100.0
 30,Entre Ríos,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,44.85
 30,Entre Ríos,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),41.6
 34,Formosa,subscore_clima,Clima y Eficiencia PUE,0.6
 34,Formosa,subscore_conectividad,Conectividad y Red Troncal,29.57
-34,Formosa,subscore_energia,Energía y Potencia SADI,26.41
+34,Formosa,subscore_energia,Energía y Potencia SADI,20.61
 34,Formosa,subscore_fiscal,Marco Fiscal y RIGI,0.0
 34,Formosa,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,34.31
 34,Formosa,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),39.24
 38,Jujuy,subscore_clima,Clima y Eficiencia PUE,37.84
 38,Jujuy,subscore_conectividad,Conectividad y Red Troncal,26.19
-38,Jujuy,subscore_energia,Energía y Potencia SADI,70.04
+38,Jujuy,subscore_energia,Energía y Potencia SADI,55.61
 38,Jujuy,subscore_fiscal,Marco Fiscal y RIGI,100.0
 38,Jujuy,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,18.38
 38,Jujuy,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),36.05
 42,La Pampa,subscore_clima,Clima y Eficiencia PUE,29.33
 42,La Pampa,subscore_conectividad,Conectividad y Red Troncal,52.42
-42,La Pampa,subscore_energia,Energía y Potencia SADI,52.64
+42,La Pampa,subscore_energia,Energía y Potencia SADI,42.35
 42,La Pampa,subscore_fiscal,Marco Fiscal y RIGI,2.86
 42,La Pampa,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,36.63
 42,La Pampa,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),47.49
 46,La Rioja,subscore_clima,Clima y Eficiencia PUE,17.47
 46,La Rioja,subscore_conectividad,Conectividad y Red Troncal,28.63
-46,La Rioja,subscore_energia,Energía y Potencia SADI,62.57
+46,La Rioja,subscore_energia,Energía y Potencia SADI,28.13
 46,La Rioja,subscore_fiscal,Marco Fiscal y RIGI,2.86
 46,La Rioja,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,18.79
 46,La Rioja,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),32.66
 50,Mendoza,subscore_clima,Clima y Eficiencia PUE,29.16
 50,Mendoza,subscore_conectividad,Conectividad y Red Troncal,49.6
-50,Mendoza,subscore_energia,Energía y Potencia SADI,49.12
+50,Mendoza,subscore_energia,Energía y Potencia SADI,74.35
 50,Mendoza,subscore_fiscal,Marco Fiscal y RIGI,100.0
 50,Mendoza,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,20.54
 50,Mendoza,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),35.51
 54,Misiones,subscore_clima,Clima y Eficiencia PUE,3.88
 54,Misiones,subscore_conectividad,Conectividad y Red Troncal,41.81
-54,Misiones,subscore_energia,Energía y Potencia SADI,18.01
+54,Misiones,subscore_energia,Energía y Potencia SADI,7.51
 54,Misiones,subscore_fiscal,Marco Fiscal y RIGI,100.0
 54,Misiones,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,40.16
 54,Misiones,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),50.86
 58,Neuquén,subscore_clima,Clima y Eficiencia PUE,29.67
 58,Neuquén,subscore_conectividad,Conectividad y Red Troncal,55.38
-58,Neuquén,subscore_energia,Energía y Potencia SADI,57.4
+58,Neuquén,subscore_energia,Energía y Potencia SADI,92.93
 58,Neuquén,subscore_fiscal,Marco Fiscal y RIGI,100.0
 58,Neuquén,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,35.43
 58,Neuquén,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),50.33
 62,Río Negro,subscore_clima,Clima y Eficiencia PUE,36.72
 62,Río Negro,subscore_conectividad,Conectividad y Red Troncal,55.28
-62,Río Negro,subscore_energia,Energía y Potencia SADI,50.56
+62,Río Negro,subscore_energia,Energía y Potencia SADI,72.95
 62,Río Negro,subscore_fiscal,Marco Fiscal y RIGI,100.0
 62,Río Negro,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,40.48
 62,Río Negro,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),57.27
 66,Salta,subscore_clima,Clima y Eficiencia PUE,31.6
 66,Salta,subscore_conectividad,Conectividad y Red Troncal,35.01
-66,Salta,subscore_energia,Energía y Potencia SADI,55.32
+66,Salta,subscore_energia,Energía y Potencia SADI,67.75
 66,Salta,subscore_fiscal,Marco Fiscal y RIGI,100.0
 66,Salta,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,19.41
 66,Salta,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),43.41
 70,San Juan,subscore_clima,Clima y Eficiencia PUE,18.8
 70,San Juan,subscore_conectividad,Conectividad y Red Troncal,51.82
-70,San Juan,subscore_energia,Energía y Potencia SADI,67.71
+70,San Juan,subscore_energia,Energía y Potencia SADI,59.08
 70,San Juan,subscore_fiscal,Marco Fiscal y RIGI,100.0
 70,San Juan,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,13.24
 70,San Juan,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),32.18
 74,San Luis,subscore_clima,Clima y Eficiencia PUE,23.06
 74,San Luis,subscore_conectividad,Conectividad y Red Troncal,62.49
-74,San Luis,subscore_energia,Energía y Potencia SADI,67.37
+74,San Luis,subscore_energia,Energía y Potencia SADI,38.79
 74,San Luis,subscore_fiscal,Marco Fiscal y RIGI,100.0
 74,San Luis,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,29.11
 74,San Luis,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),40.73
 78,Santa Cruz,subscore_clima,Clima y Eficiencia PUE,84.9
 78,Santa Cruz,subscore_conectividad,Conectividad y Red Troncal,34.53
-78,Santa Cruz,subscore_energia,Energía y Potencia SADI,78.0
+78,Santa Cruz,subscore_energia,Energía y Potencia SADI,52.92
 78,Santa Cruz,subscore_fiscal,Marco Fiscal y RIGI,60.63
 78,Santa Cruz,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,28.93
 78,Santa Cruz,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),55.12
 82,Santa Fe,subscore_clima,Clima y Eficiencia PUE,15.42
 82,Santa Fe,subscore_conectividad,Conectividad y Red Troncal,54.81
-82,Santa Fe,subscore_energia,Energía y Potencia SADI,51.81
+82,Santa Fe,subscore_energia,Energía y Potencia SADI,53.1
 82,Santa Fe,subscore_fiscal,Marco Fiscal y RIGI,100.0
 82,Santa Fe,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,57.97
 82,Santa Fe,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),56.04
 86,Stgo. Estero,subscore_clima,Clima y Eficiencia PUE,2.18
 86,Stgo. Estero,subscore_conectividad,Conectividad y Red Troncal,33.44
-86,Stgo. Estero,subscore_energia,Energía y Potencia SADI,39.93
+86,Stgo. Estero,subscore_energia,Energía y Potencia SADI,29.37
 86,Stgo. Estero,subscore_fiscal,Marco Fiscal y RIGI,2.86
 86,Stgo. Estero,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,27.79
 86,Stgo. Estero,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),36.01
 90,Tucumán,subscore_clima,Clima y Eficiencia PUE,17.39
 90,Tucumán,subscore_conectividad,Conectividad y Red Troncal,47.35
-90,Tucumán,subscore_energia,Energía y Potencia SADI,48.79
+90,Tucumán,subscore_energia,Energía y Potencia SADI,48.11
 90,Tucumán,subscore_fiscal,Marco Fiscal y RIGI,100.0
 90,Tucumán,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,32.42
 90,Tucumán,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),46.78
 94,Tierra del Fuego,subscore_clima,Clima y Eficiencia PUE,100.0
 94,Tierra del Fuego,subscore_conectividad,Conectividad y Red Troncal,14.33
-94,Tierra del Fuego,subscore_energia,Energía y Potencia SADI,0.0
+94,Tierra del Fuego,subscore_energia,Energía y Potencia SADI,16.24
 94,Tierra del Fuego,subscore_fiscal,Marco Fiscal y RIGI,70.0
 94,Tierra del Fuego,subscore_talento_riesgo,Talento STEM y Seguridad Sísmica,15.62
 94,Tierra del Fuego,subscore_tier_readiness,Aptitud Territorial Tier (Tier-Readiness),31.51

@@ -43,15 +43,20 @@ Los perfiles de demanda que consumen estas variables están definidos en
 
 ---
 
-## Sección 1 — Energía y Red SADI
+## Sección 1 — Energía y Red SADI (v2.1.0)
 
 > Relevancia principal: **Perfil A (Campus IA)**. Máxima ponderación en `weights_profiles.json`.  
-> Fuente objetivo primaria: Secretaría de Energía / CAMMESA (Centrales de Generación SADI), ENRE.
+> Fuente objetivo primaria: Secretaría de Energía / CAMMESA (Centrales de Generación SADI) + Secretaría de Energía / SESCO Capítulo IV (Gas Natural 2025).
 
 | Columna | Tipo Pandas | Unidad | Optimización | Fuente Oficial Objetivo | Estado |
 |---------|------------|--------|-------------|------------------------|--------|
 | `sadi_potencia_instalada_mw` | `float64` | MW | ↑ | Sec. Energía / CAMMESA — Centrales de Generación SADI | 🟢 LISTO |
+| `sadi_potencia_firme_mw` | `float64` | MW | ↑ | Sec. Energía / CAMMESA — Nuclear + Hidroeléctrica + Ciclo Combinado + Bioenergía | 🟢 LISTO |
+| `sadi_mw_renovable` | `float64` | MW | ↑ | Sec. Energía / CAMMESA — Renovables Ley 27.191 | 🟢 LISTO |
 | `sadi_pct_renovable` | `float64` | % (0–100) | ↑ | Sec. Energía / CAMMESA — Renovables Ley 27.191 | 🟢 LISTO |
+| `sadi_mw_limpia` | `float64` | MW | ↑ | Sec. Energía / CAMMESA — Hidroeléctrica TOTAL + Eólica + Solar + Bioenergía + Nuclear | 🟢 LISTO |
+| `sadi_pct_limpia` | `float64` | % (0–100) | ↑ | Sec. Energía / CAMMESA — Matriz Libre de Carbono s/ total provincial | 🟢 LISTO |
+| `produccion_gas_operativa_mm3` | `float64` | Mm3/año | ↑ | Sec. Energía de la Nación / SESCO Capítulo IV (Año 2025 completo) | 🟢 LISTO |
 | `n_centrales_sadi` | `float64` | Cantidad | ↑ | CAMMESA — Conteo de nodos/centrales de generación | 🟢 LISTO |
 | `sadi_diversidad_tech` | `int64` | Cantidad tecnologías | ↑ | CAMMESA — Diversidad tecnológica de generación provincial | 🟢 LISTO |
 | `sadi_uptime_index` | `float64` | Índice 0–1 | ↑ | ENRE — SAIDI/SAIFI (solo AMBA; pendiente fuente nacional uniforme) | 🔴 NaN |
@@ -61,11 +66,10 @@ Los perfiles de demanda que consumen estas variables están definidos en
 | `potencial_offgrid_score` | `float64` | Índice 0–10 | ↑ | INENCO (solar/eólico) + CONICET (Patagonia) — Recurso renovable off-grid | 🔴 NaN |
 
 **Notas:**
-- `sadi_potencia_instalada_mw` agrega todas las centrales interconectadas al SADI por provincia (decisión D6). Tierra del Fuego registra 0.0 MW por tratarse de un sistema provincial no interconectado.
-- `sadi_pct_renovable` computa solar, eólica, biomasa, biogás y mini-hidro (≤50 MW) bajo el régimen de la Ley 27.191.
-- `sadi_uptime_index` se derivará de SAIDI cuando se disponga de fuente nacional uniforme (CAMMESA/distribuidoras regionales), ya que ENRE regula únicamente Edenor y Edesur (AMBA).
-- `sadi_margen_disponible_mw` requiere extracción de informes anuales nodales CAMMESA (PDF).
-- Variables de proyección (`2028`, `2036`) alimentarán el módulo Monte Carlo en `src/modeling/`.
+- `sadi_potencia_instalada_mw` agrega todas las centrales interconectadas al SADI por provincia. Yacyretá (2.745 MW) se computa en Corrientes y Salto Grande (945 MW) en Entre Ríos. Tierra del Fuego registra 0.0 MW por tratarse de un sistema provincial físicamente aislado.
+- `sadi_potencia_firme_mw` aísla la generación de base confiable 24/7 (nuclear, hidroeléctrica, ciclos combinados CCGT y bioenergía), diferenciándola de picos o intermitentes.
+- `sadi_pct_limpia` computa la matriz libre de carbono total (sin limitar a mini-hidro) según los compromisos corporativos ESG/RE100 de hyperscalers.
+- `produccion_gas_operativa_mm3` computa la extracción real del año 2025 (12 meses) de la Secretaría de Energía, excluyendo offshore federal de Estado Nacional. Tierra del Fuego conserva su puntaje real de gas in-situ (1.351,66 Mm3).
 
 ---
 

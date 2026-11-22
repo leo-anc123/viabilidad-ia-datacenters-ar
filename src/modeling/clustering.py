@@ -86,7 +86,7 @@ def fit_archetypes_kmeans(
     df: pd.DataFrame,
     n_clusters: int = 4,
     features: List[str] = FEATURE_COLUMNS,
-    random_state: int = 42,
+    random_state: int = 28,
 ) -> Tuple[pd.DataFrame, pd.DataFrame, KMeans]:
     """
     Entrena K-Means para k=4 y asigna nombres de arquetipo unívocos

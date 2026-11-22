@@ -46,7 +46,7 @@ def run_all_validations() -> None:
     # 2. Validación de Preprocesamiento y log1p
     df_norm, meta = preprocess_features(df_raw)
     norm_cols = [c for c in df_norm.columns if c.startswith("norm_")]
-    assert len(norm_cols) == 16, f"Se esperaban 16 features normalizadas, obtenidas {len(norm_cols)}"
+    assert len(norm_cols) == 19, f"Se esperaban 19 features normalizadas (v2.1.0), obtenidas {len(norm_cols)}"
     assert df_norm[norm_cols].isna().sum().sum() == 0, "No debe haber ningún NaN en features normalizadas"
 
     for col in norm_cols:
@@ -67,7 +67,10 @@ def run_all_validations() -> None:
 
     # 3. Validación de Caso Físico de Tierra del Fuego
     tdf_row = df_norm[df_norm["jurisdiccion_id"] == "94"].iloc[0]
+    assert tdf_row["norm_potencia_firme"] == 0.0, "TDF debe tener 0.0 en potencia firme SADI"
     assert tdf_row["norm_potencia_sadi"] == 0.0, "TDF debe tener 0.0 en potencia SADI normalizada"
+    assert tdf_row["norm_pct_limpia"] == 0.0, "TDF debe tener 0.0 en % limpia SADI"
+    assert tdf_row["norm_seguridad_gas"] > 0.0, "TDF debe tener score positivo en gas in-situ por Cuenca Austral"
     assert tdf_row["norm_pct_renovable"] == 0.0, "TDF debe tener 0.0 en % renovable SADI"
     assert tdf_row["norm_n_centrales_sadi"] == 0.0, "TDF debe tener 0.0 en n_centrales_sadi"
     assert tdf_row["norm_sadi_diversidad_tech"] == 0.0, "TDF debe tener 0.0 en sadi_diversidad_tech"

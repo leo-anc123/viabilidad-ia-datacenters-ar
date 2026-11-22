@@ -1,13 +1,15 @@
 # ⚡ Viabilidad de Data Centers y Campus de IA en Argentina
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.35%2B-FF4B4B.svg)](https://streamlit.io/)
-[![Power BI](https://img.shields.io/badge/Power_BI-Star_Schema-F2C811.svg)](bi/guia_powerbi_modelo_estrella.md)
-[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-Clustering_K--Means-F7931E.svg)](https://scikit-learn.org/)
-[![Status: v1.0.0](https://img.shields.io/badge/Release-v1.0.0_MVP-00b894.svg)](docs/CHANGELOG.md)
+[![React 18](https://img.shields.io/badge/React-18.3-61DAFB.svg?logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38BDF8.svg?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Status: v2.0.0](https://img.shields.io/badge/Release-v2.0.0-00b894.svg)](docs/CHANGELOG.md)
 [![EPSG:4326](https://img.shields.io/badge/GIS-EPSG%3A4326_(WGS84)-38bdf8.svg)](https://epsg.io/4326)
+[![Power BI](https://img.shields.io/badge/Power_BI-Star_Schema-F2C811.svg)](bi/guia_powerbi_modelo_estrella.md)
 
-> **Evaluación técnica, energética, climática y regulatoria multicriterio (MCDA), segmentación no supervisada (K-Means) y análisis de estabilidad estocástica (Monte Carlo) en las 24 jurisdicciones de Argentina (23 provincias + CABA).**
+> **Observatorio de Infraestructura y viabilidad técnica, energética, climática y regulatoria multicriterio (MCDA), segmentación no supervisada (K-Means), análisis Monte Carlo y proyecciones prospectivas 2026–2036 en las 24 jurisdicciones de Argentina (23 provincias + CABA).**
+
 
 ---
 
@@ -172,43 +174,68 @@ Diseñada con microtipografía ejecutiva dark-mode (`#0e1117`), interactividad f
 | ![Simulador Interactivo](docs/assets/simulador_tiempo_real.png) | ![Clustering y Monte Carlo](docs/assets/clustering_montecarlo.png) |
 | *Sliders con renormalización automática y Radar Chart vs. promedio* | *Visualización de los 4 arquetipos K-Means e intervalos P5-P95* |
 
+## 5. Experiencia de Usuario y Plataformas de Consumo
+
+El proyecto ofrece un ecosistema de visualización dual de nivel profesional:
+
+### 5.1 Aplicación Web Oficial: `nodo / IA — Observatorio de Infraestructura` (v2.0.0)
+Desarrollada en **React 18 + Vite + Tailwind CSS + Recharts + Leaflet**, orientada a decisores de inversión y políticas públicas con diseño editorial nocturno de alto contraste (`#080A12` / `#0B0E17` / `#131826`):
+
+1. **01 Dashboard Analítico:** 5 KPIs dinámicos en vivo, ranking Top 10 con barras Recharts, lectura territorial contextualizada y detalle de las 6 macro-dimensiones del modelo.
+2. **02 Mapa Geoespacial SADI:** Cartografía nocturna **Esri World Dark Gray Base** (0 API keys y 0 marcas de agua), 474 centrales SADI georreferenciadas vectoriales (`CircleMarker` proporcionales a MW), filtros multi-tecnología (`Hidroeléctrica`, `Eólica`, `Solar`, `Térmica`), reencuadre dinámico (`zoom: 9` en CABA, `zoom: 6` en provincias) y panel de provincia destacada.
+3. **03 Simulador Interactivo 6D:** Configuración libre de prioridades en escala 0–10 con pesos efectivos normalizados en vivo (`XX.X%`), barra de **Requisitos Mínimos Técnicos** (Potencia SADI en MW, PUE térmico y toggle RIGI), ranking con deltas `▲/▼/=` y Radar hexagonal comparado frente a la línea de **Promedio Nacional**.
+4. **04 Proyecciones a Futuro (2026–2036):** Gráficos multivariados de los 3 escenarios oficiales (*Acelerado*, *Tendencial*, *Conservador*) partiendo de base común 2026, selector de horizontes temporales y tarjetas con deltas proyectados.
+5. **05 Matriz Provincial Heatmap:** Auditoría exhaustiva de las 24 jurisdicciones con celdas tipo heatmap para las 6 dimensiones auditadas, buscador reactivo, ordenamiento por columnas, cluster K-Means y estabilidad Monte Carlo (Prob. Top 3 %).
+6. **Trazabilidad en Vivo:** Badge superior conectado a `data_freshness.json` con modal de auditoría de las 6 fuentes oficiales.
+
 ### 5.2 Capa de Business Intelligence en Power BI Desktop
 Construida bajo un **Modelo Estrella puro (Star Schema)** alimentado desde `data/04_outputs/pbi_ready/` y estilizada mediante el tema oficial `bi/theme_dark_ivid.json`:
 
 ![Modelo Estrella Power BI](docs/assets/powerbi_modelo_estrella.png)
 *(Ver guía técnica completa y bloque de medidas DAX en [bi/guia_powerbi_modelo_estrella.md](bi/guia_powerbi_modelo_estrella.md))*
 
+### 5.3 Aplicación de Respaldo en Streamlit (v1.0.0)
+Preservada en `app/main.py` como entorno interactivo de validación estadística y respaldo operativo local.
+
 ---
 
 ## 6. Instalación Local y Despliegue
 
 ### 6.1 Requisitos Previos
-- Python 3.10 o superior (recomendado 3.11 o 3.12).
+- Python 3.10 o superior (recomendado 3.11+).
+- Node.js 18+ y npm (recomendado Node 20+).
 - Git instalado en el sistema.
 
-### 6.2 Setup Rápido en Local
+### 6.2 Ejecución de la App Web `nodo / IA` (React + Vite)
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/viabilidad-ia-datacenters-ar.git
-cd viabilidad-ia-datacenters-ar
+# 1. Posicionarse en la carpeta web
+cd web
 
-# 2. Crear y activar entorno virtual
-# En Windows (PowerShell):
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-# En Linux / macOS:
-python3 -m venv .venv
-source .venv/bin/activate
+# 2. Instalar dependencias
+npm install
 
-# 3. Instalar dependencias exactas
-pip install -r requirements.txt
+# 3. Iniciar servidor de desarrollo local
+npm run dev
 
-# 4. Iniciar la aplicación web Streamlit
-streamlit run app/main.py
+# 4. Construir bundle de producción
+npm run build
+```
+La aplicación quedará disponible de inmediato en `http://localhost:5173/`.
+
+### 6.3 Despliegue en Netlify / Vercel
+La aplicación `web/` está diseñada bajo una arquitectura JAMstack pura sin servidor backend, consumiendo el contrato estático auditado `ivid_payload.json`:
+1. **Root directory:** `web`
+2. **Build command:** `npm run build`
+3. **Publish directory:** `web/dist`
+4. **Environment Variables:** Ninguna requerida (0 API keys necesarias).
+
+### 6.4 Pipeline CI/CD Automatizado (Python)
+Para actualizar los datos y regenerar todos los outputs y el contrato web en un solo comando idempotente:
+```bash
+python src/pipeline/run_full_pipeline.py --mode full
 ```
 
-### 6.3 Ejecución de la Suite de Validación y Calidad
-El proyecto incluye un pipeline automatizado de pruebas para validar la consistencia de datos y algoritmos:
+### 6.5 Ejecución de la Suite de Validación y Calidad
 ```bash
 # Validar integridad referencial y coordenadas WGS84 de la tabla maestra
 python src/etl/validate_master.py data/03_processed/master_24_jurisdicciones.parquet
@@ -218,6 +245,9 @@ python src/modeling/validate_mcda.py
 
 # Validar clustering K-Means, Monte Carlo y capa pbi_ready/
 python src/modeling/validate_fase3.py
+
+# Validar modelo predictivo prospectivo 2026–2036
+python src/modeling/validate_forecasting.py
 ```
 
 ### 6.4 Despliegue en Streamlit Community Cloud

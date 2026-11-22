@@ -1,6 +1,6 @@
 # Reporte de Control de Calidad y Cobertura — Fase 2 (v0.5.0)
 
-**Fecha de generación:** 2026-11-21 10:36:37  
+**Fecha de generación:** 2026-11-22 13:05:13  
 **Tabla auditada:** `data/03_processed/master_24_jurisdicciones.parquet`  
 **Registros territoriales:** 24 jurisdicciones (23 provincias + CABA) — 100% match ancla INDEC.  
 
@@ -8,10 +8,10 @@
 
 ## 1. Resumen Ejecutivo de Cobertura
 
-- **Total de columnas unificadas:** 63
-- **Columnas 100% completas (0% nulos):** 49 (77.8%)
-- **Columnas con nulos parciales justificados:** 1 (1.6%)
-- **Columnas 100% NaN documentadas para Fase 3/4/5:** 13 (20.6%)
+- **Total de columnas unificadas:** 68
+- **Columnas 100% completas (0% nulos):** 54 (79.4%)
+- **Columnas con nulos parciales justificados:** 1 (1.5%)
+- **Columnas 100% NaN documentadas para Fase 3/4/5:** 13 (19.1%)
 
 ---
 
@@ -20,7 +20,7 @@
 | Dimensión | Columnas Totales | 100% Completas | Parciales | 100% NaN | Estado de Viabilidad |
 |:---|:---:|:---:|:---:|:---:|:---|
 | Sección 0 — Ancla Territorial | 6 | 6 | 0 | 0 | 🟢 Operativa |
-| Sección 1 — Energía y Red SADI | 11 | 6 | 0 | 5 | 🟡 Operativa c/ pendientes |
+| Sección 1 — Energía y Red SADI | 16 | 11 | 0 | 5 | 🟡 Operativa c/ pendientes |
 | Sección 2 — Clima y Agua | 13 | 11 | 0 | 2 | 🟡 Operativa c/ pendientes |
 | Sección 3 — Conectividad | 10 | 8 | 0 | 2 | 🟡 Operativa c/ pendientes |
 | Sección 4 — Fiscal y Regulatorio | 10 | 8 | 1 | 1 | 🟡 Operativa c/ pendientes |
@@ -39,7 +39,12 @@
 | Ancla Territorial | `lat_capital` | 24 | 0 | 0.0% | 🟢 Completo | Ingresa directamente al modelo multicriterio (MCDA) / clustering. |
 | Ancla Territorial | `lon_capital` | 24 | 0 | 0.0% | 🟢 Completo | Ingresa directamente al modelo multicriterio (MCDA) / clustering. |
 | Energía y Red SADI | `sadi_potencia_instalada_mw` | 24 | 0 | 0.0% | 🟢 Completo | Ingresa directamente al modelo multicriterio (MCDA) / clustering. |
+| Energía y Red SADI | `sadi_potencia_firme_mw` | 24 | 0 | 0.0% | 🟢 Completo | Ingresa directamente al modelo multicriterio (MCDA) / clustering. |
+| Energía y Red SADI | `sadi_mw_renovable` | 24 | 0 | 0.0% | 🟢 Completo | Ingresa directamente al modelo multicriterio (MCDA) / clustering. |
 | Energía y Red SADI | `sadi_pct_renovable` | 24 | 0 | 0.0% | 🟢 Completo | Ingresa directamente al modelo multicriterio (MCDA) / clustering. |
+| Energía y Red SADI | `sadi_mw_limpia` | 24 | 0 | 0.0% | 🟢 Completo | Ingresa directamente al modelo multicriterio (MCDA) / clustering. |
+| Energía y Red SADI | `sadi_pct_limpia` | 24 | 0 | 0.0% | 🟢 Completo | Ingresa directamente al modelo multicriterio (MCDA) / clustering. |
+| Energía y Red SADI | `produccion_gas_operativa_mm3` | 24 | 0 | 0.0% | 🟢 Completo | Ingresa directamente al modelo multicriterio (MCDA) / clustering. |
 | Energía y Red SADI | `sadi_uptime_index` | 0 | 24 | 100.0% | 🔴 100% NaN | Sin datos oficiales uniformes. No inventar. Conservar o excluir en scoring Fase 3. |
 | Energía y Red SADI | `sadi_margen_disponible_mw` | 0 | 24 | 100.0% | 🔴 100% NaN | Sin datos oficiales uniformes. No inventar. Conservar o excluir en scoring Fase 3. |
 | Energía y Red SADI | `proyeccion_potencia_2028_mw` | 0 | 24 | 100.0% | 🔴 100% NaN | Sin datos oficiales uniformes. No inventar. Conservar o excluir en scoring Fase 3. |

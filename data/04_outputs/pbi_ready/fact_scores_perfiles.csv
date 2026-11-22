@@ -1,73 +1,73 @@
 ﻿jurisdiccion_id,jurisdiccion_nombre,jurisdiccion_corta,region_argentina,perfil_id,perfil_nombre,score_base,rank_base,mc_score_mean,mc_score_std,mc_score_p5,mc_score_p95,mc_rank_median,prob_top3_pct,prob_top5_pct
-02,Ciudad Autónoma de Buenos Aires,CABA,AMBA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,70.3506,1,70.3506,0.0,70.3506,70.3506,1,100.0,100.0
-26,Chubut,Chubut,Patagonia,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,60.8648,2,60.8648,0.0,60.8648,60.8648,2,100.0,100.0
-06,Buenos Aires,Buenos Aires,AMBA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,60.7404,3,60.7404,0.0,60.7404,60.7404,3,100.0,100.0
-14,Córdoba,Córdoba,Centro,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,58.5765,4,58.5765,0.0,58.5765,58.5765,4,0.0,100.0
-78,Santa Cruz,Santa Cruz,Patagonia,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,57.0207,5,57.0207,0.0,57.0207,57.0207,5,0.0,100.0
-62,Río Negro,Río Negro,Patagonia,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,56.7178,6,56.7178,0.0,56.7178,56.7178,6,0.0,0.0
-82,Santa Fe,Santa Fe,Centro,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,56.0073,7,56.0073,0.0,56.0073,56.0073,7,0.0,0.0
-58,Neuquén,Neuquén,Patagonia,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,54.7017,8,54.7017,0.0,54.7017,54.7017,8,0.0,0.0
-74,San Luis,San Luis,Cuyo,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,53.7945,9,53.7945,0.0,53.7945,53.7945,9,0.0,0.0
-30,Entre Ríos,Entre Ríos,Centro,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,49.0316,10,49.0316,0.0,49.0316,49.0316,10,0.0,0.0
-18,Corrientes,Corrientes,NEA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,48.8126,11,48.8126,0.0,48.8126,48.8126,11,0.0,0.0
-90,Tucumán,Tucumán,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,48.7886,12,48.7886,0.0,48.7886,48.7886,12,0.0,0.0
-38,Jujuy,Jujuy,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,48.084,13,48.084,0.0,48.084,48.084,13,0.0,0.0
-66,Salta,Salta,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,47.4585,14,47.4585,0.0,47.4585,47.4585,14,0.0,0.0
-50,Mendoza,Mendoza,Cuyo,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,47.3218,15,47.3218,0.0,47.3218,47.3218,15,0.0,0.0
-70,San Juan,San Juan,Cuyo,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,47.2935,16,47.2935,0.0,47.2935,47.2935,16,0.0,0.0
-22,Chaco,Chaco,NEA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,46.7222,17,46.7222,0.0,46.7222,46.7222,17,0.0,0.0
-10,Catamarca,Catamarca,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,45.6453,18,45.6453,0.0,45.6453,45.6453,18,0.0,0.0
-54,Misiones,Misiones,NEA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,42.4531,19,42.4531,0.0,42.4531,42.4531,19,0.0,0.0
-94,Tierra del Fuego,Tierra del Fuego,Patagonia,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,38.5761,20,38.5761,0.0,38.5761,38.5761,20,0.0,0.0
-42,La Pampa,La Pampa,Centro,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,36.8965,21,36.8965,0.0,36.8965,36.8965,21,0.0,0.0
-46,La Rioja,La Rioja,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,27.1616,22,27.1616,0.0,27.1616,27.1616,22,0.0,0.0
-86,Santiago del Estero,Stgo. Estero,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,23.701,23,23.701,0.0,23.701,23.701,23,0.0,0.0
-34,Formosa,Formosa,NEA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,21.688,24,21.688,0.0,21.688,21.688,24,0.0,0.0
-78,Santa Cruz,Santa Cruz,Patagonia,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),64.0912,1,64.04,0.88,62.59,65.49,1,100.0,100.0
-26,Chubut,Chubut,Patagonia,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),63.5711,2,63.55,0.89,62.07,65.0,2,100.0,100.0
-02,Ciudad Autónoma de Buenos Aires,CABA,AMBA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),63.3009,3,63.35,1.19,61.42,65.39,3,100.0,100.0
-06,Buenos Aires,Buenos Aires,AMBA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),58.9985,4,59.03,0.81,57.68,60.28,4,0.0,100.0
-14,Córdoba,Córdoba,Centro,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),56.5327,5,56.54,1.03,54.79,58.22,5,0.0,97.8
-62,Río Negro,Río Negro,Patagonia,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),55.6774,6,55.67,0.88,54.25,57.09,6,0.0,1.3
-74,San Luis,San Luis,Cuyo,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),55.093,7,55.1,1.18,53.07,57.05,7,0.0,0.9
-58,Neuquén,Neuquén,Patagonia,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),54.7844,8,54.78,0.96,53.12,56.34,8,0.0,0.0
-38,Jujuy,Jujuy,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),53.4458,9,53.41,1.18,51.45,55.29,9,0.0,0.0
-82,Santa Fe,Santa Fe,Centro,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),53.3094,10,53.32,1.15,51.36,55.18,10,0.0,0.0
-70,San Juan,San Juan,Cuyo,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),50.4072,11,50.4,1.34,48.11,52.59,11,0.0,0.0
-66,Salta,Salta,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),49.8702,12,49.85,1.02,48.16,51.47,12,0.0,0.0
-90,Tucumán,Tucumán,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),48.1087,13,48.11,1.11,46.23,49.89,13,0.0,0.0
-50,Mendoza,Mendoza,Cuyo,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),47.9081,14,47.9,1.03,46.18,49.57,14,0.0,0.0
-18,Corrientes,Corrientes,NEA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),47.5715,15,47.58,1.31,45.32,49.79,15,0.0,0.0
-30,Entre Ríos,Entre Ríos,Centro,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),47.1875,16,47.19,1.1,45.36,49.0,16,0.0,0.0
-10,Catamarca,Catamarca,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),45.8922,17,45.89,1.16,43.9,47.75,17,0.0,0.0
-22,Chaco,Chaco,NEA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),43.301,18,43.31,1.31,41.15,45.49,18,0.0,0.0
-94,Tierra del Fuego,Tierra del Fuego,Patagonia,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),38.2212,19,38.15,2.14,34.74,41.79,20,0.0,0.0
-42,La Pampa,La Pampa,Centro,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),38.1173,20,38.14,0.87,36.68,39.57,20,0.0,0.0
-54,Misiones,Misiones,NEA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),37.0056,21,37.01,1.46,34.67,39.47,20,0.0,0.0
-46,La Rioja,La Rioja,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),32.3329,22,32.34,1.25,30.27,34.34,22,0.0,0.0
-86,Santiago del Estero,Stgo. Estero,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),24.3679,23,24.39,0.9,22.89,25.87,23,0.0,0.0
-34,Formosa,Formosa,NEA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),20.3171,24,20.34,0.75,19.13,21.61,24,0.0,0.0
-02,Ciudad Autónoma de Buenos Aires,CABA,AMBA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,75.1614,1,75.16,1.09,73.33,76.94,1,100.0,100.0
-06,Buenos Aires,Buenos Aires,AMBA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,64.8261,2,64.81,0.66,63.69,65.87,2,100.0,100.0
-14,Córdoba,Córdoba,Centro,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,57.5282,3,57.55,0.65,56.51,58.64,3,93.8,100.0
-26,Chubut,Chubut,Patagonia,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,56.5373,4,56.57,0.81,55.26,57.94,4,6.2,100.0
-82,Santa Fe,Santa Fe,Centro,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,55.7558,5,55.78,0.7,54.62,56.94,5,0.0,100.0
-62,Río Negro,Río Negro,Patagonia,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,54.526,6,54.57,0.68,53.45,55.72,6,0.0,0.0
-74,San Luis,San Luis,Cuyo,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,53.0916,7,53.13,0.98,51.4,54.61,7,0.0,0.0
-58,Neuquén,Neuquén,Patagonia,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,52.8265,8,52.87,0.76,51.55,54.1,8,0.0,0.0
-78,Santa Cruz,Santa Cruz,Patagonia,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,50.6673,9,50.69,0.97,49.15,52.33,9,0.0,0.0
-18,Corrientes,Corrientes,NEA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,47.562,10,47.59,0.81,46.26,48.94,10,0.0,0.0
-30,Entre Ríos,Entre Ríos,Centro,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,47.3219,11,47.36,0.73,46.14,48.61,11,0.0,0.0
-90,Tucumán,Tucumán,NOA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,46.7636,12,46.8,0.8,45.45,48.12,12,0.0,0.0
-22,Chaco,Chaco,NEA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,45.4205,13,45.45,0.83,44.12,46.85,13,0.0,0.0
-70,San Juan,San Juan,Cuyo,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,45.06,14,45.11,1.15,43.15,46.92,14,0.0,0.0
-50,Mendoza,Mendoza,Cuyo,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,44.5988,15,44.66,0.93,43.07,46.15,15,0.0,0.0
-10,Catamarca,Catamarca,NOA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,43.3959,16,43.44,0.92,41.86,44.94,16,0.0,0.0
-66,Salta,Salta,NOA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,42.3544,17,42.41,0.94,40.92,43.99,17,0.0,0.0
-42,La Pampa,La Pampa,Centro,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,41.2927,18,41.25,0.65,40.2,42.32,19,0.0,0.0
-54,Misiones,Misiones,NEA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,41.2927,19,41.33,0.93,39.78,42.84,19,0.0,0.0
-38,Jujuy,Jujuy,NOA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,41.2307,20,41.29,1.13,39.5,43.18,19,0.0,0.0
-94,Tierra del Fuego,Tierra del Fuego,Patagonia,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,29.1484,21,29.23,1.22,27.3,31.26,21,0.0,0.0
-46,La Rioja,La Rioja,NOA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,28.6631,22,28.63,0.69,27.54,29.74,22,0.0,0.0
-86,Santiago del Estero,Stgo. Estero,NOA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,27.4847,23,27.45,0.52,26.59,28.26,23,0.0,0.0
-34,Formosa,Formosa,NEA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,25.6398,24,25.6,0.53,24.67,26.44,24,0.0,0.0
+02,Ciudad Autónoma de Buenos Aires,CABA,AMBA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,70.5458,1,70.5458,0.0,70.5458,70.5458,1,100.0,100.0
+26,Chubut,Chubut,Patagonia,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,62.3442,2,62.3442,0.0,62.3442,62.3442,2,100.0,100.0
+58,Neuquén,Neuquén,Patagonia,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,60.6236,3,60.6236,0.0,60.6236,60.6236,3,100.0,100.0
+06,Buenos Aires,Buenos Aires,AMBA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,60.5931,4,60.5931,0.0,60.5931,60.5931,4,0.0,100.0
+62,Río Negro,Río Negro,Patagonia,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,60.4497,5,60.4497,0.0,60.4497,60.4497,5,0.0,100.0
+14,Córdoba,Córdoba,Centro,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,60.1346,6,60.1346,0.0,60.1346,60.1346,6,0.0,0.0
+82,Santa Fe,Santa Fe,Centro,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,56.223,7,56.223,0.0,56.223,56.223,7,0.0,0.0
+78,Santa Cruz,Santa Cruz,Patagonia,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,52.8408,8,52.8408,0.0,52.8408,52.8408,8,0.0,0.0
+30,Entre Ríos,Entre Ríos,Centro,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,52.5337,9,52.5337,0.0,52.5337,52.5337,9,0.0,0.0
+18,Corrientes,Corrientes,NEA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,52.4938,10,52.4938,0.0,52.4938,52.4938,10,0.0,0.0
+50,Mendoza,Mendoza,Cuyo,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,51.5266,11,51.5266,0.0,51.5266,51.5266,11,0.0,0.0
+66,Salta,Salta,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,49.5294,12,49.5294,0.0,49.5294,49.5294,12,0.0,0.0
+74,San Luis,San Luis,Cuyo,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,49.0322,13,49.0322,0.0,49.0322,49.0322,13,0.0,0.0
+90,Tucumán,Tucumán,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,48.6754,14,48.6754,0.0,48.6754,48.6754,14,0.0,0.0
+70,San Juan,San Juan,Cuyo,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,45.8556,15,45.8556,0.0,45.8556,45.8556,15,0.0,0.0
+38,Jujuy,Jujuy,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,45.6789,16,45.6789,0.0,45.6789,45.6789,16,0.0,0.0
+22,Chaco,Chaco,NEA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,45.1276,17,45.1276,0.0,45.1276,45.1276,17,0.0,0.0
+94,Tierra del Fuego,Tierra del Fuego,Patagonia,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,41.2833,18,41.2833,0.0,41.2833,41.2833,18,0.0,0.0
+10,Catamarca,Catamarca,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,41.0718,19,41.0718,0.0,41.0718,41.0718,19,0.0,0.0
+54,Misiones,Misiones,NEA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,40.7017,20,40.7017,0.0,40.7017,40.7017,20,0.0,0.0
+42,La Pampa,La Pampa,Centro,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,35.1803,21,35.1803,0.0,35.1803,35.1803,21,0.0,0.0
+86,Santiago del Estero,Stgo. Estero,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,21.9418,22,21.9418,0.0,21.9418,21.9418,22,0.0,0.0
+46,La Rioja,La Rioja,NOA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,21.4229,23,21.4229,0.0,21.4229,21.4229,23,0.0,0.0
+34,Formosa,Formosa,NEA,benchmark_cabase,Perfil C — Benchmark CABASE / Línea Base Sectorial,20.721,24,20.721,0.0,20.721,20.721,24,0.0,0.0
+26,Chubut,Chubut,Patagonia,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),66.234,1,66.21,1.01,64.51,67.83,1,100.0,100.0
+58,Neuquén,Neuquén,Patagonia,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),65.4438,2,65.44,1.45,63.07,67.9,2,100.0,100.0
+02,Ciudad Autónoma de Buenos Aires,CABA,AMBA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),63.6522,3,63.7,1.19,61.77,65.72,3,90.1,100.0
+62,Río Negro,Río Negro,Patagonia,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),62.3947,4,62.39,0.96,60.79,63.97,4,9.9,100.0
+14,Córdoba,Córdoba,Centro,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),59.3373,5,59.34,1.06,57.51,61.11,5,0.0,71.2
+06,Buenos Aires,Buenos Aires,AMBA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),58.7333,6,58.76,0.8,57.42,60.01,6,0.0,25.0
+78,Santa Cruz,Santa Cruz,Patagonia,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),56.5673,7,56.52,0.81,55.21,57.86,7,0.0,3.8
+50,Mendoza,Mendoza,Cuyo,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),55.4767,8,55.47,1.26,53.33,57.51,8,0.0,0.0
+18,Corrientes,Corrientes,NEA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),53.9331,9,53.94,1.52,51.32,56.39,10,0.0,0.0
+82,Santa Fe,Santa Fe,Centro,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),53.6978,10,53.71,1.15,51.77,55.57,10,0.0,0.0
+66,Salta,Salta,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),53.5979,11,53.57,1.13,51.72,55.39,10,0.0,0.0
+30,Entre Ríos,Entre Ríos,Centro,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),53.4912,12,53.49,1.21,51.48,55.51,11,0.0,0.0
+38,Jujuy,Jujuy,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),49.1165,13,49.08,1.03,47.39,50.71,13,0.0,0.0
+90,Tucumán,Tucumán,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),47.9049,14,47.9,1.11,46.05,49.7,14,0.0,0.0
+70,San Juan,San Juan,Cuyo,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),47.8189,15,47.82,1.24,45.74,49.87,15,0.0,0.0
+74,San Luis,San Luis,Cuyo,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),46.5209,16,46.53,1.1,44.75,48.31,16,0.0,0.0
+94,Tierra del Fuego,Tierra del Fuego,Patagonia,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),43.0941,17,43.03,1.82,40.12,46.05,17,0.0,0.0
+22,Chaco,Chaco,NEA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),40.4307,18,40.44,1.37,38.22,42.77,18,0.0,0.0
+10,Catamarca,Catamarca,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),37.6599,19,37.66,1.28,35.66,39.69,19,0.0,0.0
+42,La Pampa,La Pampa,Centro,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),35.028,20,35.05,0.7,33.87,36.19,20,0.0,0.0
+54,Misiones,Misiones,NEA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),33.8531,21,33.86,1.62,31.27,36.54,21,0.0,0.0
+46,La Rioja,La Rioja,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),22.0034,22,22.01,0.46,21.23,22.76,22,0.0,0.0
+86,Santiago del Estero,Stgo. Estero,NOA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),21.2014,23,21.22,0.71,20.04,22.42,23,0.0,0.0
+34,Formosa,Formosa,NEA,campus_ia_training,Perfil A — Campus de Entrenamiento IA (Alta Densidad),18.5764,24,18.6,0.7,17.49,19.8,24,0.0,0.0
+02,Ciudad Autónoma de Buenos Aires,CABA,AMBA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,75.3371,1,75.34,1.08,73.5,77.11,1,100.0,100.0
+06,Buenos Aires,Buenos Aires,AMBA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,64.6935,2,64.68,0.67,63.57,65.74,2,100.0,100.0
+14,Córdoba,Córdoba,Centro,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,58.9305,3,58.95,0.67,57.92,60.08,3,82.6,99.7
+58,Neuquén,Neuquén,Patagonia,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,58.1561,4,58.19,0.99,56.45,59.77,4,15.6,86.8
+62,Río Negro,Río Negro,Patagonia,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,57.8847,5,57.92,0.74,56.74,59.13,5,0.0,61.1
+26,Chubut,Chubut,Patagonia,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,57.8688,6,57.9,0.89,56.47,59.36,5,1.8,52.4
+82,Santa Fe,Santa Fe,Centro,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,55.9499,7,55.97,0.7,54.81,57.14,7,0.0,0.0
+18,Corrientes,Corrientes,NEA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,50.8751,8,50.9,0.92,49.51,52.41,8,0.0,0.0
+30,Entre Ríos,Entre Ríos,Centro,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,50.4737,9,50.51,0.79,49.3,51.81,9,0.0,0.0
+74,San Luis,San Luis,Cuyo,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,48.8056,10,48.85,1.0,47.17,50.45,10,0.0,0.0
+50,Mendoza,Mendoza,Cuyo,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,48.3831,11,48.43,1.04,46.67,50.13,11,0.0,0.0
+78,Santa Cruz,Santa Cruz,Patagonia,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,46.9054,12,46.94,0.78,45.71,48.21,12,0.0,0.0
+90,Tucumán,Tucumán,NOA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,46.6617,13,46.7,0.8,45.35,48.02,13,0.0,0.0
+66,Salta,Salta,NOA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,44.2183,14,44.27,1.02,42.59,45.99,15,0.0,0.0
+22,Chaco,Chaco,NEA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,43.9854,15,44.02,0.87,42.59,45.47,15,0.0,0.0
+70,San Juan,San Juan,Cuyo,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,43.7659,16,43.82,1.11,41.87,45.58,15,0.0,0.0
+42,La Pampa,La Pampa,Centro,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,39.7481,17,39.71,0.65,38.64,40.79,18,0.0,0.0
+54,Misiones,Misiones,NEA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,39.7164,18,39.76,1.01,38.06,41.39,18,0.0,0.0
+10,Catamarca,Catamarca,NOA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,39.2798,19,39.34,0.98,37.7,40.93,19,0.0,0.0
+38,Jujuy,Jujuy,NOA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,39.066,20,39.13,1.02,37.53,40.86,19,0.0,0.0
+94,Tierra del Fuego,Tierra del Fuego,Patagonia,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,31.5848,21,31.66,1.17,29.78,33.63,21,0.0,0.0
+86,Santiago del Estero,Stgo. Estero,NOA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,25.9014,22,25.87,0.49,25.03,26.63,22,0.0,0.0
+34,Formosa,Formosa,NEA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,24.7694,23,24.73,0.54,23.77,25.59,23,0.0,0.0
+46,La Rioja,La Rioja,NOA,nodo_inferencia_edge,Perfil B — Nodos de Inferencia / Edge,23.4983,24,23.48,0.37,22.86,24.08,24,0.0,0.0

@@ -31,8 +31,10 @@ from src.modeling.preprocessing import preprocess_features, ANCHOR_COLUMNS
 # Cada dimensión suma exactamente 1.0
 INTRA_DIMENSION_WEIGHTS: Dict[str, Dict[str, float]] = {
     "subscore_energia": {
-        "norm_potencia_sadi": 0.60,
-        "norm_pct_renovable": 0.40,
+        "norm_potencia_firme": 0.35,
+        "norm_potencia_sadi": 0.25,
+        "norm_pct_limpia": 0.20,
+        "norm_seguridad_gas": 0.20,
     },
     "subscore_clima": {
         "norm_pue_climatologico": 0.65,

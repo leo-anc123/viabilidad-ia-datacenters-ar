@@ -90,9 +90,9 @@ DIMENSION_METADATA = [
 
 TECNOLOGIA_FILTRO_MAP = {
     "Térmica": "Térmica",
-    "Biogas": "Térmica",
-    "Biomasa": "Térmica",
-    "Nuclear": "Térmica",
+    "Biogas": "Bioenergía",
+    "Biomasa": "Bioenergía",
+    "Nuclear": "Nuclear",
     "Fotovoltaica": "Solar",
     "Eólica": "Eólica",
     "Hidroeléctrica": "Hidroeléctrica",
