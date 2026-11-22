@@ -88,3 +88,10 @@ coverage.xml
 *.temp
 *.bak
 *.log
+
+# ── Frontend Web (Node / Vite) ─────────────────────────────────
+web/node_modules/
+web/dist/
+web/.vite/
+!web/public/data/ivid_payload.json
+

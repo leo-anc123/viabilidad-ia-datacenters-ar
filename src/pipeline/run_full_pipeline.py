@@ -297,12 +297,17 @@ def main() -> int:
         return 1
 
     # ─────────────────────────────────────────────────────────────────────────
-    # ETAPA 5: Exportación Star Schema (Power BI & Streamlit feeds)
+    # ETAPA 5: Exportación Star Schema (Power BI & Streamlit feeds) & Web Payload
     # ─────────────────────────────────────────────────────────────────────────
-    print("\n📊 ETAPA 5: EXPORTACIÓN BI FEEDS (STAR SCHEMA)")
-    rc_bi = _run_step("5. Exportación BI Modelo Estrella (export_bi_feeds.py)", [py_exe, "src/modeling/export_bi_feeds.py"])
+    print("\n📊 ETAPA 5: EXPORTACIÓN BI FEEDS & CONTRATO WEB")
+    rc_bi = _run_step("5.1 Exportación BI Modelo Estrella (export_bi_feeds.py)", [py_exe, "src/modeling/export_bi_feeds.py"])
     if rc_bi != 0:
         print("❌ Error crítico en exportación BI. Abortando pipeline.")
+        return 1
+
+    rc_web = _run_step("5.2 Exportación Contrato Web Unificado (export_web_payload.py)", [py_exe, "src/pipeline/export_web_payload.py"])
+    if rc_web != 0:
+        print("❌ Error crítico en exportación de Web Payload. Abortando pipeline.")
         return 1
 
     # ─────────────────────────────────────────────────────────────────────────
