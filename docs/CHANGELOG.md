@@ -6,6 +6,29 @@ Formato: `[versión] — YYYY-MM-DD | Rol`
 
 ---
 
+## [2.0.0-alpha.3] — 2026-11-21 | Científico de Datos
+
+### Added
+- `docs/metodologia_forecasting.md`: marco metodológico formal para el análisis prospectivo decenal (2026–2036 en 7 horizontes: 2026, 2028, 2030, 2031, 2032, 2034, 2036). Establece las ecuaciones de estado bajo 3 escenarios estructurales (Acelerado, Tendencial, Conservador), anclaje riguroso en cartera real RenovAr/MATER (~1.852,7 MW en construcción), curvas logísticas sigmoideas de saturación para FTTH y penetración de banda ancha ($L \le 100\%$), deterioro termodinámico de PUE mediante pendientes empíricas observadas en ERA5 (media $+0.041\ ^\circ\text{C}/\text{año}$) acotadas a $\text{PUE} \ge 1.10$, y tratamiento estricto del sistema aislado de Tierra del Fuego.
+- `src/modeling/forecasting.py`: motor modular predictivo prospectivo reproducible (`seed=42`). Normaliza features con escalado de base fija anclada rígidamente a los límites del año base 2026 (`Fixed Base Scaling`), asegurando que $\Delta\text{Score}_{vs\_2026}$ mida progreso real de infraestructura. Reutiliza directamente el motor MCDA (`calculate_composite_score`) de `src/modeling/mcda_engine.py` (cero duplicación de fórmulas). Exporta 504 registros a `data/04_outputs/proyecciones_2026_2036.parquet` y `.csv`.
+- `data/04_outputs/pbi_ready/fact_proyecciones_2026_2036.csv`: tabla de hechos en formato largo para el modelo estrella de Power BI (UTF-8 con BOM), con exactamente 1.512 filas ($24 \text{ provincias} \times 7 \text{ años} \times 3 \text{ escenarios} \times 3 \text{ perfiles}$), clave foránea `jurisdiccion_id`, métricas proyectadas, deltas y subscores contextuales.
+- `src/modeling/validate_forecasting.py`: suite de pruebas automatizadas con 6 grupos de aserciones estrictas (dimensiones 504 y 1.512 filas, 0 nulos, rango $[0.0, 100.0]$, origen único en 2026 con $\Delta\text{Score} == 0.0$ y $\Delta\text{Rank} == 0$, permutaciones perfectas $1 \dots 24$, monotonicidad macroeconómica inter-escenario y restricciones físicas de TDF y PUE).
+- `docs/resultados_forecasting_v2.md`: informe ejecutivo con el análisis longitudinal comparativo de ganadores y perdedores de ranking a 2, 5 y 10 años (consolidación de Santa Cruz y Chubut en Campus IA; salto de Tierra del Fuego de #19 a #2 en Acelerado; ascenso de Corrientes de #15 a #7 en Tendencial; liderazgo sostenido de CABA y PBA en Inferencia Edge).
+
+### Changed
+- `src/modeling/export_bi_feeds.py`: incorporada la función `build_fact_proyecciones_2026_2036(...)` e integrada la exportación de `fact_proyecciones_2026_2036.csv` dentro de `export_all_bi_feeds()`.
+- `src/pipeline/run_full_pipeline.py`: integrado el paso 4.3 de análisis predictivo y el paso 6.4 de validación de forecasting dentro del orquestador maestro CI/CD, actualizando el contrato de versión a `2.0.0-alpha.3`.
+
+### QA & Validation
+- `src/modeling/forecasting.py`: **PASS** (504 filas generadas en 5.3s).
+- `src/modeling/export_bi_feeds.py`: **PASS** (1.512 filas en `fact_proyecciones_2026_2036.csv` con encoding `utf-8-sig`).
+- `src/modeling/validate_forecasting.py`: **PASS** (6/6 grupos de pruebas aprobadas con 0 errores).
+- `src/pipeline/run_full_pipeline.py --usar-raw-existente`: **PASS** (Etapas 1 a 6 completadas exitosamente con exit code 0).
+- `python -m py_compile app/main.py`: **PASS** (compilación limpia).
+- **Hito:** Cierre exitoso de la **Iteración 2 — Bloque 2C (Módulo de Análisis Predictivo Prospectivo 2026–2036)**.
+
+---
+
 ## [2.0.0-alpha.2] — 2026-11-21 | Ingeniero de Datos y MLOps
 
 ### Added

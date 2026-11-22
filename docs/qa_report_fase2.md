@@ -1,6 +1,6 @@
 # Reporte de Control de Calidad y Cobertura — Fase 2 (v0.5.0)
 
-**Fecha de generación:** 2026-11-21 09:55:07  
+**Fecha de generación:** 2026-11-21 10:36:37  
 **Tabla auditada:** `data/03_processed/master_24_jurisdicciones.parquet`  
 **Registros territoriales:** 24 jurisdicciones (23 provincias + CABA) — 100% match ancla INDEC.  
 

@@ -66,7 +66,7 @@ def _run_step(description: str, cmd: List[str], cwd: Path = _REPO_ROOT) -> int:
     return res.returncode
 
 
-def generar_contrato_frescura(statuses: Dict[str, str], pipeline_version: str = "2.0.0-alpha.2") -> Dict[str, Any]:
+def generar_contrato_frescura(statuses: Dict[str, str], pipeline_version: str = "2.0.0-alpha.3") -> Dict[str, Any]:
     """
     Construye y exporta data/04_outputs/data_freshness.json con la trazabilidad
     completa de cortes temporales y estados de actualización.
@@ -291,6 +291,11 @@ def main() -> int:
         print("❌ Error crítico en Monte Carlo. Abortando pipeline.")
         return 1
 
+    rc_forecast = _run_step("4.3 Análisis Predictivo Prospectivo 2026-2036 (forecasting.py)", [py_exe, "src/modeling/forecasting.py"])
+    if rc_forecast != 0:
+        print("❌ Error crítico en forecasting. Abortando pipeline.")
+        return 1
+
     # ─────────────────────────────────────────────────────────────────────────
     # ETAPA 5: Exportación Star Schema (Power BI & Streamlit feeds)
     # ─────────────────────────────────────────────────────────────────────────
@@ -331,6 +336,15 @@ def main() -> int:
         )
         if rc_v_fase3 != 0:
             print("❌ Fallo en validate_fase3.py. Abortando compuerta de calidad.")
+            return 1
+
+        # 6.4 Validador Análisis Predictivo 2026–2036
+        rc_v_forecast = _run_step(
+            "6.4 Validación Análisis Predictivo (validate_forecasting.py)",
+            [py_exe, "src/modeling/validate_forecasting.py"]
+        )
+        if rc_v_forecast != 0:
+            print("❌ Fallo en validate_forecasting.py. Abortando compuerta de calidad.")
             return 1
 
     print("\n" + "=" * 80)

@@ -252,10 +252,62 @@ def build_geo_centrales_sadi(
     return df_clean[export_cols].reset_index(drop=True)
 
 
+def build_fact_proyecciones_2026_2036(
+    proyecciones_path: Path,
+    config_path: Path,
+) -> pd.DataFrame:
+    """
+    Construye la tabla de hechos del modelo estrella para análisis prospectivo
+    longitudinal (2026–2036) en formato largo por perfil oficial.
+    Granularidad: 24 jurisdicciones × 7 años × 3 escenarios × 3 perfiles = 1.512 filas.
+    """
+    df_proj = pd.read_parquet(proyecciones_path)
+    with open(config_path, "r", encoding="utf-8") as f:
+        cfg = json.load(f)
+
+    profile_names = {
+        "campus_ia_training": cfg.get("campus_ia_training", {}).get("_nombre", "Campus IA Training (Perfil A)"),
+        "nodo_inferencia_edge": cfg.get("nodo_inferencia_edge", {}).get("_nombre", "Nodo Inferencia Edge (Perfil B)"),
+        "benchmark_cabase": cfg.get("benchmark_cabase", {}).get("_nombre", "Benchmark Balanceado CABASE (Perfil C)"),
+    }
+
+    records = []
+    for _, row in df_proj.iterrows():
+        base_record = {
+            "jurisdiccion_id": row["jurisdiccion_id"],
+            "jurisdiccion_nombre": row["jurisdiccion_nombre"],
+            "jurisdiccion_corta": row["jurisdiccion_corta"],
+            "region_argentina": row["region_argentina"],
+            "anio": int(row["anio"]),
+            "horizonte": row["horizonte"],
+            "escenario_id": row["escenario_id"],
+            "escenario_nombre": row["escenario_nombre"],
+            "subscore_energia": float(row["subscore_energia"]),
+            "subscore_clima": float(row["subscore_clima"]),
+            "subscore_conectividad": float(row["subscore_conectividad"]),
+            "subscore_fiscal": float(row["subscore_fiscal"]),
+            "subscore_talento_riesgo": float(row["subscore_talento_riesgo"]),
+            "subscore_tier_readiness": float(row["subscore_tier_readiness"]),
+        }
+        for p_id, p_nom in profile_names.items():
+            r = dict(base_record)
+            r["perfil_id"] = p_id
+            r["perfil_nombre"] = p_nom
+            r["score_proyectado"] = float(row[f"score_{p_id}"])
+            r["rank_proyectado"] = int(row[f"rank_{p_id}"])
+            r["delta_score_vs_2026"] = float(row[f"delta_score_{p_id}"])
+            r["delta_rank_vs_2026"] = int(row[f"delta_rank_{p_id}"])
+            records.append(r)
+
+    df_fact = pd.DataFrame(records)
+    return df_fact
+
+
 def export_all_bi_feeds(
     scores_path: str = "data/04_outputs/scores_mcda_perfiles.parquet",
     clusters_path: str = "data/04_outputs/clusters_arquetipos.parquet",
     montecarlo_path: str = "data/04_outputs/montecarlo_sensibilidad.parquet",
+    proyecciones_path: str = "data/04_outputs/proyecciones_2026_2036.parquet",
     config_path: str = "config/weights_profiles.json",
     raw_cammesa_path: str = "data/01_raw/cammesa_centrales_generacion_sadi_raw.csv",
     output_dir: str = "data/04_outputs/pbi_ready",
@@ -269,6 +321,7 @@ def export_all_bi_feeds(
     scores_p = Path(scores_path)
     clusters_p = Path(clusters_path)
     mc_p = Path(montecarlo_path)
+    proj_p = Path(proyecciones_path)
     cfg_p = Path(config_path)
     cammesa_p = Path(raw_cammesa_path)
 
@@ -292,12 +345,23 @@ def export_all_bi_feeds(
     geo_path = out_dir / "geo_centrales_sadi.csv"
     geo_centrales.to_csv(geo_path, index=False, encoding="utf-8-sig")
 
-    return {
+    # 5. Hechos Proyecciones Prospectivas 2026–2036
+    fact_proyecciones = pd.DataFrame()
+    if proj_p.exists():
+        fact_proyecciones = build_fact_proyecciones_2026_2036(proj_p, cfg_p)
+        proj_csv_path = out_dir / "fact_proyecciones_2026_2036.csv"
+        fact_proyecciones.to_csv(proj_csv_path, index=False, encoding="utf-8-sig")
+
+    res = {
         "dim_jurisdicciones": dim_jurisdicciones,
         "fact_scores_perfiles": fact_scores,
         "fact_subscores_radar": fact_radar,
         "geo_centrales_sadi": geo_centrales,
     }
+    if not fact_proyecciones.empty:
+        res["fact_proyecciones_2026_2036"] = fact_proyecciones
+
+    return res
 
 
 if __name__ == "__main__":
